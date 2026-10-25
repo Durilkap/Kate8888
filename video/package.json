@@ -1,0 +1,12 @@
+{
+  "name": "kate-reels",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Сборка рилсов Екатерины в Remotion",
+  "dependencies": {
+    "@remotion/cli": "^4.0.538",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "remotion": "^4.0.538"
+  }
+}
