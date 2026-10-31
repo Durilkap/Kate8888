@@ -28,7 +28,7 @@ type Seg = {
 };
 
 // start: кадр исходника (30 fps). s0 -> s1: зум, ox/oy: точка зума в процентах.
-const SEGS: Seg[] = [
+export const SEGS: Seg[] = [
   {from: 0, dur: 48, file: 'source.mp4', start: 120, s0: 1.15, s1: 1.45, ox: 55, oy: 46},
   {from: 48, dur: 36, file: 'source.mp4', start: 180, s0: 1.5, s1: 1.2, ox: 50, oy: 55},
   {from: 84, dur: 36, file: 'source.mp4', start: 240, s0: 1.25, s1: 1.6, ox: 50, oy: 58},
@@ -39,7 +39,7 @@ const SEGS: Seg[] = [
   {from: 329, dur: 31, file: 'slow.mp4', start: 0, freezeAt: 100, calm: true, s0: 1.38, s1: 1.48, ox: 50, oy: 40},
 ];
 
-const Segment: React.FC<{seg: Seg}> = ({seg}) => {
+export const Segment: React.FC<{seg: Seg}> = ({seg}) => {
   const f = useCurrentFrame();
   const punch = seg.calm ? 0 : Math.pow(Math.max(0, 1 - f / 9), 2);
   const base = interpolate(f, [0, seg.dur], [seg.s0, seg.s1], {

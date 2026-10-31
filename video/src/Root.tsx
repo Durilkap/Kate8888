@@ -2,6 +2,7 @@ import React from 'react';
 import {Composition} from 'remotion';
 import {TestCard} from './TestCard';
 import {BestAngle, BEST_ANGLE_FRAMES} from './BestAngle';
+import {BestAngleFifa, FIFA_FRAMES} from './BestAngleFifa';
 
 export const Root: React.FC = () => (
   <>
@@ -17,6 +18,14 @@ export const Root: React.FC = () => (
       id="BestAngle"
       component={BestAngle}
       durationInFrames={BEST_ANGLE_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="BestAngleFifa"
+      component={BestAngleFifa}
+      durationInFrames={FIFA_FRAMES}
       fps={30}
       width={1080}
       height={1920}
