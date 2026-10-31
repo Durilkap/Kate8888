@@ -30,7 +30,7 @@ const CAPS: Cap[] = [
   },
   {
     from: 156,
-    dur: 72,
+    dur: 54,
     top: 190,
     lines: [
       {text: 'А потом узнают', size: 90, weight: 700},
@@ -38,12 +38,13 @@ const CAPS: Cap[] = [
     ],
   },
   {
-    from: 228,
-    dur: 42,
-    top: 170,
+    from: 210,
+    dur: 60,
+    top: 165,
     lines: [
-      {text: 'Отзывчивая.', size: 112, weight: 800},
-      {text: 'Поддержу любой разговор', size: 58, weight: 500},
+      {text: 'Классная и', size: 100, weight: 800},
+      {text: 'коммуникабельная.', size: 84, weight: 800, gold: true},
+      {text: 'Поддержу любой разговор', size: 56, weight: 500},
     ],
   },
   {
