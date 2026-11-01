@@ -23,3 +23,8 @@
 3. Перекодировать в обычный `yuv420p` TV range и убрать метаданные (`-vf scale=in_range=full:out_range=tv,format=yuv420p -color_range tv -colorspace bt709 -map_metadata -1`).
 
 Ограничения: звук помощник не слышит, тайминги проверены только по паузам и на синтетическом сигнале; финал смотрит и слушает Катя. Лицензия Remotion для коммерческого использования блогером не подтверждена (см. remotion.dev/license).
+
+## Рилс «Слишком» в машине (видео Кати на камеру)
+1. Распознать речь: `python3 audio/transcribe.py исходник.mp4 work/asr.json`. Нужны `pip install sherpa-onnx` и модели в `/tmp/asrmodel` (GigaAM v2 transducer и silero_vad.onnx из релизов github.com/k2-fsa/sherpa-onnx, раздел asr-models; HuggingFace из этой среды закрыт).
+2. Монтаж без пауз и данные субтитров: `python3 tools/prepare_slishkom_car.py исходник.mp4 work/asr.json` (куски и слова заданы в скрипте).
+3. Рендер композиции `SlishkomCar`, затем перекодирование в обычный `yuv420p` и удаление метаданных, как выше.

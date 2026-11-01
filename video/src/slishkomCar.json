@@ -1,0 +1,617 @@
+{
+ "editFrames": 1040,
+ "pieces": [
+  {
+   "from": 0,
+   "to": 99,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Мне",
+      "gold": false,
+      "f": 2
+     },
+     {
+      "text": "говорили",
+      "gold": false,
+      "f": 7
+     },
+     {
+      "text": "о",
+      "gold": false,
+      "f": 21
+     },
+     {
+      "text": "том,",
+      "gold": false,
+      "f": 26
+     }
+    ],
+    [
+     {
+      "text": "что",
+      "gold": false,
+      "f": 36
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 48
+     },
+     {
+      "text": "слишком",
+      "gold": true,
+      "f": 54
+     }
+    ],
+    [
+     {
+      "text": "многого",
+      "gold": true,
+      "f": 67
+     },
+     {
+      "text": "хочу.",
+      "gold": true,
+      "f": 79
+     }
+    ]
+   ]
+  },
+  {
+   "from": 99,
+   "to": 190,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Мне",
+      "gold": false,
+      "f": 103
+     },
+     {
+      "text": "говорили",
+      "gold": false,
+      "f": 107
+     },
+     {
+      "text": "о",
+      "gold": false,
+      "f": 122
+     },
+     {
+      "text": "том,",
+      "gold": false,
+      "f": 125
+     }
+    ],
+    [
+     {
+      "text": "что",
+      "gold": false,
+      "f": 131
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 136
+     },
+     {
+      "text": "слишком",
+      "gold": true,
+      "f": 141
+     }
+    ],
+    [
+     {
+      "text": "уверена",
+      "gold": true,
+      "f": 153
+     },
+     {
+      "text": "в",
+      "gold": true,
+      "f": 167
+     },
+     {
+      "text": "себе.",
+      "gold": true,
+      "f": 171
+     }
+    ]
+   ]
+  },
+  {
+   "from": 190,
+   "to": 284,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Мне",
+      "gold": false,
+      "f": 190
+     },
+     {
+      "text": "говорили",
+      "gold": false,
+      "f": 195
+     },
+     {
+      "text": "о",
+      "gold": false,
+      "f": 208
+     },
+     {
+      "text": "том,",
+      "gold": false,
+      "f": 213
+     }
+    ],
+    [
+     {
+      "text": "что",
+      "gold": false,
+      "f": 220
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 229
+     },
+     {
+      "text": "слишком",
+      "gold": true,
+      "f": 238
+     }
+    ],
+    [
+     {
+      "text": "яркая.",
+      "gold": true,
+      "f": 259
+     }
+    ]
+   ]
+  },
+  {
+   "from": 284,
+   "to": 372,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Знаете,",
+      "gold": false,
+      "f": 287
+     },
+     {
+      "text": "только",
+      "gold": false,
+      "f": 299
+     }
+    ],
+    [
+     {
+      "text": "спустя",
+      "gold": false,
+      "f": 313
+     },
+     {
+      "text": "некоторое",
+      "gold": false,
+      "f": 329
+     },
+     {
+      "text": "время",
+      "gold": false,
+      "f": 352
+     }
+    ]
+   ]
+  },
+  {
+   "from": 372,
+   "to": 435,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "я",
+      "gold": false,
+      "f": 374
+     },
+     {
+      "text": "начала",
+      "gold": false,
+      "f": 377
+     },
+     {
+      "text": "понимать:",
+      "gold": false,
+      "f": 388
+     }
+    ],
+    [
+     {
+      "text": "почему?",
+      "gold": true,
+      "f": 416
+     }
+    ]
+   ]
+  },
+  {
+   "from": 435,
+   "to": 462,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Для",
+      "gold": false,
+      "f": 437
+     },
+     {
+      "text": "чего?",
+      "gold": true,
+      "f": 443
+     }
+    ]
+   ]
+  },
+  {
+   "from": 462,
+   "to": 527,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "А",
+      "gold": false,
+      "f": 463
+     },
+     {
+      "text": "для",
+      "gold": false,
+      "f": 465
+     },
+     {
+      "text": "того,",
+      "gold": false,
+      "f": 470
+     },
+     {
+      "text": "чтобы",
+      "gold": false,
+      "f": 477
+     }
+    ],
+    [
+     {
+      "text": "меня",
+      "gold": false,
+      "f": 485
+     },
+     {
+      "text": "прогнуть",
+      "gold": true,
+      "f": 492
+     },
+     {
+      "text": "под",
+      "gold": false,
+      "f": 506
+     },
+     {
+      "text": "себя.",
+      "gold": false,
+      "f": 511
+     }
+    ]
+   ]
+  },
+  {
+   "from": 527,
+   "to": 591,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Для",
+      "gold": false,
+      "f": 528
+     },
+     {
+      "text": "того,",
+      "gold": false,
+      "f": 534
+     },
+     {
+      "text": "чтобы",
+      "gold": false,
+      "f": 541
+     }
+    ],
+    [
+     {
+      "text": "я",
+      "gold": false,
+      "f": 552
+     },
+     {
+      "text": "уменьшалась.",
+      "gold": true,
+      "f": 558
+     }
+    ]
+   ]
+  },
+  {
+   "from": 591,
+   "to": 747,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Для",
+      "gold": false,
+      "f": 595
+     },
+     {
+      "text": "того,",
+      "gold": false,
+      "f": 600
+     },
+     {
+      "text": "чтобы",
+      "gold": false,
+      "f": 610
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 623
+     }
+    ],
+    [
+     {
+      "text": "принимала",
+      "gold": false,
+      "f": 628
+     }
+    ],
+    [
+     {
+      "text": "чужие",
+      "gold": true,
+      "f": 669
+     },
+     {
+      "text": "правила",
+      "gold": true,
+      "f": 683
+     },
+     {
+      "text": "игры.",
+      "gold": true,
+      "f": 705
+     }
+    ]
+   ]
+  },
+  {
+   "from": 747,
+   "to": 793,
+   "kind": "card",
+   "chunks": [
+    [
+     {
+      "text": "Но",
+      "gold": false,
+      "f": 748
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 752
+     },
+     {
+      "text": "выбрала",
+      "gold": false,
+      "f": 755
+     }
+    ],
+    [
+     {
+      "text": "ДРУГОЕ.",
+      "gold": true,
+      "f": 768
+     }
+    ]
+   ],
+   "sizes": [
+    96,
+    190
+   ]
+  },
+  {
+   "from": 793,
+   "to": 839,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Сейчас",
+      "gold": false,
+      "f": 794
+     },
+     {
+      "text": "я",
+      "gold": false,
+      "f": 801
+     }
+    ],
+    [
+     {
+      "text": "не",
+      "gold": true,
+      "f": 805
+     },
+     {
+      "text": "прогибаюсь,",
+      "gold": true,
+      "f": 808
+     }
+    ]
+   ]
+  },
+  {
+   "from": 839,
+   "to": 880,
+   "kind": "card",
+   "chunks": [
+    [
+     {
+      "text": "Никому",
+      "gold": false,
+      "f": 841
+     },
+     {
+      "text": "ничего",
+      "gold": false,
+      "f": 846
+     }
+    ],
+    [
+     {
+      "text": "НЕ",
+      "gold": true,
+      "f": 853
+     },
+     {
+      "text": "ДОКАЗЫВАЮ.",
+      "gold": true,
+      "f": 857
+     }
+    ]
+   ],
+   "sizes": [
+    96,
+    150
+   ]
+  },
+  {
+   "from": 880,
+   "to": 952,
+   "kind": "card",
+   "chunks": [
+    [
+     {
+      "text": "Я",
+      "gold": false,
+      "f": 883
+     },
+     {
+      "text": "иду",
+      "gold": false,
+      "f": 886
+     }
+    ],
+    [
+     {
+      "text": "СВОИМ",
+      "gold": true,
+      "f": 906
+     },
+     {
+      "text": "ПУТЁМ.",
+      "gold": true,
+      "f": 931
+     }
+    ]
+   ],
+   "sizes": [
+    110,
+    170
+   ]
+  },
+  {
+   "from": 952,
+   "to": 990,
+   "kind": "video",
+   "chunks": [
+    [
+     {
+      "text": "Я",
+      "gold": false,
+      "f": 954
+     },
+     {
+      "text": "иду",
+      "gold": false,
+      "f": 957
+     }
+    ],
+    [
+     {
+      "text": "к",
+      "gold": false,
+      "f": 965
+     },
+     {
+      "text": "своей",
+      "gold": false,
+      "f": 969
+     },
+     {
+      "text": "цели,",
+      "gold": true,
+      "f": 978
+     }
+    ]
+   ]
+  },
+  {
+   "from": 990,
+   "to": 1040,
+   "kind": "card",
+   "chunks": [
+    [
+     {
+      "text": "Я",
+      "gold": false,
+      "f": 990
+     },
+     {
+      "text": "иду",
+      "gold": false,
+      "f": 994
+     },
+     {
+      "text": "к",
+      "gold": false,
+      "f": 1002
+     },
+     {
+      "text": "своей",
+      "gold": false,
+      "f": 1006
+     }
+    ],
+    [
+     {
+      "text": "МЕЧТЕ.",
+      "gold": true,
+      "f": 1016
+     }
+    ]
+   ],
+   "sizes": [
+    96,
+    210
+   ]
+  }
+ ]
+}

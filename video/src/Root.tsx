@@ -4,6 +4,7 @@ import {TestCard} from './TestCard';
 import {BestAngle, BEST_ANGLE_FRAMES} from './BestAngle';
 import {BestAngleFifa, FIFA_FRAMES} from './BestAngleFifa';
 import {Slishkom, SLISHKOM_FRAMES, DEFAULT_PROPS} from './Slishkom';
+import {SlishkomCar, SLISHKOM_CAR_FRAMES} from './SlishkomCar';
 
 export const Root: React.FC = () => (
   <>
@@ -32,6 +33,14 @@ export const Root: React.FC = () => (
       height={1920}
       defaultProps={DEFAULT_PROPS}
       calculateMetadata={({props}) => ({durationInFrames: props.total})}
+    />
+    <Composition
+      id="SlishkomCar"
+      component={SlishkomCar}
+      durationInFrames={SLISHKOM_CAR_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
     />
     <Composition
       id="BestAngleFifa"
