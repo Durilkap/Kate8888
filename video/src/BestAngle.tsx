@@ -14,7 +14,7 @@ import {
 
 export const BEST_ANGLE_FRAMES = 360;
 
-type Seg = {
+export type Seg = {
   from: number;
   dur: number;
   file: 'source.mp4' | 'slow.mp4';

@@ -6,3 +6,10 @@ out/
 *.jpeg
 *.png
 work/
+*.wav
+*.m4a
+*.mp3
+*.ogg
+*.opus
+*.aac
+__pycache__/

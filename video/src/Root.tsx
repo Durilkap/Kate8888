@@ -3,6 +3,7 @@ import {Composition} from 'remotion';
 import {TestCard} from './TestCard';
 import {BestAngle, BEST_ANGLE_FRAMES} from './BestAngle';
 import {BestAngleFifa, FIFA_FRAMES} from './BestAngleFifa';
+import {Slishkom, SLISHKOM_FRAMES, DEFAULT_PROPS} from './Slishkom';
 
 export const Root: React.FC = () => (
   <>
@@ -21,6 +22,16 @@ export const Root: React.FC = () => (
       fps={30}
       width={1080}
       height={1920}
+    />
+    <Composition
+      id="Slishkom"
+      component={Slishkom}
+      durationInFrames={SLISHKOM_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+      defaultProps={DEFAULT_PROPS}
+      calculateMetadata={({props}) => ({durationInFrames: props.total})}
     />
     <Composition
       id="BestAngleFifa"
