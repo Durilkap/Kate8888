@@ -42,7 +42,7 @@ const SCENES: Scene[] = [
   {dur: 54, src: S('c5.mp4'), z: [1.05, 1.0], lines: [{t: 'И нет,'}, {t: 'я не голодаю,', big: true}]},
   {dur: 54, src: S('c6.mp4'), slow: true, z: [1.0, 1.06], lines: [{t: 'не живу в зале.', big: true}]},
   {dur: 78, src: S('c7.mp4'), z: [1.0, 1.08], lines: [{t: '2 раза в неделю', big: true, gold: true}, {t: 'тренировка и питание по плану.'}]},
-  {dur: 30, src: S('c8.mp4'), z: [1.0, 1.06], lines: [{t: 'Тело подтянулось.', big: true}]},
+  {dur: 45, src: S('posle4.jpg'), photo: true, pos: '50% 60%', z: [1.0, 1.07], lines: [{t: 'Тело подтянулось.', big: true}]},
   {dur: 30, src: S('c9.mp4'), slow: true, z: [1.06, 1.0], lines: [{t: 'Мышцы рельефные.', big: true, gold: true}]},
   {dur: 30, src: S('posle2.jpg'), photo: true, pos: '45% 45%', z: [1.0, 1.06], lines: [{t: 'Энергии гораздо больше.', big: true}]},
 ];
@@ -132,8 +132,9 @@ const Reveal: React.FC = () => {
   // 0-26: «было» на весь экран; 26-40: шторка открывает «стало»; дальше рядом
   const wipe = interpolate(f, [26, 40], [1080, 540], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const flash = interpolate(f, [38, 41, 50], [0, 0.55, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const zb = interpolate(f, [0, REVEAL], [1.04, 1.1]);
-  const za = interpolate(f, [26, REVEAL], [1.42, 1.3], {extrapolateLeft: 'clamp'});
+  // «было» и «стало» сняты сзади в одной позе; «было» увеличиваем, чтобы рост совпал (ноги на одном уровне)
+  const zb = interpolate(f, [0, 26, 40, REVEAL], [1.0, 1.06, 1.25, 1.29], {extrapolateRight: 'clamp'});
+  const za = interpolate(f, [26, REVEAL], [1.0, 1.04], {extrapolateLeft: 'clamp'});
   const lab = spring({frame: f - 44, fps, config: {damping: 14, stiffness: 160}});
   const labB = spring({frame: f - 4, fps, config: {damping: 14, stiffness: 160}});
   const img = (src: string, pos: string, z: number, origin = '50% 50%'): React.ReactNode => (
@@ -166,10 +167,10 @@ const Reveal: React.FC = () => {
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       <div style={{position: 'absolute', left: 0, top: 0, width: wipe, height: 1920, overflow: 'hidden'}}>
-        <div style={{position: 'absolute', left: (wipe - 1080) / 2, top: 0, width: 1080, height: 1920}}>{img(S('do.jpg'), '45% 40%', zb)}</div>
+        <div style={{position: 'absolute', left: (wipe - 1080) / 2, top: 0, width: 1080, height: 1920}}>{img(S('do.jpg'), '50% 50%', zb, '47% 92%')}</div>
       </div>
       <div style={{position: 'absolute', left: wipe, top: 0, width: 1080 - wipe, height: 1920, overflow: 'hidden'}}>
-        <div style={{position: 'absolute', left: -270, top: 0, width: 1080, height: 1920}}>{img(S('posle2.jpg'), '46% 40%', za, '50% 52%')}</div>
+        <div style={{position: 'absolute', left: -270, top: 0, width: 1080, height: 1920}}>{img(S('posle3.jpg'), '50% 50%', za, '51% 89%')}</div>
       </div>
       <div style={{position: 'absolute', left: wipe - 3, top: 0, width: 6, height: 1920, background: GOLD, opacity: wipe < 1080 ? 1 : 0}} />
       <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 40%), linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 32%)'}} />
