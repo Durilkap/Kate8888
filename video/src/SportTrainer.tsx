@@ -44,10 +44,10 @@ const SCENES: Scene[] = [
   {dur: 78, src: S('c7.mp4'), z: [1.0, 1.08], lines: [{t: '2 раза в неделю', big: true, gold: true}, {t: 'тренировка и питание по плану.'}]},
   {dur: 45, src: S('posle4.jpg'), photo: true, pos: '50% 60%', z: [1.0, 1.07], lines: [{t: 'Тело подтянулось.', big: true}]},
   {dur: 30, src: S('c9.mp4'), slow: true, z: [1.06, 1.0], lines: [{t: 'Мышцы рельефные.', big: true, gold: true}]},
-  {dur: 30, src: S('posle2.jpg'), photo: true, pos: '45% 45%', z: [1.0, 1.06], lines: [{t: 'Энергии гораздо больше.', big: true}]},
+  {dur: 45, src: S('c11.mp4'), z: [1.0, 1.05], lines: [{t: 'Энергии гораздо больше.', big: true}]},
 ];
 const REVEAL = 120;
-const END = 45;
+const END = 66;
 const STARTS = SCENES.reduce<number[]>((acc, s, i) => [...acc, i === 0 ? 0 : acc[i - 1] + SCENES[i - 1].dur], []);
 const MAIN = STARTS[STARTS.length - 1] + SCENES[SCENES.length - 1].dur;
 export const SPORT_FRAMES = MAIN + REVEAL + END;
@@ -187,21 +187,25 @@ const Reveal: React.FC = () => {
   );
 };
 
+// Финал: Катя спереди (видео в зеркале, стол внизу обрезан) и подпись.
 const EndCard: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const p = spring({frame: f - 3, fps, config: {damping: 16, stiffness: 120, mass: 0.7}});
-  const line = interpolate(f, [6, 22], [0, 1], {easing: Easing.out(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const z = interpolate(f, [0, END], [1.1, 1.16]);
+  const p = spring({frame: f - 8, fps, config: {damping: 16, stiffness: 120, mass: 0.7}});
+  const line = interpolate(f, [12, 28], [0, 1], {easing: Easing.out(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const z = interpolate(f, [0, END], [1.0, 1.06]);
+  const flash = interpolate(f, [0, 6], [0.5, 0], {extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
-      <AbsoluteFill style={{filter: 'brightness(0.42)', transform: `scale(${z})`}}>
-        <Img src={staticFile(S('sq2.jpg'))} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+      <AbsoluteFill style={{transform: `scale(${z})`, transformOrigin: '50% 60%', filter: 'contrast(1.05) saturate(1.05)'}}>
+        <OffthreadVideo src={staticFile(S('c10.mp4'))} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
       </AbsoluteFill>
-      <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif', color: '#fff'}}>
+      <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.35) 30%, rgba(0,0,0,0) 50%)'}} />
+      <div style={{position: 'absolute', top: 1260, width: '100%', textAlign: 'center', fontFamily: 'Inter, sans-serif', color: '#fff', textShadow: '0 4px 26px rgba(0,0,0,0.6)'}}>
         <div style={{fontSize: 104, fontWeight: 800, opacity: p, transform: `translateY(${(1 - p) * 30}px)`}}>Я Екатерина.</div>
-        <div style={{width: 340 * line, height: 3, backgroundColor: GOLD, marginTop: 30}} />
-      </AbsoluteFill>
+        <div style={{width: 340 * line, height: 3, backgroundColor: GOLD, margin: '26px auto 0'}} />
+      </div>
+      <AbsoluteFill style={{backgroundColor: '#fff', opacity: flash}} />
     </AbsoluteFill>
   );
 };
