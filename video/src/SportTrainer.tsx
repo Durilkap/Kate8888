@@ -41,7 +41,7 @@ const SCENES: Scene[] = [
     src: S('c11.mp4'),
     shots: [
       {dur: 26, src: S('c12.mp4'), z: [1.06, 1.0]},
-      {dur: 26, src: S('posle4.jpg'), photo: true, pos: '50% 60%', z: [1.08, 1.02]},
+      {dur: 26, src: S('c14.mp4'), z: [1.08, 1.02]},
       {dur: 26, src: S('c13.mp4'), from: 2, z: [1.0, 1.06]},
     ],
     titleTop: 1170,
