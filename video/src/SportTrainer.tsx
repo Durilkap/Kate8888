@@ -26,23 +26,37 @@ type Scene = {
   pos?: string; // objectPosition для фото
   z?: [number, number];
   origin?: string; // точка зума
+  from?: number; // с какого кадра клипа начинать
+  shots?: Shot[]; // несколько быстрых кадров под одним титром (хук)
+  titleTop?: number; // высота титра, если сверху он закрывает лицо
   lines: Line[];
 };
+type Shot = {dur: number; src: string; photo?: boolean; pos?: string; z?: [number, number]; origin?: string; from?: number};
 
 const S = (p: string) => `sport/${p}`;
 
 const SCENES: Scene[] = [
-  {dur: 78, src: S('c1.mp4'), slow: true, z: [1.42, 1.26], origin: '72% 62%', lines: [{t: 'Говорят, у меня'}, {t: 'фигура 25-летней', gold: true, big: true}]},
+  {
+    dur: 78,
+    src: S('c11.mp4'),
+    shots: [
+      {dur: 26, src: S('c11.mp4'), from: 36, z: [1.06, 1.0]},
+      {dur: 26, src: S('posle4.jpg'), photo: true, pos: '50% 60%', z: [1.08, 1.02]},
+      {dur: 26, src: S('c10.mp4'), from: 40, z: [1.0, 1.06]},
+    ],
+    titleTop: 1170,
+    lines: [{t: 'Говорят, у меня'}, {t: 'фигура 25-летней', gold: true, big: true}],
+  },
   {dur: 72, src: S('c2.mp4'), z: [1.0, 1.08], lines: [{t: 'Но пять лет тренировок'}, {t: 'такого результата не дали.', big: true}]},
   {dur: 72, src: S('c3.mp4'), z: [1.06, 1.0], lines: [{t: 'Он появился'}, {t: 'за последние три месяца.', gold: true, big: true}]},
   {dur: 54, src: S('c4.mp4'), z: [1.0, 1.1], lines: [{t: 'Знаешь,'}, {t: 'что изменилось?', gold: true, big: true}]},
   {dur: 66, src: S('posle1.jpg'), photo: true, pos: '50% 45%', z: [1.0, 1.08], lines: [{t: 'Я нашла'}, {t: 'своего тренера.', gold: true, big: true}]},
-  {dur: 66, src: S('sq1.jpg'), photo: true, pos: '45% 50%', z: [1.0, 1.08], lines: [{t: 'Раньше было: тут тяжело,'}, {t: 'это не хочу.', big: true}]},
+  {dur: 66, src: S('posle2.jpg'), photo: true, pos: '45% 45%', z: [1.0, 1.08], lines: [{t: 'Раньше было: тут тяжело,'}, {t: 'это не хочу.', big: true}]},
   {dur: 60, src: S('sq2.jpg'), photo: true, pos: '50% 50%', z: [1.08, 1.0], lines: [{t: 'Сейчас я всё делаю'}, {t: 'с кайфом.', gold: true, big: true}]},
   {dur: 54, src: S('c5.mp4'), z: [1.05, 1.0], lines: [{t: 'И нет,'}, {t: 'я не голодаю,', big: true}]},
   {dur: 54, src: S('c6.mp4'), slow: true, z: [1.0, 1.06], lines: [{t: 'не живу в зале.', big: true}]},
   {dur: 78, src: S('c7.mp4'), z: [1.0, 1.08], lines: [{t: '2 раза в неделю', big: true, gold: true}, {t: 'тренировка и питание по плану.'}]},
-  {dur: 45, src: S('posle4.jpg'), photo: true, pos: '50% 60%', z: [1.0, 1.07], lines: [{t: 'Тело подтянулось.', big: true}]},
+  {dur: 45, src: S('c1.mp4'), slow: true, z: [1.42, 1.3], origin: '72% 62%', lines: [{t: 'Тело подтянулось.', big: true}]},
   {dur: 30, src: S('c9.mp4'), slow: true, z: [1.06, 1.0], lines: [{t: 'Мышцы рельефные.', big: true, gold: true}]},
   {dur: 45, src: S('c11.mp4'), z: [1.0, 1.05], lines: [{t: 'Энергии гораздо больше.', big: true}]},
 ];
@@ -95,7 +109,7 @@ const Title: React.FC<{lines: Line[]; dur: number; first?: boolean; top?: number
   );
 };
 
-const Media: React.FC<{s: Scene; dur: number; first?: boolean}> = ({s, dur, first}) => {
+const Media: React.FC<{s: Scene | Shot; dur: number; first?: boolean}> = ({s, dur, first}) => {
   const f = useCurrentFrame();
   const [z0, z1] = s.z ?? [1, 1.06];
   const punch = first ? 0 : Math.pow(Math.max(0, 1 - f / 7), 2); // первый кадр (хук) чёткий
@@ -118,7 +132,7 @@ const Media: React.FC<{s: Scene; dur: number; first?: boolean}> = ({s, dur, firs
         {s.photo ? (
           <Img src={staticFile(s.src)} style={style} />
         ) : (
-          <OffthreadVideo src={staticFile(s.src)} muted playbackRate={s.slow ? 0.5 : 1} style={style} />
+          <OffthreadVideo src={staticFile(s.src)} muted startFrom={s.from ?? 0} playbackRate={s.slow ? 0.5 : 1} style={style} />
         )}
       </AbsoluteFill>
       <AbsoluteFill style={{backgroundColor: '#fff', opacity: 0.25 * punch}} />
@@ -214,9 +228,23 @@ export const SportTrainer: React.FC = () => (
   <AbsoluteFill style={{backgroundColor: '#000'}}>
     {SCENES.map((s, i) => (
       <Sequence key={i} from={STARTS[i]} durationInFrames={s.dur}>
-        <Media s={s} dur={s.dur} first={i === 0} />
-        <AbsoluteFill style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 26%, rgba(0,0,0,0) 42%)'}} />
-        <Title lines={s.lines} dur={s.dur} first={i === 0} />
+        {s.shots ? (
+          s.shots.map((sh, k) => (
+            <Sequence key={k} from={s.shots!.slice(0, k).reduce((a, b) => a + b.dur, 0)} durationInFrames={sh.dur}>
+              <Media s={sh} dur={sh.dur} first={i === 0 && k === 0} />
+            </Sequence>
+          ))
+        ) : (
+          <Media s={s} dur={s.dur} first={i === 0} />
+        )}
+        <AbsoluteFill
+          style={{
+            background: s.titleTop
+              ? 'linear-gradient(to top, rgba(0,0,0,0) 18%, rgba(0,0,0,0.45) 34%, rgba(0,0,0,0) 50%)'
+              : 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 26%, rgba(0,0,0,0) 42%)',
+          }}
+        />
+        <Title lines={s.lines} dur={s.dur} first={i === 0} top={s.titleTop} />
       </Sequence>
     ))}
     <Sequence from={MAIN} durationInFrames={REVEAL}>
