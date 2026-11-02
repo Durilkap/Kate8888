@@ -25,13 +25,14 @@ type Scene = {
   slow?: boolean; // клип 60 к/с, играем вдвое медленнее
   pos?: string; // objectPosition для фото
   z?: [number, number];
+  origin?: string; // точка зума
   lines: Line[];
 };
 
 const S = (p: string) => `sport/${p}`;
 
 const SCENES: Scene[] = [
-  {dur: 78, src: S('c1.mp4'), slow: true, z: [1.12, 1.02], lines: [{t: 'Говорят, у меня'}, {t: 'фигура 25-летней', gold: true, big: true}]},
+  {dur: 78, src: S('c1.mp4'), slow: true, z: [1.42, 1.26], origin: '72% 62%', lines: [{t: 'Говорят, у меня'}, {t: 'фигура 25-летней', gold: true, big: true}]},
   {dur: 72, src: S('c2.mp4'), z: [1.0, 1.08], lines: [{t: 'Но пять лет тренировок'}, {t: 'такого результата не дали.', big: true}]},
   {dur: 72, src: S('c3.mp4'), z: [1.08, 1.0], lines: [{t: 'Он появился'}, {t: 'за последние три месяца.', gold: true, big: true}]},
   {dur: 54, src: S('c4.mp4'), z: [1.0, 1.1], lines: [{t: 'Знаешь,'}, {t: 'что изменилось?', gold: true, big: true}]},
@@ -110,6 +111,7 @@ const Media: React.FC<{s: Scene; dur: number}> = ({s, dur}) => {
       <AbsoluteFill
         style={{
           transform: `scale(${scale})`,
+          transformOrigin: s.origin ?? '50% 50%',
           filter: `blur(${5 * punch}px) contrast(1.06) saturate(1.08) brightness(1.03)`,
         }}
       >
@@ -131,11 +133,14 @@ const Reveal: React.FC = () => {
   const wipe = interpolate(f, [26, 40], [1080, 540], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const flash = interpolate(f, [38, 41, 50], [0, 0.55, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const zb = interpolate(f, [0, REVEAL], [1.04, 1.1]);
-  const za = interpolate(f, [26, REVEAL], [1.12, 1.04], {extrapolateLeft: 'clamp'});
+  const za = interpolate(f, [26, REVEAL], [1.42, 1.3], {extrapolateLeft: 'clamp'});
   const lab = spring({frame: f - 44, fps, config: {damping: 14, stiffness: 160}});
   const labB = spring({frame: f - 4, fps, config: {damping: 14, stiffness: 160}});
-  const img = (src: string, pos: string, z: number): React.ReactNode => (
-    <Img src={staticFile(src)} style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: pos, transform: `scale(${z})`}} />
+  const img = (src: string, pos: string, z: number, origin = '50% 50%'): React.ReactNode => (
+    <Img
+      src={staticFile(src)}
+      style={{width: '100%', height: '100%', objectFit: 'cover', objectPosition: pos, transform: `scale(${z})`, transformOrigin: origin}}
+    />
   );
   const label = (t: string, x: number, p: number, gold?: boolean) => (
     <div
@@ -164,7 +169,7 @@ const Reveal: React.FC = () => {
         <div style={{position: 'absolute', left: (wipe - 1080) / 2, top: 0, width: 1080, height: 1920}}>{img(S('do.jpg'), '45% 40%', zb)}</div>
       </div>
       <div style={{position: 'absolute', left: wipe, top: 0, width: 1080 - wipe, height: 1920, overflow: 'hidden'}}>
-        <div style={{position: 'absolute', left: -270, top: 0, width: 1080, height: 1920}}>{img(S('posle2.jpg'), '46% 40%', za)}</div>
+        <div style={{position: 'absolute', left: -270, top: 0, width: 1080, height: 1920}}>{img(S('posle2.jpg'), '46% 40%', za, '50% 52%')}</div>
       </div>
       <div style={{position: 'absolute', left: wipe - 3, top: 0, width: 6, height: 1920, background: GOLD, opacity: wipe < 1080 ? 1 : 0}} />
       <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 40%), linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 32%)'}} />

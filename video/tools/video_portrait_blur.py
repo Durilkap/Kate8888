@@ -30,7 +30,19 @@ def main():
     ap.add_argument('--dark', type=float, default=0.82)
     ap.add_argument('--vf', default='', help='доп. фильтр ffmpeg (цвет), применяется до маски')
     ap.add_argument('--model', default='/tmp/segdl/u2net_human_seg.onnx')
+    ap.add_argument('--keep', default='', help='x0,y0,x1,y1 (доли кадра): рамка, где человек всегда чёткий')
+    ap.add_argument('--zone', default='', help='x0,y0,x1,y1: размывать только внутри этой области (вывески)')
+    ap.add_argument('--noseg', action='store_true', help='без нейросети: просто размыть область --zone')
     a = ap.parse_args()
+
+    def box(spec, feather):
+        m = np.zeros((H, W), np.float32)
+        x0, y0, x1, y1 = [float(v) for v in spec.split(',')]
+        m[int(y0 * H):int(y1 * H), int(x0 * W):int(x1 * W)] = 1
+        return cv2.GaussianBlur(m, (0, 0), feather)
+
+    keep = box(a.keep, 40) if a.keep else None
+    zone = box(a.zone, 25) if a.zone else np.ones((H, W), np.float32)
 
     so = ort.SessionOptions()
     so.intra_op_num_threads = 4
@@ -54,6 +66,14 @@ def main():
         if len(buf) < W * H * 3:
             break
         fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
+        if a.noseg:
+            mk = (1 - zone)[..., None]
+            f32 = fr.astype(np.float32)
+            small = cv2.resize(f32, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
+            bg = cv2.resize(cv2.GaussianBlur(small, (0, 0), a.blur / 4), (W, H), interpolation=cv2.INTER_LINEAR)
+            wr.stdin.write(np.clip(f32 * mk + bg * (1 - mk), 0, 255).astype(np.uint8).tobytes())
+            n += 1
+            continue
         x = cv2.resize(fr, (320, 320), interpolation=cv2.INTER_AREA).astype(np.float32) / 255
         x = ((x - mean) / std).transpose(2, 0, 1)[None]
         m = sess.run(None, {inp: x})[0][0, 0]
@@ -65,7 +85,11 @@ def main():
             m = m * cv2.dilate((lab == big).astype(np.uint8), np.ones((5, 5), np.uint8))
         prev = m if prev is None else 0.55 * m + 0.45 * prev  # сглаживание во времени
         mk = cv2.GaussianBlur(cv2.resize(prev, (W, H), interpolation=cv2.INTER_CUBIC), (0, 0), 4)
-        mk = np.clip(mk * 1.15, 0, 1)[..., None]
+        mk = np.clip(mk * 1.15, 0, 1)
+        if keep is not None:
+            mk = np.maximum(mk, keep)
+        mk = 1 - (1 - mk) * zone  # размываем только внутри зоны
+        mk = mk[..., None]
         f32 = fr.astype(np.float32)
         small = cv2.resize(f32, (W // 4, H // 4), interpolation=cv2.INTER_AREA)
         bg = cv2.resize(cv2.GaussianBlur(small, (0, 0), a.blur / 4 * 1.0), (W, H), interpolation=cv2.INTER_LINEAR) * a.dark
