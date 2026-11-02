@@ -35,14 +35,21 @@ def main():
     ap.add_argument('--noseg', action='store_true', help='без нейросети: просто размыть область --zone')
     a = ap.parse_args()
 
-    def box(spec, feather):
+    def box(spec, feather, t=0.0):
+        # spec: 'x0,y0,x1,y1' или движущаяся рамка 'x0,y0,x1,y1>x0,y0,x1,y1' (камера движется), несколько через ';'
         m = np.zeros((H, W), np.float32)
-        x0, y0, x1, y1 = [float(v) for v in spec.split(',')]
-        m[int(y0 * H):int(y1 * H), int(x0 * W):int(x1 * W)] = 1
+        for b in spec.split(';'):
+            parts = b.split('>')
+            p0 = [float(v) for v in parts[0].split(',')]
+            p1 = [float(v) for v in parts[-1].split(',')]
+            x0, y0, x1, y1 = [u + (v - u) * t for u, v in zip(p0, p1)]
+            m[int(y0 * H):int(y1 * H), int(x0 * W):int(x1 * W)] = 1
         return cv2.GaussianBlur(m, (0, 0), feather)
 
+    nfr = max(2, int(round((a.t or 1) * a.fps)))
     keep = box(a.keep, 40) if a.keep else None
-    zone = box(a.zone, 25) if a.zone else np.ones((H, W), np.float32)
+    moving = '>' in a.zone
+    zone = box(a.zone, 18) if a.zone else np.ones((H, W), np.float32)
 
     so = ort.SessionOptions()
     so.intra_op_num_threads = 4
@@ -66,6 +73,8 @@ def main():
         if len(buf) < W * H * 3:
             break
         fr = np.frombuffer(buf, np.uint8).reshape(H, W, 3)
+        if moving:
+            zone = box(a.zone, 18, min(1.0, n / (nfr - 1)))
         if a.noseg:
             mk = (1 - zone)[..., None]
             f32 = fr.astype(np.float32)

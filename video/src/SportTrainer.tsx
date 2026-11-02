@@ -95,10 +95,10 @@ const Title: React.FC<{lines: Line[]; dur: number; first?: boolean; top?: number
   );
 };
 
-const Media: React.FC<{s: Scene; dur: number}> = ({s, dur}) => {
+const Media: React.FC<{s: Scene; dur: number; first?: boolean}> = ({s, dur, first}) => {
   const f = useCurrentFrame();
   const [z0, z1] = s.z ?? [1, 1.06];
-  const punch = Math.pow(Math.max(0, 1 - f / 7), 2);
+  const punch = first ? 0 : Math.pow(Math.max(0, 1 - f / 7), 2); // первый кадр (хук) чёткий
   const scale = interpolate(f, [0, dur], [z0, z1], {easing: Easing.bezier(0.22, 0.61, 0.36, 1)}) * (1 + 0.1 * punch);
   const style: React.CSSProperties = {
     width: '100%',
@@ -194,7 +194,7 @@ const EndCard: React.FC = () => {
   const z = interpolate(f, [0, END], [1.1, 1.16]);
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
-      <AbsoluteFill style={{filter: 'blur(14px) brightness(0.45)', transform: `scale(${z})`}}>
+      <AbsoluteFill style={{filter: 'brightness(0.42)', transform: `scale(${z})`}}>
         <Img src={staticFile(S('sq2.jpg'))} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
       </AbsoluteFill>
       <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter, sans-serif', color: '#fff'}}>
@@ -209,7 +209,7 @@ export const SportTrainer: React.FC = () => (
   <AbsoluteFill style={{backgroundColor: '#000'}}>
     {SCENES.map((s, i) => (
       <Sequence key={i} from={STARTS[i]} durationInFrames={s.dur}>
-        <Media s={s} dur={s.dur} />
+        <Media s={s} dur={s.dur} first={i === 0} />
         <AbsoluteFill style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.2) 26%, rgba(0,0,0,0) 42%)'}} />
         <Title lines={s.lines} dur={s.dur} first={i === 0} />
       </Sequence>
