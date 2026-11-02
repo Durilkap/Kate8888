@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   AbsoluteFill,
+  Audio,
   Easing,
   Img,
   interpolate,
@@ -11,6 +12,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from 'remotion';
+import V from './sportVoice.json';
 
 // Рилс 13 «Свой тренер»: кадры Кати из зала, титры по сценарию (scenarii/rils-13-sport-svoj-trener.md),
 // в конце «было / стало». Фон на видео и фото размыт заранее (tools/video_portrait_blur.py, portrait_blur.py),
@@ -40,28 +42,33 @@ const SCENES: Scene[] = [
     dur: 78,
     src: S('c11.mp4'),
     shots: [
-      {dur: 26, src: S('c12.mp4'), z: [1.06, 1.0]},
-      {dur: 26, src: S('c14.mp4'), z: [1.08, 1.02]},
-      {dur: 26, src: S('c13.mp4'), from: 2, z: [1.0, 1.06]},
+      {dur: 30, src: S('c12.mp4'), z: [1.06, 1.0]},
+      {dur: 29, src: S('c14.mp4'), z: [1.08, 1.02]},
+      {dur: V.scenes[0] - 59, src: S('c13.mp4'), z: [1.0, 1.06]},
     ],
     titleTop: 1170,
     lines: [{t: 'Говорят, у меня'}, {t: 'фигура 25-летней', gold: true, big: true}],
   },
-  {dur: 72, src: S('c2.mp4'), z: [1.0, 1.08], lines: [{t: 'Но пять лет тренировок'}, {t: 'такого результата не дали.', big: true}]},
-  {dur: 72, src: S('c3.mp4'), z: [1.06, 1.0], lines: [{t: 'Он появился'}, {t: 'за последние три месяца.', gold: true, big: true}]},
+  {dur: 72, src: S('c2.mp4'), z: [1.0, 1.08], lines: [{t: 'Но пять лет тренировок'}, {t: 'такого результата мне не дали.', big: true}]},
+  {dur: 72, src: S('c3.mp4'), z: [1.06, 1.0], lines: [{t: 'И он появился'}, {t: 'за крайние три месяца.', gold: true, big: true}]},
   {dur: 54, src: S('c4.mp4'), z: [1.0, 1.1], lines: [{t: 'Знаешь,'}, {t: 'что изменилось?', gold: true, big: true}]},
   {dur: 66, src: S('posle1.jpg'), photo: true, pos: '50% 45%', z: [1.0, 1.08], lines: [{t: 'Я нашла'}, {t: 'своего тренера.', gold: true, big: true}]},
-  {dur: 66, src: S('posle2.jpg'), photo: true, pos: '45% 45%', z: [1.0, 1.08], lines: [{t: 'Раньше было: тут тяжело,'}, {t: 'это не хочу.', big: true}]},
-  {dur: 60, src: S('sq2.jpg'), photo: true, pos: '50% 50%', z: [1.08, 1.0], lines: [{t: 'Сейчас я всё делаю'}, {t: 'с кайфом.', gold: true, big: true}]},
-  {dur: 54, src: S('c5.mp4'), z: [1.05, 1.0], lines: [{t: 'И нет,'}, {t: 'я не голодаю,', big: true}]},
+  {dur: 66, src: S('posle2.jpg'), photo: true, pos: '45% 45%', z: [1.0, 1.08], lines: [{t: 'Раньше у меня было:'}, {t: 'тут тяжело, это не хочу.', big: true}]},
+  {dur: 60, src: S('sq2.jpg'), photo: true, pos: '50% 50%', z: [1.08, 1.0], lines: [{t: 'А сейчас я всё делаю'}, {t: 'с кайфом.', gold: true, big: true}]},
+  {dur: 54, src: S('c5.mp4'), z: [1.05, 1.0], lines: [{t: 'Нет,'}, {t: 'я не голодаю,', big: true}]},
   {dur: 54, src: S('c6.mp4'), slow: true, z: [1.0, 1.06], lines: [{t: 'не живу в зале.', big: true}]},
   {dur: 78, src: S('c7.mp4'), z: [1.0, 1.08], lines: [{t: '2 раза в неделю', big: true, gold: true}, {t: 'тренировка и питание по плану.'}]},
-  {dur: 45, src: S('c1.mp4'), slow: true, z: [1.42, 1.3], origin: '72% 62%', lines: [{t: 'Тело подтянулось.', big: true}]},
-  {dur: 30, src: S('c9.mp4'), slow: true, z: [1.06, 1.0], lines: [{t: 'Мышцы рельефные.', big: true, gold: true}]},
-  {dur: 45, src: S('c11.mp4'), z: [1.0, 1.05], lines: [{t: 'Энергии гораздо больше.', big: true}]},
+  {dur: 45, src: S('c1.mp4'), slow: true, z: [1.42, 1.3], origin: '72% 62%', lines: [{t: 'Тело подтянулось,', big: true}]},
+  {dur: 30, src: S('c9.mp4'), slow: true, z: [1.06, 1.0], lines: [{t: 'мышцы рельефные.', big: true, gold: true}]},
+  {dur: 45, src: S('c11.mp4'), z: [1.0, 1.05], lines: [{t: 'Энергии стало'}, {t: 'гораздо больше.', big: true, gold: true}]},
 ];
-const REVEAL = 120;
-const END = 66;
+// Длины сцен по озвучке Кати (tools/prepare_sport_voice.py)
+SCENES.forEach((sc, i) => {
+  sc.dur = V.scenes[i];
+});
+const REVEAL = V.reveal;
+const END = V.end;
+const M = V.marks; // кадры слов «было», «стало», «вот», «мне» внутри сцены «было / стало»
 const STARTS = SCENES.reduce<number[]>((acc, s, i) => [...acc, i === 0 ? 0 : acc[i - 1] + SCENES[i - 1].dur], []);
 const MAIN = STARTS[STARTS.length - 1] + SCENES[SCENES.length - 1].dur;
 export const SPORT_FRAMES = MAIN + REVEAL + END;
@@ -144,13 +151,13 @@ const Reveal: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   // 0-26: «было» на весь экран; 26-40: шторка открывает «стало»; дальше рядом
-  const wipe = interpolate(f, [26, 40], [1080, 540], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const flash = interpolate(f, [38, 41, 50], [0, 0.55, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const wipe = interpolate(f, [M.stalo - 2, M.stalo + 9], [1080, 540], {easing: Easing.inOut(Easing.cubic), extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const flash = interpolate(f, [M.stalo + 7, M.stalo + 10, M.stalo + 19], [0, 0.55, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   // «было» и «стало» сняты сзади в одной позе; «было» увеличиваем, чтобы рост совпал (ноги на одном уровне)
-  const zb = interpolate(f, [0, 26, 40, REVEAL], [1.0, 1.06, 1.25, 1.29], {extrapolateRight: 'clamp'});
-  const za = interpolate(f, [26, REVEAL], [1.0, 1.04], {extrapolateLeft: 'clamp'});
-  const lab = spring({frame: f - 44, fps, config: {damping: 14, stiffness: 160}});
-  const labB = spring({frame: f - 4, fps, config: {damping: 14, stiffness: 160}});
+  const zb = interpolate(f, [0, M.stalo - 2, M.stalo + 9, REVEAL], [1.0, 1.03, 1.25, 1.29], {extrapolateRight: 'clamp'});
+  const za = interpolate(f, [M.stalo, REVEAL], [1.0, 1.04], {extrapolateLeft: 'clamp'});
+  const lab = spring({frame: f - M.stalo - 6, fps, config: {damping: 14, stiffness: 160}});
+  const labB = spring({frame: f - M.bylo + 2, fps, config: {damping: 14, stiffness: 160}});
   const img = (src: string, pos: string, z: number, origin = '50% 50%'): React.ReactNode => (
     <Img
       src={staticFile(src)}
@@ -191,11 +198,11 @@ const Reveal: React.FC = () => {
       {label('БЫЛО', wipe / 2 - 270, labB)}
       {label('СТАЛО', 540, lab, true)}
       <AbsoluteFill style={{backgroundColor: '#fff', opacity: flash}} />
-      <Sequence from={44} durationInFrames={34}>
-        <Title lines={[{t: 'Вот это я.', gold: true, big: true}]} dur={34} top={330} />
+      <Sequence from={M.vot - 2} durationInFrames={M.mne - M.vot}>
+        <Title lines={[{t: 'Вот это я.', gold: true, big: true}]} dur={M.mne - M.vot} top={330} />
       </Sequence>
-      <Sequence from={78} durationInFrames={REVEAL - 78}>
-        <Title lines={[{t: 'Мне помогла не программа,'}, {t: 'а свой тренер.', gold: true, big: true}]} dur={REVEAL - 78 + 6} top={300} />
+      <Sequence from={M.mne - 2} durationInFrames={REVEAL - M.mne + 2}>
+        <Title lines={[{t: 'Мне помогла не программа,'}, {t: 'а свой тренер.', gold: true, big: true}]} dur={REVEAL - M.mne + 8} top={300} />
       </Sequence>
     </AbsoluteFill>
   );
@@ -254,5 +261,6 @@ export const SportTrainer: React.FC = () => (
       <EndCard />
     </Sequence>
     <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.38) 100%)'}} />
+    <Audio src={staticFile(S('voice.wav'))} />
   </AbsoluteFill>
 );
