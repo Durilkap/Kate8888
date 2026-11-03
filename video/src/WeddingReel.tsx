@@ -31,14 +31,14 @@ const M = (n: number) => `wed/m${n}.mp4`; // куски видео видеог�
 const SHOTS: Shot[] = [
   {src: M(1), video: true, dur: 45, z: [1.0, 1.05]},
   {src: W(1), dur: 30, z: [1.0, 1.08], origin: '45% 40%'},
-  {src: M(2), video: true, dur: 42, z: [1.0, 1.04], label: 'Причёска'},
+  {src: M(2), video: true, dur: 42, z: [1.0, 1.04]},
   {src: M(3), video: true, dur: 30, z: [1.04, 1.0]},
-  {src: M(4), video: true, dur: 36, z: [1.0, 1.05], label: 'Макияж'},
-  {src: W(5), dur: 30, z: [1.7, 1.95], origin: '33% 38%', label: 'Серьги'},
-  {src: 'wed/v1.mp4', video: true, dur: 75, z: [1.0, 1.05], label: 'Платье на заказ'},
+  {src: M(4), video: true, dur: 36, z: [1.0, 1.05]},
+  {src: W(5), dur: 30, z: [1.7, 1.95], origin: '33% 38%'},
+  {src: 'wed/v1.mp4', video: true, dur: 75, z: [1.0, 1.05]},
   {src: M(5), video: true, dur: 23, z: [1.04, 1.0]},
   {src: W(30), dur: 27, z: [1.0, 1.07]},
-  {src: M(6), video: true, dur: 23, z: [1.0, 1.05], label: 'Перчатки'},
+  {src: M(6), video: true, dur: 23, z: [1.0, 1.05]},
   {src: M(7), video: true, dur: 33, z: [1.04, 1.0]},
   {src: W(27), dur: 30, z: [1.0, 1.07]},
   {src: M(8), video: true, dur: 20, z: [1.04, 1.0]},
@@ -48,15 +48,67 @@ const SHOTS: Shot[] = [
   {src: W(31), dur: 27, z: [1.06, 1.0]},
   {src: W(14), dur: 28, z: [1.0, 1.06]},
   {src: W(17), dur: 28, z: [1.0, 1.08], origin: '50% 30%'},
-  {src: W(19), dur: 33, z: [1.0, 1.1], origin: '50% 80%', label: 'Туфли'},
-  {src: W(10), dur: 27, z: [1.06, 1.0]},
-  {src: W(25), dur: 33, z: [1.06, 1.0], label: 'Букет'},
+  {src: W(19), dur: 33, z: [1.0, 1.1], origin: '50% 80%'},
+  {src: W(13), dur: 27, z: [1.0, 1.08]},
+  {src: W(25), dur: 33, z: [1.06, 1.0]},
   {src: W(22), dur: 28, z: [1.0, 1.06]},
-  {src: W(24), dur: 108, z: [1.0, 1.12], origin: '50% 45%'},
+  {src: W(24), dur: 126, z: [1.0, 1.12], origin: '50% 45%'},
 ];
 const STARTS = SHOTS.reduce<number[]>((a, s, i) => [...a, i === 0 ? 0 : a[i - 1] + SHOTS[i - 1].dur], []);
 export const WEDDING_FRAMES = STARTS[STARTS.length - 1] + SHOTS[SHOTS.length - 1].dur;
 const HOOK = SHOTS[0].dur + SHOTS[1].dur; // хук держится на двух первых кадрах
+
+// Титры по сценарию «Мой путь к моей Девочке» (scenarii/rils-15-put-k-devochke.md): кадр начала и строки
+type CapLine = {t: string; gold?: boolean; it?: boolean; big?: boolean};
+const CAPS: {from: number; lines: CapLine[]}[] = [
+  {from: 0, lines: [{t: 'Когда ты в последний раз'}, {t: 'была не сильной,'}, {t: 'а девочкой?', gold: true, it: true, big: true}]},
+  {from: 96, lines: [{t: 'Работа, дом, решения.'}]},
+  {from: 150, lines: [{t: 'Всё на тебе.', big: true}]},
+  {from: 198, lines: [{t: 'И все говорят:'}, {t: '«Ты же сильная, справишься».', it: true}]},
+  {from: 276, lines: [{t: 'И ты справляешься.'}]},
+  {from: 324, lines: [{t: 'Только устаёшь так,'}, {t: 'что забываешь, какая ты.'}]},
+  {from: 400, lines: [{t: 'Я тоже долго была'}, {t: 'только сильной.'}]},
+  {from: 462, lines: [{t: 'Пока не разрешила'}, {t: 'себе другое:'}]},
+  {from: 516, lines: [{t: 'просить помощи,', gold: true, it: true, big: true}]},
+  {from: 560, lines: [{t: 'принимать заботу,', gold: true, it: true, big: true}]},
+  {from: 604, lines: [{t: 'быть мягкой рядом'}, {t: 'со своим мужчиной.', gold: true, it: true}]},
+  {from: 676, lines: [{t: 'Это не слабость.'}, {t: 'Это лёгкость.', gold: true, it: true, big: true}]},
+  {from: 746, lines: [{t: 'Так я стала'}, {t: 'девочкой.', gold: true, it: true, big: true}]},
+  {from: 800, lines: [{t: 'И это только часть пути'}, {t: 'к себе настоящей.', it: true}]},
+  {from: 862, lines: [{t: 'Я Екатерина.', big: true}]},
+];
+
+const Caption: React.FC<{lines: CapLine[]; dur: number}> = ({lines, dur}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const out = interpolate(f, [dur - 6, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  return (
+    <AbsoluteFill style={{opacity: out}}>
+      <div style={{position: 'absolute', top: 1110, left: 50, right: 50, textAlign: 'center', fontFamily: SERIF, color: '#fff', textShadow: '0 3px 22px rgba(0,0,0,0.85), 0 0 4px rgba(0,0,0,0.5)'}}>
+        {lines.map((l, i) => {
+          const p = spring({frame: f - 2 - i * 5, fps, config: {damping: 18, stiffness: 120, mass: 0.7}});
+          const size = Math.min(l.big ? 118 : 84, Math.floor(980 / (l.t.length * 0.47)));
+          return (
+            <div
+              key={i}
+              style={{
+                fontSize: size,
+                lineHeight: 1.08,
+                fontStyle: l.it ? 'italic' : 'normal',
+                color: l.gold ? GOLD : '#fff',
+                whiteSpace: 'nowrap',
+                opacity: p,
+                transform: `translateY(${(1 - p) * 18}px)`,
+              }}
+            >
+              {l.t}
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
 
 const useFonts = () => {
   const [handle] = useState(() => delayRender('fonts'));
@@ -171,12 +223,15 @@ export const WeddingReel: React.FC = () => {
           {s.label ? <Label text={s.label} dur={s.dur} /> : null}
         </Sequence>
       ))}
-      <Sequence from={0} durationInFrames={HOOK}>
-        <Hook />
-      </Sequence>
-      <Sequence from={STARTS[last]} durationInFrames={SHOTS[last].dur}>
-        <Final dur={SHOTS[last].dur} />
-      </Sequence>
+      <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0.05) 12%, rgba(0,0,0,0.5) 28%, rgba(0,0,0,0.15) 42%, rgba(0,0,0,0) 52%)'}} />
+      {CAPS.map((c, i) => {
+        const to = i + 1 < CAPS.length ? CAPS[i + 1].from : WEDDING_FRAMES;
+        return (
+          <Sequence key={`c${i}`} from={c.from} durationInFrames={to - c.from}>
+            <Caption lines={c.lines} dur={i + 1 < CAPS.length ? to - c.from : to - c.from + 12} />
+          </Sequence>
+        );
+      })}
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 58%, rgba(0,0,0,0.35) 100%)'}} />
     </AbsoluteFill>
   );
