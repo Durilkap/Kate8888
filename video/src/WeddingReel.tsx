@@ -26,38 +26,37 @@ type Shot = {src: string; dur: number; z?: [number, number]; origin?: string; po
 
 const W = (n: number) => `wed/w${String(n).padStart(2, '0')}.jpg`;
 
+const M = (n: number) => `wed/m${n}.mp4`; // куски видео видеографа (без чужих лиц и марок)
+
 const SHOTS: Shot[] = [
-  {src: W(1), dur: 75, z: [1.0, 1.08], origin: '45% 40%'},
-  {src: W(3), dur: 28, z: [1.08, 1.0]},
-  {src: W(4), dur: 28, z: [1.0, 1.07]},
-  {src: W(2), dur: 33, z: [1.07, 1.0], label: 'Причёска'},
-  {src: W(5), dur: 33, z: [1.0, 1.08], origin: '60% 40%', label: 'Макияж'},
+  {src: M(1), video: true, dur: 45, z: [1.0, 1.05]},
+  {src: W(1), dur: 30, z: [1.0, 1.08], origin: '45% 40%'},
+  {src: M(2), video: true, dur: 42, z: [1.0, 1.04], label: 'Причёска'},
+  {src: M(3), video: true, dur: 30, z: [1.04, 1.0]},
+  {src: M(4), video: true, dur: 36, z: [1.0, 1.05], label: 'Макияж'},
   {src: W(5), dur: 30, z: [1.7, 1.95], origin: '33% 38%', label: 'Серьги'},
-  {src: 'wed/v1.mp4', video: true, dur: 84, z: [1.0, 1.05], label: 'Платье на заказ'},
-  {src: W(6), dur: 28, z: [1.06, 1.0]},
-  {src: W(13), dur: 27, z: [1.0, 1.08]},
-  {src: W(12), dur: 33, z: [1.08, 1.0], label: 'Перчатки'},
-  {src: W(8), dur: 33, z: [1.0, 1.07], origin: '50% 35%'},
-  {src: W(9), dur: 30, z: [1.07, 1.0]},
-  {src: 'wed/v2.mp4', video: true, dur: 75, z: [1.0, 1.05]},
-  {src: W(7), dur: 27, z: [1.0, 1.06]},
-  {src: W(14), dur: 30, z: [1.06, 1.0]},
-  {src: W(17), dur: 30, z: [1.0, 1.08], origin: '50% 30%'},
-  {src: W(18), dur: 27, z: [1.06, 1.0]},
+  {src: 'wed/v1.mp4', video: true, dur: 75, z: [1.0, 1.05], label: 'Платье на заказ'},
+  {src: M(5), video: true, dur: 23, z: [1.04, 1.0]},
+  {src: W(30), dur: 27, z: [1.0, 1.07]},
+  {src: M(6), video: true, dur: 23, z: [1.0, 1.05], label: 'Перчатки'},
+  {src: M(7), video: true, dur: 33, z: [1.04, 1.0]},
+  {src: W(27), dur: 30, z: [1.0, 1.07]},
+  {src: M(8), video: true, dur: 20, z: [1.04, 1.0]},
+  {src: W(29), dur: 30, z: [1.06, 1.0]},
+  {src: 'wed/v2.mp4', video: true, dur: 66, z: [1.0, 1.05]},
+  {src: W(8), dur: 30, z: [1.0, 1.07], origin: '50% 35%'},
+  {src: W(31), dur: 27, z: [1.06, 1.0]},
+  {src: W(14), dur: 28, z: [1.0, 1.06]},
+  {src: W(17), dur: 28, z: [1.0, 1.08], origin: '50% 30%'},
   {src: W(19), dur: 33, z: [1.0, 1.1], origin: '50% 80%', label: 'Туфли'},
-  {src: W(15), dur: 28, z: [1.06, 1.0]},
-  {src: W(16), dur: 28, z: [1.0, 1.06]},
   {src: W(10), dur: 27, z: [1.06, 1.0]},
-  {src: W(11), dur: 27, z: [1.0, 1.06]},
-  {src: W(20), dur: 28, z: [1.06, 1.0]},
-  {src: W(21), dur: 28, z: [1.0, 1.06]},
   {src: W(25), dur: 33, z: [1.06, 1.0], label: 'Букет'},
   {src: W(22), dur: 28, z: [1.0, 1.06]},
-  {src: W(23), dur: 30, z: [1.06, 1.0]},
   {src: W(24), dur: 108, z: [1.0, 1.12], origin: '50% 45%'},
 ];
 const STARTS = SHOTS.reduce<number[]>((a, s, i) => [...a, i === 0 ? 0 : a[i - 1] + SHOTS[i - 1].dur], []);
 export const WEDDING_FRAMES = STARTS[STARTS.length - 1] + SHOTS[SHOTS.length - 1].dur;
+const HOOK = SHOTS[0].dur + SHOTS[1].dur; // хук держится на двух первых кадрах
 
 const useFonts = () => {
   const [handle] = useState(() => delayRender('fonts'));
@@ -129,7 +128,7 @@ const Hook: React.FC = () => {
   const {fps} = useVideoConfig();
   const p1 = spring({frame: f + 12, fps, config: {damping: 18, stiffness: 110, mass: 0.8}});
   const p2 = spring({frame: f - 10, fps, config: {damping: 18, stiffness: 110, mass: 0.8}});
-  const out = interpolate(f, [SHOTS[0].dur - 8, SHOTS[0].dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const out = interpolate(f, [HOOK - 8, HOOK], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill style={{opacity: out}}>
       <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0.05) 14%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0) 50%)'}} />
@@ -172,7 +171,7 @@ export const WeddingReel: React.FC = () => {
           {s.label ? <Label text={s.label} dur={s.dur} /> : null}
         </Sequence>
       ))}
-      <Sequence from={0} durationInFrames={SHOTS[0].dur}>
+      <Sequence from={0} durationInFrames={HOOK}>
         <Hook />
       </Sequence>
       <Sequence from={STARTS[last]} durationInFrames={SHOTS[last].dur}>

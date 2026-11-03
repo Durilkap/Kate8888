@@ -48,7 +48,7 @@ def main():
     dst.mkdir(parents=True, exist_ok=True)
     for p in sorted(src.glob('p*.jpg')):
         n = int(p.stem[1:])
-        if n not in range(1, 26):
+        if n not in range(1, 32) or n in (26, 28):  # 26 и 28: в кадре лицо помощницы, не используем
             continue
         a = np.asarray(Image.open(p).convert('RGB')).astype(np.float32)
         h, w = a.shape[:2]
