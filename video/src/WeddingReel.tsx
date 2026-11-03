@@ -151,8 +151,8 @@ const Final: React.FC<{dur: number}> = ({dur}) => {
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{backgroundColor: '#fff', opacity: flash}} />
-      <AbsoluteFill style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 28%, rgba(0,0,0,0) 42%)'}} />
-      <div style={{position: 'absolute', top: 260, width: '100%', textAlign: 'center', fontFamily: SERIF, color: '#fff', textShadow: '0 4px 28px rgba(0,0,0,0.6)'}}>
+      <AbsoluteFill style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 30%, rgba(0,0,0,0) 48%)'}} />
+      <div style={{position: 'absolute', top: 260, width: '100%', textAlign: 'center', fontFamily: SERIF, color: '#fff', textShadow: '0 3px 20px rgba(0,0,0,0.9), 0 0 4px rgba(0,0,0,0.6)'}}>
         <div style={{fontSize: 98, lineHeight: 1.05, opacity: p1, transform: `translateY(${(1 - p1) * 24}px)`}}>Сколько стоил</div>
         <div style={{fontSize: 98, lineHeight: 1.05, opacity: p1, transform: `translateY(${(1 - p1) * 24}px)`}}>этот образ?</div>
         <div style={{fontSize: 74, fontStyle: 'italic', color: GOLD, marginTop: 22, opacity: p2, transform: `scale(${0.9 + 0.1 * p2})`}}>Пишите свою цифру</div>
