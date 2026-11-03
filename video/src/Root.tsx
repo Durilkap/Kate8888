@@ -6,6 +6,7 @@ import {BestAngleFifa, FIFA_FRAMES} from './BestAngleFifa';
 import {Slishkom, SLISHKOM_FRAMES, DEFAULT_PROPS} from './Slishkom';
 import {SlishkomCar, SLISHKOM_CAR_FRAMES} from './SlishkomCar';
 import {SportTrainer, SPORT_FRAMES} from './SportTrainer';
+import {WeddingReel, WEDDING_FRAMES} from './WeddingReel';
 
 export const Root: React.FC = () => (
   <>
@@ -47,6 +48,14 @@ export const Root: React.FC = () => (
       id="SportTrainer"
       component={SportTrainer}
       durationInFrames={SPORT_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="WeddingReel"
+      component={WeddingReel}
+      durationInFrames={WEDDING_FRAMES}
       fps={30}
       width={1080}
       height={1920}
