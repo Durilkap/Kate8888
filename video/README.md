@@ -37,3 +37,10 @@
 3. Плавные замедленные копии видеокусков: `python3 tools/slow_wedding_clips.py`.
 4. Рендер композиции `WeddingReel` со звуком (без `--muted`), затем финальное кодирование с AAC и `-map_metadata -1`.
 Титры: Montserrat ExtraBold, ключевые слова жёлтые (в разметке `*слово*`), строки через `|`, `!` - крупная строка.
+
+## Рилс 16 «Хороший продажник сейчас это роскошь» (Катя на камеру в машине, 2 дубля)
+1. Фото с корпоратива: `python3 tools/prepare_corporate_photos.py work/r16/src public/r16` (логотип убран, значок, текст грамоты кроме слова «ГРАМОТА», гости, бутылки размыты).
+2. Расшифровка дублей: `python3 audio/transcribe.py work/r16/src/a.mov work/r16/asr_a.json` (и b).
+3. Монтаж: `python3 tools/prepare_prodazhnik.py` (куски дублей в `CHUNKS`, титры в `CARDS`, вставки фото в `PHOTOS`; пишет `public/r16/` и `src/prodazhnik.json`).
+4. Рендер композиции `ProdazhnikReel` со звуком, финальное кодирование с AAC и `-map_metadata -1`.
+Общие титры по словам: `src/WordCaptions.tsx` (стиль рилса 14 v4).
