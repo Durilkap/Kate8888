@@ -1,34 +1,35 @@
 import React from 'react';
 import {AbsoluteFill, Audio, Easing, Img, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
-import D from './prodazhnik.json';
+import DA from './prodazhnik_a.json';
+import DB from './prodazhnik_b.json';
 import {Card, useMontserrat, WordCaptions} from './WordCaptions';
 
 // Рилс 16 «Хороший продажник сейчас это роскошь»: Катя говорит на камеру в машине (стоянка).
-// Монтаж и титры по её словам готовит tools/prepare_prodazhnik.py (src/prodazhnik.json, public/r16/).
+// Монтаж и титры по её словам готовит tools/prepare_prodazhnik.py: вариант a (первый дубль) и b (второй дубль),
+// src/prodazhnik_a.json, src/prodazhnik_b.json, public/r16/.
 // Фото с корпоратива (tools/prepare_corporate_photos.py): логотип, значок, текст грамоты кроме слова «ГРАМОТА», гости размыты.
 
-type Clip = {take: string; from: number; len: number; at: number; zoom: number};
+type Clip = {take: string; from: number; len: number; at: number};
 type Photo = {src: string; from: number; to: number};
-const CLIPS = D.clips as Clip[];
-const CARDS = D.cards as Card[];
-const PHOTOS = D.photos as Photo[];
-export const PRODAZHNIK_FRAMES = D.total;
+type Data = {total: number; clips: Clip[]; cards: Card[]; photos: Photo[]; levels: number[]; capTop: number; voice: string};
+export const PRODAZHNIK_A_FRAMES = DA.total;
+export const PRODAZHNIK_B_FRAMES = DB.total;
 
 // Крупность лица меняется рывком на каждом втором экране титров (живой монтаж разговорного видео)
-const LEVELS = [1.22, 1.34, 1.26, 1.38];
-const zoomAt = (f: number) => {
+const zoomAt = (d: Data, f: number) => {
+  const cards = d.cards;
   let i = 0;
-  while (i + 1 < CARDS.length && CARDS[i + 1].from <= f) i++;
+  while (i + 1 < cards.length && cards[i + 1].from <= f) i++;
   const k = Math.floor(i / 2);
-  const prevStart = CARDS[k * 2].from;
-  const cur = LEVELS[k % LEVELS.length];
-  const prev = k > 0 ? LEVELS[(k - 1) % LEVELS.length] : cur;
+  const prevStart = cards[k * 2].from;
+  const cur = d.levels[k % d.levels.length];
+  const prev = k > 0 ? d.levels[(k - 1) % d.levels.length] : cur;
   return interpolate(f, [prevStart, prevStart + 4], [prev, cur], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
 };
 
-const Talk: React.FC<{c: Clip}> = ({c}) => {
+const Talk: React.FC<{c: Clip; d: Data}> = ({c, d}) => {
   const f = useCurrentFrame();
-  const z = zoomAt(c.at + f) * interpolate(f, [0, c.len], [1, 1.02]);
+  const z = zoomAt(d, c.at + f) * interpolate(f, [0, c.len], [1, 1.02]);
   return (
     <AbsoluteFill style={{overflow: 'hidden'}}>
       <OffthreadVideo
@@ -41,10 +42,10 @@ const Talk: React.FC<{c: Clip}> = ({c}) => {
   );
 };
 
-const PhotoInsert: React.FC<{p: Photo}> = ({p}) => {
+const PhotoInsert: React.FC<{p: Photo; total: number}> = ({p, total}) => {
   const f = useCurrentFrame();
   const dur = p.to - p.from;
-  const o = interpolate(f, [0, 4, dur - 4, dur], [0, 1, 1, p.to >= PRODAZHNIK_FRAMES ? 1 : 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const o = interpolate(f, [0, 4, dur - 4, dur], [0, 1, 1, p.to >= total ? 1 : 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   // грамота: плавно приближаемся, чтобы читалось слово «ГРАМОТА»
   const [z0, z1, origin]: [number, number, string] = p.src.endsWith('k3.jpg') ? [1.0, 1.45, '55% 39%'] : p.src.endsWith('k1.jpg') ? [1.0, 1.08, '45% 50%'] : [1.0, 1.08, '50% 30%'];
   const s = interpolate(f, [0, dur], [z0, z1], {easing: Easing.inOut(Easing.sin)});
@@ -55,25 +56,28 @@ const PhotoInsert: React.FC<{p: Photo}> = ({p}) => {
   );
 };
 
-export const ProdazhnikReel: React.FC = () => {
+const Reel: React.FC<{d: Data}> = ({d}) => {
   const ready = useMontserrat();
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
-      {CLIPS.map((c, i) => (
-        <Sequence key={i} from={c.at} durationInFrames={i + 1 < CLIPS.length ? c.len : PRODAZHNIK_FRAMES - c.at}>
-          <Talk c={c} />
+      {d.clips.map((c, i) => (
+        <Sequence key={i} from={c.at} durationInFrames={i + 1 < d.clips.length ? c.len : d.total - c.at}>
+          <Talk c={c} d={d} />
         </Sequence>
       ))}
-      {PHOTOS.map((p, i) => (
+      {d.photos.map((p, i) => (
         <Sequence key={`p${i}`} from={p.from} durationInFrames={p.to - p.from}>
-          <PhotoInsert p={p} />
+          <PhotoInsert p={p} total={d.total} />
         </Sequence>
       ))}
       <AbsoluteFill
-        style={{background: 'linear-gradient(to top, rgba(0,0,0,0) 12%, rgba(0,0,0,0.45) 22%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0) 57%)'}}
+        style={{background: 'linear-gradient(to top, rgba(0,0,0,0) 10%, rgba(0,0,0,0.45) 20%, rgba(0,0,0,0.45) 43%, rgba(0,0,0,0) 55%)'}}
       />
-      <WordCaptions cards={CARDS} total={PRODAZHNIK_FRAMES} ready={ready} />
-      <Audio src={staticFile('r16/voice.wav')} />
+      <WordCaptions cards={d.cards} total={d.total} ready={ready} top={d.capTop} />
+      <Audio src={staticFile(d.voice)} />
     </AbsoluteFill>
   );
 };
+
+export const ProdazhnikA: React.FC = () => <Reel d={DA as Data} />;
+export const ProdazhnikB: React.FC = () => <Reel d={DB as Data} />;

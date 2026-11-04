@@ -1,0 +1,1348 @@
+{
+ "total": 1932,
+ "clips": [
+  {
+   "take": "a",
+   "from": 46,
+   "len": 311,
+   "at": 0
+  },
+  {
+   "take": "a",
+   "from": 360,
+   "len": 320,
+   "at": 311
+  },
+  {
+   "take": "a",
+   "from": 684,
+   "len": 162,
+   "at": 631
+  },
+  {
+   "take": "a",
+   "from": 850,
+   "len": 120,
+   "at": 793
+  },
+  {
+   "take": "a",
+   "from": 974,
+   "len": 180,
+   "at": 913
+  },
+  {
+   "take": "a",
+   "from": 1157,
+   "len": 112,
+   "at": 1093
+  },
+  {
+   "take": "a",
+   "from": 1274,
+   "len": 72,
+   "at": 1205
+  },
+  {
+   "take": "b",
+   "from": 1454,
+   "len": 45,
+   "at": 1277
+  },
+  {
+   "take": "b",
+   "from": 1504,
+   "len": 94,
+   "at": 1322
+  },
+  {
+   "take": "a",
+   "from": 1654,
+   "len": 193,
+   "at": 1416
+  },
+  {
+   "take": "a",
+   "from": 1886,
+   "len": 132,
+   "at": 1609
+  },
+  {
+   "take": "b",
+   "from": 1996,
+   "len": 164,
+   "at": 1741
+  }
+ ],
+ "cards": [
+  {
+   "from": 0,
+   "full": true,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Я",
+       "at": 2,
+       "a": false
+      },
+      {
+       "t": "обожаю",
+       "at": 8,
+       "a": true
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "своих",
+       "at": 21,
+       "a": false
+      },
+      {
+       "t": "клиентов",
+       "at": 29,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 44,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "и",
+       "at": 47,
+       "a": false
+      },
+      {
+       "t": "сейчас",
+       "at": 53,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "расскажу",
+       "at": 63,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "почему.",
+       "at": 79,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 98,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Я",
+       "at": 101,
+       "a": false
+      },
+      {
+       "t": "больше",
+       "at": 111,
+       "a": false
+      },
+      {
+       "t": "10",
+       "at": 127,
+       "a": true
+      },
+      {
+       "t": "лет",
+       "at": 137,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "в",
+       "at": 141,
+       "a": false
+      },
+      {
+       "t": "продажах,",
+       "at": 144,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 160,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "и",
+       "at": 163,
+       "a": false
+      },
+      {
+       "t": "по",
+       "at": 176,
+       "a": false
+      },
+      {
+       "t": "своему",
+       "at": 182,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "опыту",
+       "at": 193,
+       "a": false
+      },
+      {
+       "t": "я",
+       "at": 204,
+       "a": false
+      },
+      {
+       "t": "знаю:",
+       "at": 207,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 220,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "хороший",
+       "at": 223,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "продажник",
+       "at": 235,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "попадается",
+       "at": 255,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 274,
+   "full": false,
+   "lines": [
+    {
+     "big": true,
+     "words": [
+      {
+       "t": "один",
+       "at": 277,
+       "a": true
+      },
+      {
+       "t": "из",
+       "at": 284,
+       "a": true
+      },
+      {
+       "t": "30,",
+       "at": 290,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 303,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "а",
+       "at": 306,
+       "a": false
+      },
+      {
+       "t": "может",
+       "at": 316,
+       "a": false
+      },
+      {
+       "t": "быть,",
+       "at": 326,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "из",
+       "at": 332,
+       "a": false
+      },
+      {
+       "t": "50.",
+       "at": 340,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 359,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Поэтому",
+       "at": 362,
+       "a": false
+      },
+      {
+       "t": "хороший",
+       "at": 384,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "продажник",
+       "at": 398,
+       "a": false
+      },
+      {
+       "t": "сейчас",
+       "at": 414,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": true,
+     "words": [
+      {
+       "t": "это",
+       "at": 426,
+       "a": false
+      },
+      {
+       "t": "роскошь.",
+       "at": 434,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 451,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Отдел",
+       "at": 454,
+       "a": false
+      },
+      {
+       "t": "продаж",
+       "at": 478,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "это",
+       "at": 492,
+       "a": false
+      },
+      {
+       "t": "локомотив.",
+       "at": 500,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 521,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Он",
+       "at": 524,
+       "a": false
+      },
+      {
+       "t": "приводит",
+       "at": 534,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "клиентов,",
+       "at": 549,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 563,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "а",
+       "at": 566,
+       "a": false
+      },
+      {
+       "t": "клиенты",
+       "at": 570,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "приносят",
+       "at": 585,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "компании",
+       "at": 599,
+       "a": false
+      },
+      {
+       "t": "деньги.",
+       "at": 614,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 624,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Чем",
+       "at": 627,
+       "a": false
+      },
+      {
+       "t": "отличается",
+       "at": 644,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "хороший",
+       "at": 666,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "от",
+       "at": 679,
+       "a": false
+      },
+      {
+       "t": "рядового,",
+       "at": 684,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "скажем",
+       "at": 701,
+       "a": false
+      },
+      {
+       "t": "так?",
+       "at": 716,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 723,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "А",
+       "at": 726,
+       "a": false
+      },
+      {
+       "t": "тем,",
+       "at": 734,
+       "a": false
+      },
+      {
+       "t": "что",
+       "at": 745,
+       "a": false
+      },
+      {
+       "t": "он",
+       "at": 756,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "продаёт",
+       "at": 759,
+       "a": true
+      },
+      {
+       "t": "себя.",
+       "at": 775,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 786,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Продукт,",
+       "at": 789,
+       "a": false
+      },
+      {
+       "t": "да,",
+       "at": 820,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "важен,",
+       "at": 833,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "но",
+       "at": 857,
+       "a": false
+      },
+      {
+       "t": "доверяют",
+       "at": 868,
+       "a": true
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "человеку.",
+       "at": 885,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 901,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Для",
+       "at": 904,
+       "a": false
+      },
+      {
+       "t": "меня",
+       "at": 922,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "продажа",
+       "at": 931,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "это",
+       "at": 960,
+       "a": false
+      },
+      {
+       "t": "отношения.",
+       "at": 971,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1001,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Сначала",
+       "at": 1004,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "человек,",
+       "at": 1026,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "потом",
+       "at": 1043,
+       "a": false
+      },
+      {
+       "t": "сделка.",
+       "at": 1057,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1079,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "И",
+       "at": 1082,
+       "a": false
+      },
+      {
+       "t": "я",
+       "at": 1099,
+       "a": false
+      },
+      {
+       "t": "продаю",
+       "at": 1103,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "своё",
+       "at": 1117,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "состояние,",
+       "at": 1125,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1142,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "я",
+       "at": 1145,
+       "a": false
+      },
+      {
+       "t": "продаю",
+       "at": 1154,
+       "a": false
+      },
+      {
+       "t": "свою",
+       "at": 1166,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "энергетику.",
+       "at": 1175,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1198,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Люди",
+       "at": 1201,
+       "a": false
+      },
+      {
+       "t": "идут",
+       "at": 1216,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "на",
+       "at": 1227,
+       "a": false
+      },
+      {
+       "t": "него,",
+       "at": 1230,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1237,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "они",
+       "at": 1240,
+       "a": false
+      },
+      {
+       "t": "это",
+       "at": 1252,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "чувствуют.",
+       "at": 1258,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1274,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Хороший",
+       "at": 1277,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "продажник",
+       "at": 1302,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "это",
+       "at": 1322,
+       "a": false
+      },
+      {
+       "t": "роскошь.",
+       "at": 1331,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1345,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "А",
+       "at": 1348,
+       "a": false
+      },
+      {
+       "t": "роскошь",
+       "at": 1353,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "начинается",
+       "at": 1367,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "с",
+       "at": 1387,
+       "a": false
+      },
+      {
+       "t": "состояния.",
+       "at": 1390,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1416,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Так",
+       "at": 1420,
+       "a": false
+      },
+      {
+       "t": "классно,",
+       "at": 1419,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "на",
+       "at": 1438,
+       "a": false
+      },
+      {
+       "t": "самом",
+       "at": 1443,
+       "a": false
+      },
+      {
+       "t": "деле,",
+       "at": 1452,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1457,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "когда",
+       "at": 1460,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "в",
+       "at": 1468,
+       "a": false
+      },
+      {
+       "t": "выходной",
+       "at": 1468,
+       "a": false
+      },
+      {
+       "t": "день",
+       "at": 1486,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "тебе",
+       "at": 1495,
+       "a": false
+      },
+      {
+       "t": "пишут",
+       "at": 1506,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "клиенты.",
+       "at": 1516,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1533,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "Пишут",
+       "at": 1536,
+       "a": false
+      },
+      {
+       "t": "не",
+       "at": 1551,
+       "a": false
+      },
+      {
+       "t": "по",
+       "at": 1555,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "рабочим",
+       "at": 1560,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "вопросам,",
+       "at": 1574,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1591,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "а",
+       "at": 1594,
+       "a": false
+      },
+      {
+       "t": "просто",
+       "at": 1612,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "поделиться",
+       "at": 1623,
+       "a": true
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "своими",
+       "at": 1642,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "радостями,",
+       "at": 1658,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1673,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "своими",
+       "at": 1676,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "новостями,",
+       "at": 1690,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "что-то",
+       "at": 1708,
+       "a": false
+      },
+      {
+       "t": "обсудить.",
+       "at": 1722,
+       "a": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1738,
+   "full": false,
+   "lines": [
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "И",
+       "at": 1741,
+       "a": false
+      },
+      {
+       "t": "да,",
+       "at": 1748,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "мои",
+       "at": 1758,
+       "a": false
+      },
+      {
+       "t": "клиенты",
+       "at": 1771,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "приносят",
+       "at": 1791,
+       "a": false
+      }
+     ]
+    },
+    {
+     "big": false,
+     "words": [
+      {
+       "t": "компании",
+       "at": 1815,
+       "a": false
+      },
+      {
+       "t": "деньги.",
+       "at": 1837,
+       "a": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "from": 1853,
+   "full": false,
+   "lines": [
+    {
+     "big": true,
+     "words": [
+      {
+       "t": "Я",
+       "at": 1856,
+       "a": false
+      },
+      {
+       "t": "Екатерина.",
+       "at": 1872,
+       "a": false
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "photos": [
+  {
+   "src": "r16/k3.jpg",
+   "from": 98,
+   "to": 220
+  },
+  {
+   "src": "r16/k1.jpg",
+   "from": 1273,
+   "to": 1420
+  },
+  {
+   "src": "r16/k2.jpg",
+   "from": 1737,
+   "to": 1932
+  }
+ ],
+ "levels": [
+  1.22,
+  1.34,
+  1.26,
+  1.38
+ ],
+ "capTop": 1030,
+ "voice": "r16/voice_a.wav"
+}

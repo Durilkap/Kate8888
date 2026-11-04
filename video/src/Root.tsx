@@ -7,7 +7,7 @@ import {Slishkom, SLISHKOM_FRAMES, DEFAULT_PROPS} from './Slishkom';
 import {SlishkomCar, SLISHKOM_CAR_FRAMES} from './SlishkomCar';
 import {SportTrainer, SPORT_FRAMES} from './SportTrainer';
 import {WeddingReel, WEDDING_FRAMES} from './WeddingReel';
-import {ProdazhnikReel, PRODAZHNIK_FRAMES} from './ProdazhnikReel';
+import {ProdazhnikA, ProdazhnikB, PRODAZHNIK_A_FRAMES, PRODAZHNIK_B_FRAMES} from './ProdazhnikReel';
 
 export const Root: React.FC = () => (
   <>
@@ -62,9 +62,17 @@ export const Root: React.FC = () => (
       height={1920}
     />
     <Composition
-      id="ProdazhnikReel"
-      component={ProdazhnikReel}
-      durationInFrames={PRODAZHNIK_FRAMES}
+      id="ProdazhnikA"
+      component={ProdazhnikA}
+      durationInFrames={PRODAZHNIK_A_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ProdazhnikB"
+      component={ProdazhnikB}
+      durationInFrames={PRODAZHNIK_B_FRAMES}
       fps={30}
       width={1080}
       height={1920}
