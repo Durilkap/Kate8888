@@ -5,7 +5,7 @@ import {AbsoluteFill, continueRender, delayRender, interpolate, Sequence, spring
 // каждое слово появляется, когда Катя его произносит. Данные готовят скрипты tools/prepare_*.py.
 
 export type Word = {t: string; at: number; a: boolean};
-export type Card = {from: number; full: boolean; lines: {big: boolean; words: Word[]}[]};
+export type Card = {from: number; full: boolean; lines: {big: boolean; words: Word[]}[]; top?: number};
 
 export const YELLOW = '#FFD60A';
 export const SANS = 'Montserrat, "DejaVu Sans", sans-serif';
@@ -33,7 +33,7 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number}> = (
       <div
         style={{
           position: 'absolute',
-          top,
+          top: c.top ?? top,
           height: 470,
           left: 60,
           right: 110,
