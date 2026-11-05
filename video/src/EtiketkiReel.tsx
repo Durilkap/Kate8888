@@ -56,9 +56,8 @@ const CARDS: Card[] = [
   card(126, 'ИЗ ЧЕГО|СКЛАДЫВАЕТСЯ|ИХ *ЦЕНА?*'),
   card(165, '!*ФЛЕКСОПЕЧАТЬ*'),
   card(240, 'САМОКЛЕЯЩИЕСЯ|*ЭТИКЕТКИ*'),
-  // список появляется вслед за набором на экране
-  card(315, '1. РАЗМЕР|2. ЦВЕТНОСТЬ|3. МАТЕРИАЛ|4. *ТИРАЖ*', {at: [318, 326, 354, 378]}),
-  card(381, ''), // на экране список виден сам
+  // компьютер: экран крупно, список «размер, цветность, материал, тираж» появляется сам по мере набора
+  card(315, ''),
   card(423, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|!*ПРОСТО*', {top: 1130}),
 ];
 
@@ -99,9 +98,14 @@ export const EtiketkiReel: React.FC = () => {
       <Sequence from={0} durationInFrames={84}>
         <AbsoluteFill style={{background: 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.42) 22%, rgba(0,0,0,0) 38%)'}} />
       </Sequence>
-      <Sequence from={84} durationInFrames={ETIKETKI_FRAMES - 84}>
-        <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0) 10%, rgba(0,0,0,0.45) 20%, rgba(0,0,0,0.45) 43%, rgba(0,0,0,0) 55%)'}} />
-      </Sequence>
+      {[
+        [84, 315],
+        [423, ETIKETKI_FRAMES],
+      ].map(([a, b]) => (
+        <Sequence key={`g${a}`} from={a} durationInFrames={b - a}>
+          <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0) 10%, rgba(0,0,0,0.45) 20%, rgba(0,0,0,0.45) 43%, rgba(0,0,0,0) 55%)'}} />
+        </Sequence>
+      ))}
       <WordCaptions cards={CARDS} total={ETIKETKI_FRAMES} ready={ready} />
     </AbsoluteFill>
   );
