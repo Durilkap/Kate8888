@@ -15,16 +15,16 @@ const BIG = 132;
 const SHADOW = '0 4px 10px rgba(0,0,0,0.55), 0 8px 34px rgba(0,0,0,0.6)';
 
 let ctx: CanvasRenderingContext2D | null = null;
-const fit = (text: string, base: number) => {
+const fit = (text: string, base: number, extra = 0) => {
   if (typeof document === 'undefined') return base;
   ctx = ctx ?? document.createElement('canvas').getContext('2d');
   if (!ctx) return base;
   ctx.font = `800 ${base}px ${SANS}`;
-  const w = ctx.measureText(text).width;
+  const w = ctx.measureText(text).width + extra * base;
   return w > MAXW ? Math.floor((base * MAXW) / w) : base;
 };
 
-const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; accent: string}> = ({c, dur, ready, top, accent}) => {
+const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; accent: string; plate: boolean}> = ({c, dur, ready, top, accent, plate}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const out = interpolate(f, [dur - 4, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
@@ -49,9 +49,10 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; acce
       >
         {c.lines.map((l, i) => {
           const base = l.big ? BIG : BASE;
-          const size = ready ? fit(l.words.map((w) => w.t).join(' '), base) : base;
+          const plates = plate ? l.words.filter((w) => w.a).length * 0.42 : 0; // запас ширины на плашки
+          const size = ready ? fit(l.words.map((w) => w.t).join(' '), base, plates) : base;
           return (
-            <div key={i} style={{fontSize: size, lineHeight: 1.1, whiteSpace: 'nowrap'}}>
+            <div key={i} style={{fontSize: size, lineHeight: plate ? 1.22 : 1.1, whiteSpace: 'nowrap'}}>
               {l.words.map((w, j) => {
                 const rel = w.at - c.from;
                 const p = c.full ? 1 : spring({frame: f - rel + 2, fps, config: {damping: 13, stiffness: 190, mass: 0.6}});
@@ -62,10 +63,13 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; acce
                     style={{
                       display: 'inline-block',
                       marginRight: j + 1 < l.words.length ? '0.24em' : 0,
-                      color: w.a ? accent : '#fff',
-                      WebkitTextStroke: '5px rgba(0,0,0,0.78)',
+                      color: w.a ? (plate ? '#fff' : accent) : '#fff',
+                      WebkitTextStroke: w.a && plate ? '0px' : '5px rgba(0,0,0,0.78)',
                       paintOrder: 'stroke fill',
-                      textShadow: SHADOW,
+                      textShadow: w.a && plate ? 'none' : SHADOW,
+                      ...(w.a && plate
+                        ? {background: accent, padding: '0.05em 0.2em 0.01em', borderRadius: '0.14em', boxShadow: '0 6px 22px rgba(0,0,0,0.38)'}
+                        : {}),
                       opacity: o,
                       transform: `translateY(${(1 - p) * 16}px) scale(${0.72 + 0.28 * p})`,
                     }}
@@ -106,13 +110,20 @@ export const useMontserrat = () => {
 };
 
 // Все экраны титров: каждый держится до начала следующего, последний до конца ролика
-export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number; accent?: string}> = ({cards, total, ready, top = 1030, accent = YELLOW}) => (
+export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number; accent?: string; plate?: boolean}> = ({
+  cards,
+  total,
+  ready,
+  top = 1030,
+  accent = YELLOW,
+  plate = false,
+}) => (
   <>
     {cards.map((c, i) => {
       const to = i + 1 < cards.length ? cards[i + 1].from : total;
       return (
         <Sequence key={`c${i}`} from={c.from} durationInFrames={to - c.from}>
-          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} accent={accent} />
+          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} accent={accent} plate={plate} />
         </Sequence>
       );
     })}
