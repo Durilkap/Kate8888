@@ -24,7 +24,7 @@ const fit = (text: string, base: number) => {
   return w > MAXW ? Math.floor((base * MAXW) / w) : base;
 };
 
-const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number}> = ({c, dur, ready, top}) => {
+const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; accent: string}> = ({c, dur, ready, top, accent}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const out = interpolate(f, [dur - 4, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
@@ -62,7 +62,7 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number}> = (
                     style={{
                       display: 'inline-block',
                       marginRight: j + 1 < l.words.length ? '0.24em' : 0,
-                      color: w.a ? YELLOW : '#fff',
+                      color: w.a ? accent : '#fff',
                       WebkitTextStroke: '5px rgba(0,0,0,0.78)',
                       paintOrder: 'stroke fill',
                       textShadow: SHADOW,
@@ -106,13 +106,13 @@ export const useMontserrat = () => {
 };
 
 // Все экраны титров: каждый держится до начала следующего, последний до конца ролика
-export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number}> = ({cards, total, ready, top = 1030}) => (
+export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number; accent?: string}> = ({cards, total, ready, top = 1030, accent = YELLOW}) => (
   <>
     {cards.map((c, i) => {
       const to = i + 1 < cards.length ? cards[i + 1].from : total;
       return (
         <Sequence key={`c${i}`} from={c.from} durationInFrames={to - c.from}>
-          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} />
+          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} accent={accent} />
         </Sequence>
       );
     })}

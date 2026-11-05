@@ -49,6 +49,7 @@ const card = (from: number, text: string, opts: {full?: boolean; top?: number; a
 };
 
 const TOP = 170; // над холодильником (лицо Кати ниже)
+const RED = '#FF2A2A'; // ключевые слова красные (просьба Кати 05.11), в тон «ЦЕНА ЭТИКЕТКИ» на экране
 const CARDS: Card[] = [
   card(0, 'ВИДИШЬ ВСЁ,|ЧТО ЕСТЬ|В *ХОЛОДИЛЬНИКЕ?*', {full: true, top: TOP}),
   card(42, 'ПОЧТИ НА ВСЁМ|ЕСТЬ *ЭТИКЕТКА*', {top: TOP}),
@@ -106,7 +107,7 @@ export const EtiketkiReel: React.FC = () => {
           <AbsoluteFill style={{background: 'linear-gradient(to top, rgba(0,0,0,0) 10%, rgba(0,0,0,0.45) 20%, rgba(0,0,0,0.45) 43%, rgba(0,0,0,0) 55%)'}} />
         </Sequence>
       ))}
-      <WordCaptions cards={CARDS} total={ETIKETKI_FRAMES} ready={ready} />
+      <WordCaptions cards={CARDS} total={ETIKETKI_FRAMES} ready={ready} accent={RED} />
     </AbsoluteFill>
   );
 };
