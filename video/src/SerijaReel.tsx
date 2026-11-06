@@ -1,0 +1,117 @@
+import React from 'react';
+import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {Card, useMontserrat, WordCaptions} from './WordCaptions';
+
+// Серия рилсов про этикетки в формате рилса 18 (решение Кати 06.11): без голоса, музыка из Instagram,
+// вопрос-хук, быстрые кадры, белый текст и ключевые слова на красной плашке, подмигивание и «ПОДПИШИСЬ: ПРО ЭТИКЕТКИ ПРОСТО».
+// Кадры готовят скрипты tools/prepare_r*.py в public/<папка>/.
+
+export type Shot = {src: string; from: number; dur: number; start?: number; punch?: boolean; push?: [number, number, string]};
+export const RED = '#E8202A';
+
+// Экран титров: строки через «|», *слово* на плашке, «!» крупная строка; слова появляются друг за другом
+export const card = (from: number, text: string, opts: {full?: boolean; top?: number} = {}): Card => {
+  let k = 0;
+  const lines = text
+    ? text.split('|').map((line) => ({
+        big: line.startsWith('!'),
+        words: line
+          .replace(/^!/, '')
+          .split(' ')
+          .map((t) => ({t: t.replace(/\*/g, ''), a: t.includes('*'), at: from + 3 + 3 * k++})),
+      }))
+    : [];
+  return {from, full: !!opts.full, lines, top: opts.top};
+};
+
+const Clip: React.FC<{s: Shot; folder: string}> = ({s, folder}) => {
+  const f = useCurrentFrame();
+  const punch = s.punch ? interpolate(f, [0, 6], [1.12, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)}) : 1;
+  const [z0, z1, origin] = s.push ?? [1, 1.03, '50% 50%'];
+  const z = punch * interpolate(f, [0, s.dur], [z0, z1], {easing: Easing.inOut(Easing.sin)});
+  const style: React.CSSProperties = {width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`, transformOrigin: origin};
+  return (
+    <AbsoluteFill style={{overflow: 'hidden'}}>
+      {s.src.endsWith('.jpg') ? (
+        <Img src={staticFile(`${folder}/${s.src}`)} style={style} />
+      ) : (
+        <OffthreadVideo src={staticFile(`${folder}/${s.src}.mp4`)} startFrom={s.start ?? 0} muted style={{...style, filter: 'contrast(1.05) saturate(1.08)'}} />
+      )}
+    </AbsoluteFill>
+  );
+};
+
+const Flash: React.FC = () => {
+  const f = useCurrentFrame();
+  return <AbsoluteFill style={{backgroundColor: '#fff', opacity: interpolate(f, [0, 2, 6], [0, 0.55, 0], {extrapolateRight: 'clamp'})}} />;
+};
+
+const BOTTOM = 'linear-gradient(to top, rgba(0,0,0,0) 10%, rgba(0,0,0,0.45) 20%, rgba(0,0,0,0.45) 43%, rgba(0,0,0,0) 55%)';
+const TOPG = 'linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.42) 22%, rgba(0,0,0,0) 38%)';
+
+export const SerijaReel: React.FC<{folder: string; shots: Shot[]; cards: Card[]; total: number; flashes?: number[]; topBands?: [number, number][]}> = ({
+  folder,
+  shots,
+  cards,
+  total,
+  flashes = [],
+  topBands = [],
+}) => {
+  const ready = useMontserrat();
+  // затемнение под текстом: сверху там, где титры наверху, снизу в остальное время
+  const bands: [number, number, string][] = [];
+  let t = 0;
+  for (const [a, b] of topBands) {
+    if (a > t) bands.push([t, a, BOTTOM]);
+    bands.push([a, b, TOPG]);
+    t = b;
+  }
+  if (t < total) bands.push([t, total, BOTTOM]);
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      {shots.map((s, i) => (
+        <Sequence key={i} from={s.from} durationInFrames={s.dur}>
+          <Clip s={s} folder={folder} />
+        </Sequence>
+      ))}
+      {flashes.map((fr) => (
+        <Sequence key={`f${fr}`} from={fr} durationInFrames={8}>
+          <Flash />
+        </Sequence>
+      ))}
+      {bands.map(([a, b, bg]) => (
+        <Sequence key={`b${a}`} from={a} durationInFrames={b - a}>
+          <AbsoluteFill style={{background: bg}} />
+        </Sequence>
+      ))}
+      <WordCaptions cards={cards} total={total} ready={ready} accent={RED} plate />
+    </AbsoluteFill>
+  );
+};
+
+// Рилс 19 «Что девушка делает в типографии?» (видео Кати с производства 06.11, tools/prepare_r19.py)
+const R19_SHOTS: Shot[] = [
+  {src: 'heels', from: 0, dur: 48},
+  {src: 'walk', from: 48, dur: 60, punch: true},
+  {src: 'line', from: 108, dur: 60, punch: true},
+  {src: 'rolls', from: 168, dur: 48, punch: true},
+  {src: 'phone', from: 216, dur: 54, punch: true},
+  {src: 'desk', from: 270, dur: 54, punch: true},
+  {src: 'crouch', from: 324, dur: 51, punch: true},
+  {src: 'smile', from: 375, dur: 63},
+  {src: 'wink', from: 438, dur: 121},
+];
+export const R19_FRAMES = 559;
+const R19_CARDS: Card[] = [
+  card(0, 'ЧТО ДЕВУШКА|ДЕЛАЕТ В|!*ТИПОГРАФИИ?*', {full: true, top: 200}),
+  card(108, 'ЗНАЮ, КАК|ПЕЧАТАЮТ|*ЭТИКЕТКИ*'),
+  card(168, 'РАЗБИРАЮСЬ|В *МАТЕРИАЛАХ*'),
+  card(216, 'ВЕДУ|*ПЕРЕГОВОРЫ*'),
+  card(270, 'РАБОТАЮ|С *КЛИЕНТАМИ*'),
+  card(324, 'И ДА,|НА *КАБЛУКАХ*', {top: 200}),
+  card(375, 'И ОБЪЯСНЯЮ|ЭТО *ПРОСТО*'),
+  card(438, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|!*ПРОСТО*', {top: 1130}),
+];
+export const DevushkaReel: React.FC = () => (
+  <SerijaReel folder="r19" shots={R19_SHOTS} cards={R19_CARDS} total={R19_FRAMES} flashes={[108]} topBands={[[0, 108], [324, 375]]} />
+);

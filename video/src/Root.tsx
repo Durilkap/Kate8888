@@ -9,6 +9,7 @@ import {SportTrainer, SPORT_FRAMES} from './SportTrainer';
 import {WeddingReel, WEDDING_FRAMES} from './WeddingReel';
 import {ProdazhnikA, ProdazhnikB, PRODAZHNIK_A_FRAMES, PRODAZHNIK_B_FRAMES} from './ProdazhnikReel';
 import {EtiketkiReel, ETIKETKI_FRAMES} from './EtiketkiReel';
+import {DevushkaReel, R19_FRAMES} from './SerijaReel';
 
 export const Root: React.FC = () => (
   <>
@@ -82,6 +83,14 @@ export const Root: React.FC = () => (
       id="EtiketkiReel"
       component={EtiketkiReel}
       durationInFrames={ETIKETKI_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="DevushkaReel"
+      component={DevushkaReel}
+      durationInFrames={R19_FRAMES}
       fps={30}
       width={1080}
       height={1920}
