@@ -14,14 +14,14 @@ from pathlib import Path
 
 W, H, FPS = 1080, 1920, 30
 
-# имя: (файл, начало, конец (с исходника), скорость)
+# имя: (файл, начало, конец (с исходника), скорость[, обрезка ffmpeg до масштаба])
 CLIPS = {
     'heels': ('v7.mov', 5.20, 6.80, 1.0),     # каблуки идут к камере по полу цеха (хук)
     'walk': ('v3.mov', 4.60, 5.40, 0.40),     # идёт к камере по цеху, замедленно (240 к/с)
     'line': ('v4.mov', 0.30, 2.40, 1.0),      # идёт вдоль печатной линии
     'rolls': ('v6.mov', 0.20, 1.90, 1.0),     # рука на рулонах
     'phone': ('v1.mp4', 1.00, 2.90, 1.0),     # разговор по телефону
-    'desk': ('v10.mov', 2.00, 3.90, 1.0),     # за компьютером
+    'desk': ('v10.mov', 2.00, 3.90, 1.0),     # за компьютером; бумаги на столе мелкие и закрыты титром (проверено 06.11)
     'crouch': ('v7.mov', 9.00, 10.70, 1.0),   # присела, каблук крупно
     'smile': ('v3.mov', 6.10, 6.90, 0.38),    # оглядывается и улыбается, замедленно
     'wink': ('v9.mov', 2.30, 4.95, 0.66),     # подмигивание (около 3,8 с), чуть замедленно
@@ -31,8 +31,10 @@ CLIPS = {
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     dst.mkdir(parents=True, exist_ok=True)
-    for name, (f, a, b, speed) in CLIPS.items():
-        vf = f'scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
+    for name, spec in CLIPS.items():
+        f, a, b, speed = spec[:4]
+        pre = spec[4] + ',' if len(spec) > 4 else ''
+        vf = pre + f'scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
         if speed != 1.0:
             vf += f',setpts=PTS/{speed}'
         vf += f',fps={FPS},format=yuv420p'
