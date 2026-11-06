@@ -114,3 +114,32 @@ const R19_CARDS: Card[] = [
 export const DevushkaReel: React.FC = () => (
   <SerijaReel folder="r19" shots={R19_SHOTS} cards={R19_CARDS} total={R19_FRAMES} flashes={[108]} topBands={[[0, 108], [324, 375]]} />
 );
+
+// Рилс 19, версия 3 (06.11, Катя: «не цепляет, переделай»): история вместо перечня.
+// Стереотип («Говорят...», проверено), ответ («А я здесь. И на каблуках»), быстрые доказательства по одному слову, подмигивание.
+const R19B_SHOTS: Shot[] = [
+  {src: 'heels', from: 0, dur: 45},
+  {src: 'walk', from: 45, dur: 60, punch: true},
+  {src: 'crouch', from: 105, dur: 45, punch: true, push: [1.0, 1.1, '30% 80%']},
+  {src: 'line', from: 150, dur: 30, start: 20, punch: true},
+  {src: 'rolls', from: 180, dur: 30, start: 10, punch: true},
+  {src: 'phone', from: 210, dur: 30, start: 15, punch: true},
+  {src: 'desk', from: 240, dur: 30, start: 15, punch: true},
+  {src: 'smile', from: 270, dur: 60, punch: true},
+  {src: 'wink', from: 330, dur: 120},
+];
+export const R19B_FRAMES = 450;
+const R19B_CARDS: Card[] = [
+  card(0, 'ГОВОРЯТ,|ТИПОГРАФИЯ|НЕ МЕСТО|ДЛЯ *ДЕВУШКИ*', {full: true, top: 170}),
+  card(45, '!А Я *ЗДЕСЬ*'),
+  card(105, 'И НА|!*КАБЛУКАХ*', {top: 200}),
+  card(150, '!*ПЕЧАТЬ*'),
+  card(180, '!*РУЛОНЫ*'),
+  card(210, '!*ПЕРЕГОВОРЫ*'),
+  card(240, '!*КЛИЕНТЫ*'),
+  card(270, 'ЗНАЮ, КАК|ПЕЧАТАЮТ|*ЭТИКЕТКИ*'),
+  card(330, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|!*ПРОСТО*', {top: 1130}),
+];
+export const DevushkaReel2: React.FC = () => (
+  <SerijaReel folder="r19" shots={R19B_SHOTS} cards={R19B_CARDS} total={R19B_FRAMES} flashes={[150, 180, 210, 240]} topBands={[[0, 45], [105, 150]]} />
+);
