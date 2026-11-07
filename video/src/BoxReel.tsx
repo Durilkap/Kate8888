@@ -158,7 +158,7 @@ const R20K_CARDS: BoxCard[] = [
   {from: 87, to: 129, pos: 'bottom', lines: [{t: 'А в выходной'}, {t: 'стакан воды', red: true}]},
   {from: 129, to: 189, pos: 'bottom', lines: [{t: 'Коллаген. И да...'}, {t: 'сначала этикетка', red: true, size: 100}]},
   {from: 189, to: 234, pos: 'top', lines: [{t: 'Сырники'}, {t: 'в аэрогриле', red: true}]},
-  {from: 234, to: 314, pos: 'bottom', lines: [{t: 'Питание по плану'}, {t: 'забота от мужа', red: true}]},
+  {from: 234, to: 314, pos: 'bottom', lines: [{t: 'Питание'}, {t: 'по плану', red: true}]}, // «забота от мужа» убрано (Катя 07.11)
   {from: 314, to: 359, pos: 'bottom', y: 1100, lines: [{t: '100 г углеводов за день'}, {t: 'завтрак 488 ккал', red: true}]},
   {from: 359, to: 458, pos: 'bottom', y: 1120, lines: [{t: 'Подпишись', red: true, size: 118}, {t: 'Этикетки, деньги', size: 70}, {t: 'и жизнь без фильтров', size: 62}]},
 ];
