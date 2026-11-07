@@ -183,28 +183,32 @@ export const VyhodnojReel: React.FC = () => (
 
 // Рилс 20, вариант в брюках-зебре (видео 3, просьба Кати 07.11): одно видео плюс фото тарелки и цифры из приложения
 const R20Z_SHOTS: Shot[] = [
-  {src: 'line', from: 0, dur: 45},
-  {src: 'z_pour', from: 45, dur: 54, punch: true},
-  {src: 'z_drink', from: 99, dur: 60, punch: true},
-  {src: 'z_collagen', from: 159, dur: 72, punch: true},
-  {src: 'plate_full.jpg', from: 231, dur: 60, punch: true, push: [1.0, 1.08, '55% 68%']}, // фото целиком (решение Кати)
-  {src: 'z_eat1', from: 291, dur: 60, punch: true},
-  {src: 'z_eat2', from: 351, dur: 54, punch: true},
-  {src: 'appcard.jpg', from: 405, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
-  {src: 'z_wink', from: 465, dur: 105},
+  // хук (07.11, Катя: «не забудь про хук сильный»): контраст, тарелка крупно
+  {src: 'plate_full.jpg', from: 0, dur: 48, push: [1.3, 1.45, '55% 70%']},
+  {src: 'line', from: 48, dur: 45, punch: true},
+  {src: 'z_pour', from: 93, dur: 54, punch: true},
+  {src: 'z_drink', from: 147, dur: 60, punch: true},
+  {src: 'z_collagen', from: 207, dur: 72, punch: true},
+  {src: 'plate_full.jpg', from: 279, dur: 60, punch: true, push: [1.0, 1.08, '55% 68%']}, // фото целиком (решение Кати)
+  {src: 'z_eat1', from: 339, dur: 60, punch: true},
+  {src: 'z_eat2', from: 399, dur: 54, punch: true},
+  {src: 'appcard.jpg', from: 453, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
+  {src: 'z_wink', from: 513, dur: 105},
 ];
-export const R20Z_FRAMES = 570;
+export const R20Z_FRAMES = 618;
+// весь текст на красной плашке (просьба Кати 07.11)
 const R20Z_CARDS: Card[] = [
-  card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200, all: true}),
-  card(45, 'А В *ВЫХОДНОЙ*...', {all: true}),
-  card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*', {all: true}),
-  card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*', {all: true}),
-  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 160, all: true}),
-  card(291, 'ПИТАНИЕ|ПО *ПЛАНУ*', {all: true}), // «забота от мужа» убрано (решение Кати 07.11)
-  card(351, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*', {all: true}),
-  card(405, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000, all: true}),
-  card(465, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130, all: true}),
+  card(0, 'СЧИТАЮ КАЛОРИИ.|И ЕМ СЫРНИКИ|С *ШОКОЛАДОМ*', {full: true, top: 200, all: true}),
+  card(48, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {top: 200, all: true}),
+  card(93, 'А В *ВЫХОДНОЙ*...', {all: true}),
+  card(147, 'СНАЧАЛА|*СТАКАН ВОДЫ*', {all: true}),
+  card(207, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*', {all: true}),
+  card(279, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 160, all: true}),
+  card(339, 'ПИТАНИЕ|ПО *ПЛАНУ*', {all: true}), // «забота от мужа» убрано (решение Кати 07.11)
+  card(399, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*', {all: true}),
+  card(453, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000, all: true}),
+  card(513, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130, all: true}),
 ];
 export const VyhodnojZebra: React.FC = () => (
-  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[45]} topBands={[[0, 45], [231, 291]]} />
+  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[48, 93]} topBands={[[0, 93], [279, 339]]} />
 );
