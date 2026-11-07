@@ -160,7 +160,7 @@ const R20_SHOTS: Shot[] = [
   {src: 'water', from: 99, dur: 60, punch: true},
   {src: 'collagen', from: 159, dur: 72, punch: true},
   {src: 'airfryer', from: 231, dur: 75, punch: true},
-  {src: 'platecard.jpg', from: 306, dur: 60, punch: true, push: [1.0, 1.06, '50% 40%']},
+  {src: 'plate_full.jpg', from: 306, dur: 60, punch: true, push: [1.0, 1.08, '55% 68%']}, // фото целиком (решение Кати)
   {src: 'plate', from: 366, dur: 54, punch: true},
   {src: 'appcard.jpg', from: 420, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
   {src: 'wink', from: 480, dur: 100},
@@ -172,13 +172,13 @@ const R20_CARDS: Card[] = [
   card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
   card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
   card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*'),
-  card(306, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*', {top: 1250}),
+  card(306, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*', {top: 160}),
   card(366, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
   card(420, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000}),
   card(480, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
 ];
 export const VyhodnojReel: React.FC = () => (
-  <SerijaReel folder="r20" shots={R20_SHOTS} cards={R20_CARDS} total={R20_FRAMES} flashes={[45]} topBands={[[0, 45]]} />
+  <SerijaReel folder="r20" shots={R20_SHOTS} cards={R20_CARDS} total={R20_FRAMES} flashes={[45]} topBands={[[0, 45], [306, 366]]} />
 );
 
 // Рилс 20, вариант в брюках-зебре (видео 3, просьба Кати 07.11): одно видео плюс фото тарелки и цифры из приложения
@@ -187,7 +187,7 @@ const R20Z_SHOTS: Shot[] = [
   {src: 'z_pour', from: 45, dur: 54, punch: true},
   {src: 'z_drink', from: 99, dur: 60, punch: true},
   {src: 'z_collagen', from: 159, dur: 72, punch: true},
-  {src: 'platecard.jpg', from: 231, dur: 60, punch: true, push: [1.0, 1.06, '50% 40%']},
+  {src: 'plate_full.jpg', from: 231, dur: 60, punch: true, push: [1.0, 1.08, '55% 68%']}, // фото целиком (решение Кати)
   {src: 'z_eat1', from: 291, dur: 60, punch: true},
   {src: 'z_eat2', from: 351, dur: 54, punch: true},
   {src: 'appcard.jpg', from: 405, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
@@ -199,12 +199,12 @@ const R20Z_CARDS: Card[] = [
   card(45, 'А В *ВЫХОДНОЙ*...'),
   card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
   card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
-  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 1250}),
+  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 160}),
   card(291, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*'),
   card(351, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
   card(405, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000}),
   card(465, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
 ];
 export const VyhodnojZebra: React.FC = () => (
-  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[45]} topBands={[[0, 45]]} />
+  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[45]} topBands={[[0, 45], [231, 291]]} />
 );
