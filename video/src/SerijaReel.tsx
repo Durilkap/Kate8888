@@ -12,13 +12,21 @@ export const RED = '#E8202A';
 // Экран титров: строки через «|», *слово* на плашке, «!» крупная строка; слова появляются друг за другом
 export const card = (from: number, text: string, opts: {full?: boolean; top?: number} = {}): Card => {
   let k = 0;
+  let open = false; // выделение *...* может охватывать несколько слов
   const lines = text
     ? text.split('|').map((line) => ({
         big: line.startsWith('!'),
         words: line
           .replace(/^!/, '')
           .split(' ')
-          .map((t) => ({t: t.replace(/\*/g, ''), a: t.includes('*'), at: from + 3 + 3 * k++})),
+          .map((t) => {
+            const starts = t.startsWith('*');
+            if (starts) open = true;
+            const a = open;
+            const stars = (t.match(/\*/g) || []).length;
+            if ((starts && stars === 2) || (!starts && stars === 1)) open = false;
+            return {t: t.replace(/\*/g, ''), a, at: from + 3 + 3 * k++};
+          }),
       }))
     : [];
   return {from, full: !!opts.full, lines, top: opts.top};
@@ -142,4 +150,33 @@ const R19B_CARDS: Card[] = [
 ];
 export const DevushkaReel2: React.FC = () => (
   <SerijaReel folder="r19" shots={R19B_SHOTS} cards={R19B_CARDS} total={R19B_FRAMES} flashes={[150, 180, 210, 240]} topBands={[[0, 45], [105, 150]]} />
+);
+
+// Рилс 20 «Мой нерабочий день: сырники» (07.11, видео Кати дома, tools/prepare_r20.py).
+// Мужа в кадре нет (решение Кати); марки не видны; цифры завтрака из приложения Кати (сам экран приложения не показываем).
+const R20_SHOTS: Shot[] = [
+  {src: 'heels', from: 0, dur: 45},
+  {src: 'stretch', from: 45, dur: 54, punch: true},
+  {src: 'water', from: 99, dur: 60, punch: true},
+  {src: 'collagen', from: 159, dur: 72, punch: true},
+  {src: 'airfryer', from: 231, dur: 75, punch: true},
+  {src: 'plating', from: 306, dur: 54, punch: true},
+  {src: 'plate', from: 360, dur: 54, punch: true},
+  {src: 'plateclose', from: 414, dur: 60},
+  {src: 'wink', from: 474, dur: 100},
+];
+export const R20_FRAMES = 574;
+const R20_CARDS: Card[] = [
+  card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200}),
+  card(45, 'А В *ВЫХОДНОЙ*...'),
+  card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
+  card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
+  card(231, 'МУЖ ПРИГОТОВИЛ|СЫРНИКИ|В *АЭРОГРИЛЕ*'),
+  card(306, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*'),
+  card(360, 'В ДЕНЬ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
+  card(414, 'НА ЗАВТРАК|!*488 ККАЛ*|Б 44 · Ж 24 · У 25'),
+  card(474, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
+];
+export const VyhodnojReel: React.FC = () => (
+  <SerijaReel folder="r20" shots={R20_SHOTS} cards={R20_CARDS} total={R20_FRAMES} flashes={[45]} topBands={[[0, 45]]} />
 );

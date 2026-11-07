@@ -62,13 +62,19 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; acce
                     key={j}
                     style={{
                       display: 'inline-block',
-                      marginRight: j + 1 < l.words.length ? '0.24em' : 0,
+                      // соседние выделенные слова на плашке сливаются в одну плашку
+                      marginRight: j + 1 < l.words.length && !(plate && w.a && l.words[j + 1].a) ? '0.24em' : 0,
                       color: w.a ? (plate ? '#fff' : accent) : '#fff',
                       WebkitTextStroke: w.a && plate ? '0px' : '5px rgba(0,0,0,0.78)',
                       paintOrder: 'stroke fill',
                       textShadow: w.a && plate ? 'none' : SHADOW,
                       ...(w.a && plate
-                        ? {background: accent, padding: '0.05em 0.2em 0.01em', borderRadius: '0.14em', boxShadow: '0 6px 22px rgba(0,0,0,0.38)'}
+                        ? {
+                            background: accent,
+                            padding: `0.05em ${l.words[j + 1]?.a ? '0.24em' : '0.2em'} 0.01em ${l.words[j - 1]?.a ? '0' : '0.2em'}`,
+                            borderRadius: `${l.words[j - 1]?.a ? '0' : '0.14em'} ${l.words[j + 1]?.a ? '0' : '0.14em'} ${l.words[j + 1]?.a ? '0' : '0.14em'} ${l.words[j - 1]?.a ? '0' : '0.14em'}`,
+                            boxShadow: '0 6px 22px rgba(0,0,0,0.38)',
+                          }
                         : {}),
                       opacity: o,
                       transform: `translateY(${(1 - p) * 16}px) scale(${0.72 + 0.28 * p})`,
