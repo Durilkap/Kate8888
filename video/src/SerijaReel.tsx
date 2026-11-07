@@ -10,7 +10,7 @@ export type Shot = {src: string; from: number; dur: number; start?: number; punc
 export const RED = '#E8202A';
 
 // Экран титров: строки через «|», *слово* на плашке, «!» крупная строка; слова появляются друг за другом
-export const card = (from: number, text: string, opts: {full?: boolean; top?: number} = {}): Card => {
+export const card = (from: number, text: string, opts: {full?: boolean; top?: number; all?: boolean} = {}): Card => {
   let k = 0;
   let open = false; // выделение *...* может охватывать несколько слов
   const lines = text
@@ -25,7 +25,7 @@ export const card = (from: number, text: string, opts: {full?: boolean; top?: nu
             const a = open;
             const stars = (t.match(/\*/g) || []).length;
             if ((starts && stars === 2) || (!starts && stars === 1)) open = false;
-            return {t: t.replace(/\*/g, ''), a, at: from + 3 + 3 * k++};
+            return {t: t.replace(/\*/g, ''), a: a || !!opts.all, at: from + 3 + 3 * k++}; // all: весь текст на красной плашке
           }),
       }))
     : [];
@@ -195,15 +195,15 @@ const R20Z_SHOTS: Shot[] = [
 ];
 export const R20Z_FRAMES = 570;
 const R20Z_CARDS: Card[] = [
-  card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200}),
-  card(45, 'А В *ВЫХОДНОЙ*...'),
-  card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
-  card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
-  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 160}),
-  card(291, 'ПИТАНИЕ|ПО *ПЛАНУ*'), // «забота от мужа» убрано (решение Кати 07.11)
-  card(351, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
-  card(405, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000}),
-  card(465, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
+  card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200, all: true}),
+  card(45, 'А В *ВЫХОДНОЙ*...', {all: true}),
+  card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*', {all: true}),
+  card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*', {all: true}),
+  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 160, all: true}),
+  card(291, 'ПИТАНИЕ|ПО *ПЛАНУ*', {all: true}), // «забота от мужа» убрано (решение Кати 07.11)
+  card(351, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*', {all: true}),
+  card(405, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000, all: true}),
+  card(465, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130, all: true}),
 ];
 export const VyhodnojZebra: React.FC = () => (
   <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[45]} topBands={[[0, 45], [231, 291]]} />
