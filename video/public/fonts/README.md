@@ -7,3 +7,7 @@ Cormorant Garamond (вес 500, обычный и курсив, кириллиц
 Montserrat ExtraBold (вес 800, кириллица и латиница), The Montserrat Project Authors.
 Лицензия SIL Open Font License 1.1 (файл OFL-montserrat.txt), взят из пакета @fontsource/montserrat.
 Используется в титрах `src/WeddingReel.tsx` (версия 4).
+
+Oswald (вес 700, кириллица и латиница), The Oswald Project Authors.
+Лицензия SIL Open Font License 1.1 (файл OFL-oswald.txt), взят из пакета @fontsource/oswald.
+Используется в титрах-карточках `src/BoxReel.tsx` (стиль Кати, рилс 20).

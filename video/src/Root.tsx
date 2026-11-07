@@ -9,6 +9,7 @@ import {SportTrainer, SPORT_FRAMES} from './SportTrainer';
 import {WeddingReel, WEDDING_FRAMES} from './WeddingReel';
 import {ProdazhnikA, ProdazhnikB, PRODAZHNIK_A_FRAMES, PRODAZHNIK_B_FRAMES} from './ProdazhnikReel';
 import {EtiketkiReel, ETIKETKI_FRAMES} from './EtiketkiReel';
+import {VyhodnojKatya, R20K_FRAMES} from './BoxReel';
 import {DevushkaReel, DevushkaReel2, R19_FRAMES, R19B_FRAMES, VyhodnojReel, R20_FRAMES, VyhodnojZebra, R20Z_FRAMES} from './SerijaReel';
 
 export const Root: React.FC = () => (
@@ -115,6 +116,14 @@ export const Root: React.FC = () => (
       id="VyhodnojZebra"
       component={VyhodnojZebra}
       durationInFrames={R20Z_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="VyhodnojKatya"
+      component={VyhodnojKatya}
+      durationInFrames={R20K_FRAMES}
       fps={30}
       width={1080}
       height={1920}
