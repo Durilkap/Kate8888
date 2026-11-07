@@ -155,28 +155,56 @@ export const DevushkaReel2: React.FC = () => (
 // Рилс 20 «Мой нерабочий день: сырники» (07.11, видео Кати дома, tools/prepare_r20.py).
 // Мужа в кадре нет (решение Кати); марки не видны; цифры завтрака из приложения Кати (сам экран приложения не показываем).
 const R20_SHOTS: Shot[] = [
-  {src: 'heels', from: 0, dur: 45},
+  {src: 'line', from: 0, dur: 45}, // Катя идёт спиной вдоль печатной линии (из рилса 19, выбор Кати 07.11)
   {src: 'stretch', from: 45, dur: 54, punch: true},
   {src: 'water', from: 99, dur: 60, punch: true},
   {src: 'collagen', from: 159, dur: 72, punch: true},
   {src: 'airfryer', from: 231, dur: 75, punch: true},
-  {src: 'plating', from: 306, dur: 54, punch: true},
-  {src: 'plate', from: 360, dur: 54, punch: true},
-  {src: 'plateclose', from: 414, dur: 60},
-  {src: 'wink', from: 474, dur: 100},
+  {src: 'platecard.jpg', from: 306, dur: 60, punch: true, push: [1.0, 1.06, '50% 40%']},
+  {src: 'plate', from: 366, dur: 54, punch: true},
+  {src: 'appcard.jpg', from: 420, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
+  {src: 'wink', from: 480, dur: 100},
 ];
-export const R20_FRAMES = 574;
+export const R20_FRAMES = 580;
 const R20_CARDS: Card[] = [
   card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200}),
   card(45, 'А В *ВЫХОДНОЙ*...'),
   card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
   card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
   card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*'),
-  card(306, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*'),
-  card(360, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
-  card(414, 'НА ЗАВТРАК|!*488 ККАЛ*|Б 44 · Ж 24 · У 25', {full: true}), // карточка целиком сразу, без обрыва строки
-  card(474, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
+  card(306, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*', {top: 1250}),
+  card(366, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
+  card(420, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000}),
+  card(480, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
 ];
 export const VyhodnojReel: React.FC = () => (
   <SerijaReel folder="r20" shots={R20_SHOTS} cards={R20_CARDS} total={R20_FRAMES} flashes={[45]} topBands={[[0, 45]]} />
+);
+
+// Рилс 20, вариант в брюках-зебре (видео 3, просьба Кати 07.11): одно видео плюс фото тарелки и цифры из приложения
+const R20Z_SHOTS: Shot[] = [
+  {src: 'line', from: 0, dur: 45},
+  {src: 'z_pour', from: 45, dur: 54, punch: true},
+  {src: 'z_drink', from: 99, dur: 60, punch: true},
+  {src: 'z_collagen', from: 159, dur: 72, punch: true},
+  {src: 'platecard.jpg', from: 231, dur: 60, punch: true, push: [1.0, 1.06, '50% 40%']},
+  {src: 'z_eat1', from: 291, dur: 60, punch: true},
+  {src: 'z_eat2', from: 351, dur: 54, punch: true},
+  {src: 'appcard.jpg', from: 405, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
+  {src: 'z_wink', from: 465, dur: 105},
+];
+export const R20Z_FRAMES = 570;
+const R20Z_CARDS: Card[] = [
+  card(0, 'В БУДНИ Я|В *ТИПОГРАФИИ*', {full: true, top: 200}),
+  card(45, 'А В *ВЫХОДНОЙ*...'),
+  card(99, 'СНАЧАЛА|*СТАКАН ВОДЫ*'),
+  card(159, 'КОЛЛАГЕН. И ДА,|СНАЧАЛА СМОТРЮ|НА *ЭТИКЕТКУ*'),
+  card(231, 'СЫРНИКИ|В *АЭРОГРИЛЕ*', {top: 1250}),
+  card(291, 'ПИТАНИЕ ПО ПЛАНУ.|ЗАБОТА ОТ *МУЖА*'),
+  card(351, 'СЕГОДНЯ У МЕНЯ|*100 Г УГЛЕВОДОВ*'),
+  card(405, 'МОЙ ЗАВТРАК|В *ЦИФРАХ*', {top: 1000}),
+  card(465, 'ПОДПИШИСЬ:|ПРО ЭТИКЕТКИ|И НЕ *ТОЛЬКО*', {top: 1130}),
+];
+export const VyhodnojZebra: React.FC = () => (
+  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[45]} topBands={[[0, 45]]} />
 );
