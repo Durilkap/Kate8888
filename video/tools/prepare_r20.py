@@ -31,6 +31,8 @@ CLIPS = {
     'z_eat1': ('v3.mov', 37.60, 39.60, 1.0),   # ест сырники
     'z_eat2': ('v3.mov', 39.60, 41.40, 1.0),   # ест сырники
     'z_wink': ('v3.mov', 42.00, 44.10, 0.6),   # подходит с тарелкой и подмигивает (около 43,2 с), замедленно
+    'z_lean': ('v3.mov', 42.20, 43.00, 0.5),   # хук: наклоняется к камере с тарелкой (выбор Кати 07.11), замедленно
+    'z_wink2': ('v3.mov', 42.95, 44.13, 0.36), # подмигивание после наклона, сильно замедленно (кадры смешиваются)
 }
 
 
@@ -43,7 +45,10 @@ def main():
         vf = pre + f'scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
         if speed != 1.0:
             vf += f',setpts=PTS/{speed}'
-        vf += f',fps={FPS},format=yuv420p'
+        if speed < 0.45:  # сильное замедление: кадры смешиваются, без рывков
+            vf += f',framerate=fps={FPS}:interp_start=0:interp_end=255:scene=100,format=yuv420p'
+        else:
+            vf += f',fps={FPS},format=yuv420p'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a}', '-to', f'{b}', '-i', str(src / f), '-an', '-vf', vf,
                         '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1', str(dst / f'{name}.mp4')],
                        check=True)

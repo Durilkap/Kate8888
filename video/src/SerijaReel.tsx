@@ -184,7 +184,7 @@ export const VyhodnojReel: React.FC = () => (
 // Рилс 20, вариант в брюках-зебре (видео 3, просьба Кати 07.11): одно видео плюс фото тарелки и цифры из приложения
 const R20Z_SHOTS: Shot[] = [
   // хук (07.11, Катя: «не забудь про хук сильный»): контраст, тарелка крупно
-  {src: 'plate_full.jpg', from: 0, dur: 48, push: [1.3, 1.45, '55% 70%']},
+  {src: 'z_lean', from: 0, dur: 48, push: [1.0, 1.06, '50% 40%']}, // хук: Катя наклоняется к камере (выбор Кати 07.11)
   {src: 'line', from: 48, dur: 45, punch: true},
   {src: 'z_pour', from: 93, dur: 54, punch: true},
   {src: 'z_drink', from: 147, dur: 60, punch: true},
@@ -193,13 +193,13 @@ const R20Z_SHOTS: Shot[] = [
   {src: 'z_eat1', from: 339, dur: 60, punch: true},
   {src: 'z_eat2', from: 399, dur: 54, punch: true},
   {src: 'appcard.jpg', from: 453, dur: 60, punch: true, push: [1.0, 1.05, '50% 35%']},
-  {src: 'z_wink', from: 513, dur: 105},
+  {src: 'z_wink2', from: 513, dur: 98},
 ];
-export const R20Z_FRAMES = 618;
+export const R20Z_FRAMES = 611;
 // весь текст на красной плашке (просьба Кати 07.11)
 const R20Z_CARDS: Card[] = [
   // тексты из правки Кати (07.11), стиль: весь текст на красной плашке; длинные тире заменены переносом
-  card(0, 'МОЙ ВЫХОДНОЙ|НЕ С *КОФЕ*', {full: true, top: 200, all: true}),
+  card(0, 'МОЙ ВЫХОДНОЙ|НЕ С *КОФЕ*', {full: true, top: 1250, all: true}),
   card(48, 'В БУДНИ|*ТИПОГРАФИЯ*', {top: 200, all: true}),
   card(93, 'А В ВЫХОДНОЙ|*СТАКАН ВОДЫ*', {all: true}),
   card(207, 'КОЛЛАГЕН. И ДА...|СНАЧАЛА|*ЭТИКЕТКА*', {all: true}),
@@ -209,5 +209,5 @@ const R20Z_CARDS: Card[] = [
   card(513, 'ПОДПИШИСЬ:|ЭТИКЕТКИ, ДЕНЬГИ|И ЖИЗНЬ|БЕЗ ФИЛЬТРОВ', {top: 1100, all: true}),
 ];
 export const VyhodnojZebra: React.FC = () => (
-  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[48, 93]} topBands={[[0, 93], [279, 339]]} />
+  <SerijaReel folder="r20" shots={R20Z_SHOTS} cards={R20Z_CARDS} total={R20Z_FRAMES} flashes={[48, 93]} topBands={[[48, 93], [279, 339]]} />
 );
