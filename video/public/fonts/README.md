@@ -11,3 +11,7 @@ Montserrat ExtraBold (вес 800, кириллица и латиница), The M
 Oswald (вес 700, кириллица и латиница), The Oswald Project Authors.
 Лицензия SIL Open Font License 1.1 (файл OFL-oswald.txt), взят из пакета @fontsource/oswald.
 Используется в титрах-карточках `src/BoxReel.tsx` (стиль Кати, рилс 20).
+
+Inter SemiBold (вес 600, кириллица и латиница), The Inter Project Authors.
+Лицензия SIL Open Font License 1.1 (файл OFL-inter.txt), взят из пакета @fontsource/inter 5.1.0.
+Используется в тихих белых титрах `src/SynReel.tsx` (рилс про сына, по референсу Кати).
