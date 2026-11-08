@@ -111,6 +111,12 @@ def main():
         im = Image.open(src / f'{name}.jpg').convert('RGB')
         segs = [s for i, s in enumerate(bubbles(im)) if i not in drop]
         top, bottom = max(0, segs[0][0] - 20), min(im.height, segs[-1][1] + 20)
+        # не захватывать край следующего (обрезанного) сообщения снизу
+        a = np.asarray(im).astype(int)
+        for y in range(segs[-1][1] + 2, bottom):
+            if (a[y].min(axis=1) > 245).mean() > 0.12:
+                bottom = y - 4
+                break
         im.crop((0, top, im.width, bottom)).save(dst / f'{name}.jpg', quality=95)
         data[name] = {'w': im.width, 'h': bottom - top, 'bubbles': [[s[0] - top, s[1] - top] for s in segs]}
         print(name, data[name])
