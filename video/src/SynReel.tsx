@@ -331,3 +331,25 @@ export const SynReelPlate: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+// Версия 3 (Катя 09.11): все титры убраны, одна фраза на белой плашке в начале
+export const SynReelOne: React.FC = () => {
+  useInter();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <Footage title="" plate />
+      <Sequence from={0} durationInFrames={CHAT_START}>
+        <Plate
+          dur={CHAT_START}
+          y={1040}
+          size={66}
+          lines={[
+            {t: 'Сняла моменты,', at: 0},
+            {t: 'ради которых', at: 0},
+            {t: 'стоило пройти всё', at: 0},
+          ]}
+        />
+      </Sequence>
+    </AbsoluteFill>
+  );
+};
