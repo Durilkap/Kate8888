@@ -18,7 +18,8 @@ const SLIDES: Slide[] = [
   {img: 'bg5', text: 'Чужой негатив не про меня', dur: 80, origin: '40% 75%'},
   {img: 'bg6', text: 'А кто рядом с тобой?', dur: 110, origin: '50% 55%'},
 ];
-const starts = SLIDES.reduce<number[]>((a, s, i) => [...a, i === 0 ? 0 : a[i - 1] + SLIDES[i - 1].dur], []);
+const startsOf = (sl: Slide[]) => sl.reduce<number[]>((a, s, i) => [...a, i === 0 ? 0 : a[i - 1] + sl[i - 1].dur], []);
+const starts = startsOf(SLIDES);
 export const ZAVIST_FRAMES = starts[starts.length - 1] + SLIDES[SLIDES.length - 1].dur;
 
 const Bg: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, last}) => {
@@ -64,19 +65,21 @@ const Text: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, la
   );
 };
 
-const Reel: React.FC<{texts?: string[]}> = ({texts}) => {
+// durs: свои длительности (сумма та же, ZAVIST_FRAMES)
+const Reel: React.FC<{texts?: string[]; durs?: number[]}> = ({texts, durs}) => {
   useInter();
-  const slides = texts ? SLIDES.map((s, i) => ({...s, text: texts[i]})) : SLIDES;
+  const slides = SLIDES.map((s, i) => ({...s, text: texts ? texts[i] : s.text, dur: durs ? durs[i] : s.dur}));
+  const st = startsOf(slides);
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
-      {SLIDES.map((s, i) => (
-        <Sequence key={`b${i}`} from={starts[i]} durationInFrames={s.dur + (i + 1 < SLIDES.length ? XF : 0)}>
-          <Bg s={s} first={i === 0} last={i + 1 === SLIDES.length} />
+      {slides.map((s, i) => (
+        <Sequence key={`b${i}`} from={st[i]} durationInFrames={s.dur + (i + 1 < slides.length ? XF : 0)}>
+          <Bg s={s} first={i === 0} last={i + 1 === slides.length} />
         </Sequence>
       ))}
       {slides.map((s, i) => (
-        <Sequence key={`t${i}`} from={starts[i]} durationInFrames={s.dur}>
-          <Text s={s} first={i === 0} last={i + 1 === SLIDES.length} />
+        <Sequence key={`t${i}`} from={st[i]} durationInFrames={s.dur}>
+          <Text s={s} first={i === 0} last={i + 1 === slides.length} />
         </Sequence>
       ))}
     </AbsoluteFill>
@@ -97,5 +100,20 @@ export const ZavistReelSoft: React.FC = () => (
       'Чужой негатив не про меня',
       'А кто рядом с тобой?',
     ]}
+  />
+);
+
+// Версия 3 (Катя 09.11): жёстче, набор 2 «дерзко»; титр 3 без «всегда» и длительности по длине фраз (проверка 09.11)
+export const ZavistReelHard: React.FC = () => (
+  <Reel
+    texts={[
+      'Тебе завидуют?\nПоздравляю',
+      'Значит, ты сделала то,\nна что у них\nне хватило смелости',
+      'С дивана\nкритиковать легко',
+      'Кто сам\nчего-то добился,\nне кричит вслед.\nЕму некогда',
+      'Чужая зависть\nне мой груз',
+      'Я иду дальше.\nА ты?',
+    ]}
+    durs={[70, 105, 75, 110, 75, 110]}
   />
 );
