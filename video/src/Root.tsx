@@ -11,6 +11,7 @@ import {ProdazhnikA, ProdazhnikB, PRODAZHNIK_A_FRAMES, PRODAZHNIK_B_FRAMES} from
 import {EtiketkiReel, ETIKETKI_FRAMES} from './EtiketkiReel';
 import {VyhodnojKatya, R20K_FRAMES} from './BoxReel';
 import {SynReel, SynReelPlate, SynReelOne, SYN_FRAMES} from './SynReel';
+import {ZavistReel, ZavistReelSoft, ZAVIST_FRAMES} from './ZavistReel';
 import {DevushkaReel, DevushkaReel2, R19_FRAMES, R19B_FRAMES, VyhodnojReel, R20_FRAMES, VyhodnojZebra, R20Z_FRAMES} from './SerijaReel';
 
 export const Root: React.FC = () => (
@@ -133,6 +134,22 @@ export const Root: React.FC = () => (
       id="SynReel"
       component={SynReel}
       durationInFrames={SYN_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ZavistReel"
+      component={ZavistReel}
+      durationInFrames={ZAVIST_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="ZavistReelSoft"
+      component={ZavistReelSoft}
+      durationInFrames={ZAVIST_FRAMES}
       fps={30}
       width={1080}
       height={1920}
