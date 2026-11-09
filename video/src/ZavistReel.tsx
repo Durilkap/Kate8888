@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, Img, interpolate, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {useInter} from './SynReel';
 
 // Рилс 22 «Завидуют те, кто ничего не делает» (идея Кати 09.11): спокойный мотивирующий ролик.
@@ -9,7 +9,8 @@ import {useInter} from './SynReel';
 const FONT = 'Inter, "DejaVu Sans", sans-serif';
 const XF = 12; // переход между фото, кадры
 
-type Slide = {img: string; text: string; dur: number; origin: string};
+// folder: папка в public (по умолчанию r22); video: фон из mp4; top: текст у верха кадра (чтобы не закрывать лицо)
+type Slide = {img: string; text: string; dur: number; origin: string; folder?: string; video?: boolean; top?: number};
 const SLIDES: Slide[] = [
   {img: 'bg1', text: 'Завидуют те,\nкто ничего не делает', dur: 85, origin: '50% 70%'},
   {img: 'bg2', text: 'Негатив идёт от тех, кто ничего не добился', dur: 95, origin: '50% 60%'},
@@ -29,11 +30,26 @@ const Bg: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, last
   const o = first ? 1 : interpolate(f, [0, XF], [0, 1], {extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill style={{opacity: o, overflow: 'hidden'}}>
-      <Img
-        src={staticFile(`r22/${s.img}.jpg`)}
-        style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`, transformOrigin: s.origin, filter: 'saturate(0.9)'}}
+      {s.video ? (
+        <OffthreadVideo
+          src={staticFile(`${s.folder ?? 'r22'}/${s.img}.mp4`)}
+          muted
+          style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${1 + (z - 1) * 0.5})`, transformOrigin: s.origin}}
+        />
+      ) : (
+        <Img
+          src={staticFile(`${s.folder ?? 'r22'}/${s.img}.jpg`)}
+          style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`, transformOrigin: s.origin, filter: 'saturate(0.9)'}}
+        />
+      )}
+      <AbsoluteFill
+        style={{
+          background:
+            s.top === undefined
+              ? 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 45%, rgba(0,0,0,0.38) 60%, rgba(0,0,0,0.2) 100%)'
+              : 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.25) 32%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.12) 100%)',
+        }}
       />
-      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.38) 45%, rgba(0,0,0,0.38) 60%, rgba(0,0,0,0.2) 100%)'}} />
     </AbsoluteFill>
   );
 };
@@ -43,9 +59,10 @@ const Text: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, la
   const inP = first ? 1 : interpolate(f, [4, 16], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
   const out = last ? 1 : interpolate(f, [s.dur - 6, s.dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
-    <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', padding: '0 80px'}}>
+    <AbsoluteFill style={s.top === undefined ? {justifyContent: 'center', alignItems: 'center', padding: '0 80px'} : {}}>
       <div
         style={{
+          ...(s.top === undefined ? {} : {position: 'absolute', top: s.top, left: 70, right: 70}),
           fontFamily: FONT,
           fontWeight: 600,
           fontSize: 76,
@@ -56,7 +73,7 @@ const Text: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, la
           textWrap: 'balance',
           whiteSpace: 'pre-line',
           opacity: inP * out,
-          transform: `translateY(${(1 - inP) * 18 - 60}px)`,
+          transform: `translateY(${(1 - inP) * 18 - (s.top === undefined ? 60 : 0)}px)`,
         } as React.CSSProperties}
       >
         {s.text}
@@ -66,9 +83,9 @@ const Text: React.FC<{s: Slide; first: boolean; last: boolean}> = ({s, first, la
 };
 
 // durs: свои длительности (сумма та же, ZAVIST_FRAMES)
-const Reel: React.FC<{texts?: string[]; durs?: number[]}> = ({texts, durs}) => {
+const Reel: React.FC<{texts?: string[]; durs?: number[]; base?: Slide[]}> = ({texts, durs, base = SLIDES}) => {
   useInter();
-  const slides = SLIDES.map((s, i) => ({...s, text: texts ? texts[i] : s.text, dur: durs ? durs[i] : s.dur}));
+  const slides = base.map((s, i) => ({...s, text: texts ? texts[i] : s.text, dur: durs ? durs[i] : s.dur}));
   const st = startsOf(slides);
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
@@ -117,3 +134,14 @@ export const ZavistReelHard: React.FC = () => (
     durs={[70, 105, 75, 110, 75, 110]}
   />
 );
+
+// Версия 4 (Катя 09.11): набор 2 на фото и видео Кати (tools/prepare_r22_katya.py), текст у верха кадра
+const KATYA: Slide[] = [
+  {img: 'face', video: true, folder: 'r22k', text: 'Тебе завидуют?\nПоздравляю', dur: 70, origin: '50% 50%', top: 300},
+  {img: 'photo_walk', folder: 'r22k', text: 'Значит, ты сделала то,\nна что у них\nне хватило смелости', dur: 105, origin: '45% 55%', top: 300},
+  {img: 'sea', video: true, folder: 'r22k', text: 'С дивана\nкритиковать легко', dur: 75, origin: '50% 50%', top: 760},
+  {img: 'photo_tree', folder: 'r22k', text: 'Кто сам\nчего-то добился,\nне кричит вслед.\nЕму некогда', dur: 110, origin: '52% 60%', top: 280},
+  {img: 'swing', video: true, folder: 'r22k', text: 'Чужая зависть\nне мой груз', dur: 75, origin: '50% 50%', top: 300},
+  {img: 'photo_balcony', folder: 'r22k', text: 'Я иду дальше.\nА ты?', dur: 110, origin: '45% 55%', top: 300},
+];
+export const ZavistKatya: React.FC = () => <Reel base={KATYA} />;

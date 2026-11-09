@@ -53,3 +53,4 @@
 ## Рилс 22 «Завидуют те, кто ничего не делает» (фото из интернета)
 1. `python3 tools/prepare_r22.py public/r22`: 6 фото Unsplash (id и описание в скрипте), вертикальная обрезка, без метаданных.
 2. Композиции `ZavistReel` (слова Кати) и `ZavistReelSoft` (мягче) в `src/ZavistReel.tsx`: медленное приближение, переходы, белый текст Inter SemiBold. Без звука.
+3. Версия на фото и видео Кати: `python3 tools/prepare_r22_katya.py work/r22k/src public/r22k` (видео HDR переводится в SDR, вывеска отеля вне кадра), композиция `ZavistKatya`.
