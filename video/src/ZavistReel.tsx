@@ -137,7 +137,7 @@ export const ZavistReelHard: React.FC = () => (
 
 // Версия 4 (Катя 09.11): набор 2 на фото и видео Кати (tools/prepare_r22_katya.py), текст у верха кадра
 const KATYA: Slide[] = [
-  {img: 'face', video: true, folder: 'r22k', text: 'Тебе завидуют?\nПоздравляю', dur: 70, origin: '50% 50%', top: 300},
+  {img: 'look', video: true, folder: 'r22k', text: 'Тебе завидуют?\nПоздравляю', dur: 70, origin: '50% 50%', top: 300}, // Катя смотрит вдаль (было лицо крупно, Катя 09.11)
   {img: 'photo_walk', folder: 'r22k', text: 'Значит, ты сделала то,\nна что у них\nне хватило смелости', dur: 105, origin: '45% 55%', top: 300},
   {img: 'sea', video: true, folder: 'r22k', text: 'С дивана\nкритиковать легко', dur: 75, origin: '50% 50%', top: 760},
   {img: 'photo_tree', folder: 'r22k', text: 'Кто сам\nчего-то добился,\nне кричит вслед.\nЕму некогда', dur: 110, origin: '52% 60%', top: 280},

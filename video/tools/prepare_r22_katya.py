@@ -16,8 +16,9 @@ from PIL import Image
 W, H, FPS = 1080, 1920, 30
 TONEMAP = 'zscale=t=linear:npl=203,format=gbrpf32le,zscale=p=bt709,tonemap=hable:desat=0,zscale=t=bt709:m=bt709:r=tv'
 
-# имя: (начало, конец, скорость)
+# имя: (начало, конец, скорость[, приближение, центр по x, по y])
 CLIPS = {
+    'look': (4.65, 6.35, 0.62, 1.6, 0.5, 0.92),  # Катя на качелях смотрит вдаль (хук, выбор Кати 09.11); приближено: вывеска отеля вне кадра
     'face': (11.25, 12.80, 0.56),  # камера приближается к лицу Кати, улыбка (хук)
     'sea': (13.60, 15.55, 0.66),   # море без людей; после 15,6 камера поворачивает к качелям
     'swing': (8.00, 10.95, 1.0),   # качели, лёгкость; вывеска отеля вне кадра
@@ -29,8 +30,13 @@ PHOTOS = {'photo_walk': 0.40, 'photo_balcony': 0.47, 'photo_tree': 0.52}
 def main():
     src, dst = Path(sys.argv[1]), Path(sys.argv[2])
     dst.mkdir(parents=True, exist_ok=True)
-    for name, (a, b, speed) in CLIPS.items():
-        vf = f'{TONEMAP},scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
+    for name, spec in CLIPS.items():
+        a, b, speed = spec[:3]
+        vf = TONEMAP
+        if len(spec) > 3:
+            z, ox, oy = spec[3:]
+            vf += f',crop=iw/{z}:ih/{z}:(iw-iw/{z})*{ox}:(ih-ih/{z})*{oy}'
+        vf += f',scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
         if speed != 1.0:
             vf += f',setpts=PTS/{speed}'
         vf += f',fps={FPS},format=yuv420p'
