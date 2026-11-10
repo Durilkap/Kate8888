@@ -54,3 +54,7 @@
 1. `python3 tools/prepare_r22.py public/r22`: 6 фото Unsplash (id и описание в скрипте), вертикальная обрезка, без метаданных.
 2. Композиции `ZavistReel` (слова Кати) и `ZavistReelSoft` (мягче) в `src/ZavistReel.tsx`: медленное приближение, переходы, белый текст Inter SemiBold. Без звука.
 3. Версия на фото и видео Кати: `python3 tools/prepare_r22_katya.py work/r22k/src public/r22k` (видео HDR переводится в SDR, вывеска отеля вне кадра), композиция `ZavistKatya`.
+
+## Рилс 23 «Угадай продукт по кусочку этикетки» (видео Кати из магазина)
+1. `python3 tools/prepare_r23.py work/r23/src public/r23`: загадки g1-g6 (кусочек этикетки, цифровое приближение 4K), ответы a1-a6, финал end. Ценники с логотипом магазина и крупное название марки не берутся.
+2. Композиция `UgadajReel` (`src/UgadajReel.tsx`) на шаблоне серии `SerijaReel`, красная плашка, без звука.

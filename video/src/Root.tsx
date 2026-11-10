@@ -12,6 +12,7 @@ import {EtiketkiReel, ETIKETKI_FRAMES} from './EtiketkiReel';
 import {VyhodnojKatya, R20K_FRAMES} from './BoxReel';
 import {SynReel, SynReelPlate, SynReelOne, SYN_FRAMES} from './SynReel';
 import {ZavistReel, ZavistReelSoft, ZavistReelHard, ZavistKatya, ZAVIST_FRAMES} from './ZavistReel';
+import {UgadajReel, UGADAJ_FRAMES} from './UgadajReel';
 import {DevushkaReel, DevushkaReel2, R19_FRAMES, R19B_FRAMES, VyhodnojReel, R20_FRAMES, VyhodnojZebra, R20Z_FRAMES} from './SerijaReel';
 
 export const Root: React.FC = () => (
@@ -142,6 +143,14 @@ export const Root: React.FC = () => (
       id="ZavistReel"
       component={ZavistReel}
       durationInFrames={ZAVIST_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="UgadajReel"
+      component={UgadajReel}
+      durationInFrames={UGADAJ_FRAMES}
       fps={30}
       width={1080}
       height={1920}
