@@ -41,12 +41,13 @@ export const UgadajReel: React.FC = () => (
 // Хук-вызов, таймер на загадках, переходы «пролёт» (плавный зум и размытие), ответы с плавным отъездом.
 // Резких «рывков» зума нет: все приближения идут по плавным кривым.
 
-const XT = 9; // длина перехода, кадры
-type Seg = {src: string; from: number; dur: number; rate?: number; zoom?: [number, number]; reveal?: boolean};
+export const XT = 9; // длина перехода, кадры
+// folder: папка в public (по умолчанию r23); start: с какого кадра клипа начинать
+export type Seg = {src: string; from: number; dur: number; rate?: number; zoom?: [number, number]; reveal?: boolean; folder?: string; start?: number; origin?: string};
 
 const smooth = Easing.bezier(0.45, 0, 0.2, 1);
 
-const MClip: React.FC<{s: Seg; first: boolean; last: boolean}> = ({s, first, last}) => {
+export const MClip: React.FC<{s: Seg; first: boolean; last: boolean}> = ({s, first, last}) => {
   const f = useCurrentFrame();
   const len = s.dur + (last ? 0 : XT);
   const [z0, z1] = s.zoom ?? [1.0, 1.08];
@@ -62,7 +63,8 @@ const MClip: React.FC<{s: Seg; first: boolean; last: boolean}> = ({s, first, las
   return (
     <AbsoluteFill style={{overflow: 'hidden', opacity: enter}}>
       <OffthreadVideo
-        src={staticFile(`r23/${s.src}.mp4`)}
+        src={staticFile(`${s.folder ?? 'r23'}/${s.src}.mp4`)}
+        startFrom={s.start ?? 0}
         muted
         playbackRate={s.rate ?? 1}
         style={{
@@ -70,6 +72,7 @@ const MClip: React.FC<{s: Seg; first: boolean; last: boolean}> = ({s, first, las
           height: '100%',
           objectFit: 'cover',
           transform: `scale(${base * enterZ * exitZ})`,
+          transformOrigin: s.origin ?? '50% 50%',
           filter: `blur(${blur.toFixed(2)}px) contrast(1.05) saturate(1.08)`,
         }}
       />
@@ -148,7 +151,7 @@ const Badge: React.FC<{n: number; dur: number}> = ({n, dur}) => {
   );
 };
 
-const Flash: React.FC = () => {
+export const Flash: React.FC = () => {
   const f = useCurrentFrame();
   return <AbsoluteFill style={{backgroundColor: '#fff', opacity: interpolate(f, [0, 2, 9], [0, 0.75, 0], {extrapolateRight: 'clamp'})}} />;
 };
@@ -328,11 +331,19 @@ const Whip: React.FC<{src: string; dur: number; startFrom?: number}> = ({src, du
 
 // финал: Катя идёт к камере и подмигивает, стоп-кадр -> фотокарточка
 // fr: кадр стоп-кадра в куске wink (wink_freeze.jpg = кадр fr - 1); lines: тексты финала
-const Finale: React.FC<{dur: number; fr?: number; lines?: [string, string, string]}> = ({dur, fr = 43, lines = ['СКОЛЬКО УГАДАЛ?', 'ПИШИ ЦИФРУ', 'В КОММЕНТАРИЯХ']}) => {
+// clip/freeze/origin/start: свой финальный кадр (по умолчанию подмигивание из рилса 23)
+export const Finale: React.FC<{dur: number; fr?: number; lines?: [string, string, string]; clip?: string; freeze?: string; origin?: string; start?: number}> = ({
+  dur,
+  fr = 43,
+  lines = ['СКОЛЬКО УГАДАЛ?', 'ПИШИ ЦИФРУ', 'В КОММЕНТАРИЯХ'],
+  clip = 'r23/wink.mp4',
+  freeze = 'r23/wink_freeze.jpg',
+  origin = '22% 36%', // лицо Кати (кадр сдвинут вправо 10.11)
+  start = 0,
+}) => {
   const FR = fr;
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const origin = '22% 36%'; // лицо Кати (кадр сдвинут вправо 10.11)
   const vz = interpolate(f, [0, FR], [1.0, 1.14], {extrapolateRight: 'clamp', easing: smooth});
   const enter = interpolate(f, [0, 10], [0, 1], {extrapolateRight: 'clamp', easing: Easing.bezier(0.16, 1, 0.3, 1)});
   const p = spring({frame: f - FR, fps, config: {damping: 20, stiffness: 110, mass: 0.9}});
@@ -342,13 +353,14 @@ const Finale: React.FC<{dur: number; fr?: number; lines?: [string, string, strin
   const inner = interpolate(p, [0, 1], [1.14, 1.32]) * (1 + 0.04 * drift);
   const border = interpolate(p, [0, 1], [0, 22]);
   const flash = interpolate(f, [FR, FR + 2, FR + 12], [0, 0.85, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const freezeSrc = staticFile('r23/wink_freeze.jpg');
+  const freezeSrc = staticFile(freeze);
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       {f < FR ? (
         <AbsoluteFill style={{overflow: 'hidden', transform: `translateX(${(1 - enter) * 100}%)`}}>
           <OffthreadVideo
-            src={staticFile('r23/wink.mp4')}
+            src={staticFile(clip)}
+            startFrom={start}
             muted
             style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${vz})`, transformOrigin: origin, filter: `blur(${((1 - enter) * 22).toFixed(2)}px)`}}
           />
@@ -527,7 +539,7 @@ export const UgadajMotion3: React.FC = () => {
 // плавные переходы-пролёты, финал на развороте и подмигивании со стоп-кадром. Без цен, марок и лиц покупателей.
 
 const OSW = 'Oswald, "DejaVu Sans Condensed", sans-serif';
-const useOswald2 = () => {
+export const useOswald2 = () => {
   const [handle] = React.useState(() => delayRender('oswald2'));
   React.useEffect(() => {
     const cyr = 'U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116';
@@ -545,7 +557,7 @@ const useOswald2 = () => {
 
 const TSHADOW = '0 3px 0 rgba(0,0,0,0.35), 0 6px 22px rgba(0,0,0,0.55)';
 // слово вылетает: сдвиг, наклон и проявление по плавной кривой
-const KWord: React.FC<{t: string; at: number; size: number; red?: boolean; from?: 'left' | 'right' | 'up'; dur: number}> = ({t, at, size, red, from = 'right', dur}) => {
+export const KWord: React.FC<{t: string; at: number; size: number; red?: boolean; from?: 'left' | 'right' | 'up'; dur: number}> = ({t, at, size, red, from = 'right', dur}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const p = at <= 0 ? 1 : spring({frame: f - at, fps, config: {damping: 15, stiffness: 190, mass: 0.6}});
