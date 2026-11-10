@@ -331,7 +331,7 @@ const FR = 34; // кадр подмигивания в куске wink (стоп
 const Finale: React.FC<{dur: number}> = ({dur}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
-  const origin = '31% 36%'; // лицо Кати
+  const origin = '22% 36%'; // лицо Кати (кадр сдвинут вправо 10.11)
   const vz = interpolate(f, [0, FR], [1.0, 1.14], {extrapolateRight: 'clamp', easing: smooth});
   const enter = interpolate(f, [0, 10], [0, 1], {extrapolateRight: 'clamp', easing: Easing.bezier(0.16, 1, 0.3, 1)});
   const p = spring({frame: f - FR, fps, config: {damping: 20, stiffness: 110, mass: 0.9}});
