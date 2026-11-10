@@ -327,8 +327,9 @@ const Whip: React.FC<{src: string; dur: number; startFrom?: number}> = ({src, du
 };
 
 // финал: Катя идёт к камере и подмигивает, стоп-кадр -> фотокарточка
-const FR = 34; // кадр подмигивания в куске wink (стоп-кадр = кадр 33)
-const Finale: React.FC<{dur: number}> = ({dur}) => {
+// fr: кадр стоп-кадра в куске wink (wink_freeze.jpg = кадр fr - 1); lines: тексты финала
+const Finale: React.FC<{dur: number; fr?: number; lines?: [string, string, string]}> = ({dur, fr = 43, lines = ['СКОЛЬКО УГАДАЛ?', 'ПИШИ ЦИФРУ', 'В КОММЕНТАРИЯХ']}) => {
+  const FR = fr;
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const origin = '22% 36%'; // лицо Кати (кадр сдвинут вправо 10.11)
@@ -378,9 +379,9 @@ const Finale: React.FC<{dur: number}> = ({dur}) => {
       <AbsoluteFill style={{backgroundColor: '#fff', opacity: flash}} />
       <Sequence from={FR + 8}>
         <Block top={1260}>
-          <RPlate t="СКОЛЬКО УГАДАЛ?" size={84} dur={dur} delay={0} />
-          <RPlate t="ПИШИ ЦИФРУ" size={78} dur={dur} delay={8} dark />
-          <RPlate t="В КОММЕНТАРИЯХ" size={78} dur={dur} delay={14} dark />
+          <RPlate t={lines[0]} size={84} dur={dur} delay={0} />
+          <RPlate t={lines[1]} size={78} dur={dur} delay={8} dark />
+          <RPlate t={lines[2]} size={78} dur={dur} delay={14} dark />
         </Block>
       </Sequence>
     </AbsoluteFill>
@@ -474,6 +475,48 @@ export const UgadajMotion2: React.FC = () => {
           <Flash />
         </Sequence>
       ))}
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Версия 4 (Катя 10.11): ответы не в ролике, а в комментариях; из кадров Кати только разворот и подмигивание.
+// Хук, 6 загадок по 1,4 с (замедлены из 60 к/с, без повторов кадров), финал на подмигивании.
+const G3 = 42;
+const M3_END = HOOK + 5 * G3;
+const M3_FIN = 132;
+export const UGADAJ_M3_FRAMES = M3_END + M3_FIN;
+const SEGS3: Seg[] = [
+  {src: 'sg1', from: 0, dur: HOOK, zoom: [1.0, 1.12]},
+  ...[2, 3, 4, 5, 6].map((n, i) => ({src: `sg${n}`, from: HOOK + i * G3, dur: G3, zoom: [1.0, 1.1] as [number, number]})),
+];
+
+export const UgadajMotion3: React.FC = () => {
+  useMontserrat();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      {SEGS3.map((s, i) => (
+        <Sequence key={`g${i}`} from={s.from} durationInFrames={s.dur + XT}>
+          <MClip s={s} first={i === 0} last={false} />
+        </Sequence>
+      ))}
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.32) 100%)'}} />
+      <Sequence from={0} durationInFrames={HOOK}>
+        <HookText dur={HOOK} />
+      </Sequence>
+      {[0, 1, 2, 3, 4, 5].map((i) => {
+        const from = i === 0 ? 30 : HOOK + (i - 1) * G3;
+        const dur = i === 0 ? HOOK - 30 : G3;
+        return (
+          <Sequence key={`b${i}`} from={from} durationInFrames={dur}>
+            <Badge n={i + 1} dur={dur} />
+            <Dots active={i} done={i} />
+          </Sequence>
+        );
+      })}
+      <Sequence from={M3_END} durationInFrames={M3_FIN}>
+        <Finale dur={M3_FIN} fr={43} lines={['ПИШИ ВАРИАНТЫ', 'ОТВЕТЫ', 'В КОММЕНТАРИЯХ']} />
+      </Sequence>
     </AbsoluteFill>
   );
 };
