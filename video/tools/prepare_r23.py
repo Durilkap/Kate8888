@@ -28,7 +28,11 @@ CLIPS = {
     'a5': ('v7507.mov', 2.00, 3.80, 1.0, 1.0, 0.5, 0.5),   # бутылка 5 целиком
     'g6': ('v7508.mov', 1.00, 2.40, 1.0, 1.7, 0.2, 0.75),  # бутылка 6: банан на розовой этикетке (название марки выше кадра)
     'a6': ('v7508.mov', 2.50, 4.20, 1.0, 1.3, 0.5, 1.0),   # бутылка 6: приближение вниз, название марки сверху за краем
-    'end': ('vwink.mp4', 2.80, 7.20, 1.0, 1.0, 0.5, 0.5),  # Катя в магазине берёт продукт с полки (финал)
+    'end': ('vwink.mp4', 2.80, 7.20, 1.0, 1.0, 0.5, 0.5),  # Катя в магазине берёт продукт с полки (финал v1)
+    # Катя 10.11: «вставь, как я иду, а не наклоняюсь; там есть момент, где я подмигиваю»
+    'walk': ('vwink.mp4', 7.30, 9.30, 1.0, 1.15, 0.3, 0.5),   # идёт по залу (спиной), без наклона
+    'wink': ('vwink.mp4', 9.45, 11.25, 1.0, 1.45, 0.0, 0.3),  # идёт к камере, подмигивает около 10,0 и 10,6 с
+    'look': ('vwink.mp4', 13.65, 14.88, 1.0, 1.45, 0.05, 0.3),  # уходит и оглядывается через плечо
 }
 
 
@@ -38,12 +42,18 @@ def main():
     for name, (f, a, b, speed, z, ox, oy) in CLIPS.items():
         vf = f'crop=iw/{z}:ih/{z}:(iw-iw/{z})*{ox}:(ih-ih/{z})*{oy},' if z != 1.0 else ''
         vf += f'scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
+        if f.endswith('.mp4'):
+            vf += ',unsharp=5:5:0.6'  # исходник 720p: лёгкая резкость после увеличения
         if speed != 1.0:
             vf += f',setpts=PTS/{speed}'
         vf += f',fps={FPS},format=yuv420p'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a}', '-to', f'{b}', '-i', str(src / f), '-an', '-vf', vf,
                         '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1', str(dst / f'{name}.mp4')], check=True)
         print(name)
+    # стоп-кадр подмигивания для финала (кадр 33 куска wink)
+    if (dst / 'wink.mp4').exists():
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(dst / 'wink.mp4'), '-vf', "select='eq(n\\,33)'", '-frames:v', '1',
+                        '-q:v', '2', str(dst / 'wink_freeze.jpg')], check=True)
 
 
 if __name__ == '__main__':
