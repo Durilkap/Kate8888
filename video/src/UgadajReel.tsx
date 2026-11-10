@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, continueRender, delayRender, Easing, Img, interpolate, OffthreadVideo, Sequence, spring, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 import {card, RED, SerijaReel, Shot} from './SerijaReel';
 import {SANS, useMontserrat} from './WordCaptions';
 import type {Card} from './WordCaptions';
@@ -378,11 +378,11 @@ const Finale: React.FC<{dur: number; fr?: number; lines?: [string, string, strin
       )}
       <AbsoluteFill style={{backgroundColor: '#fff', opacity: flash}} />
       <Sequence from={FR + 8}>
-        <Block top={1260}>
+        {lines[0] === '' ? null : <Block top={1260}>
           <RPlate t={lines[0]} size={84} dur={dur} delay={0} />
           <RPlate t={lines[1]} size={78} dur={dur} delay={8} dark />
           <RPlate t={lines[2]} size={78} dur={dur} delay={14} dark />
-        </Block>
+        </Block>}
       </Sequence>
     </AbsoluteFill>
   );
@@ -517,6 +517,220 @@ export const UgadajMotion3: React.FC = () => {
       <Sequence from={M3_END} durationInFrames={M3_FIN}>
         <Finale dur={M3_FIN} fr={43} lines={['ПИШИ ВАРИАНТЫ', 'ОТВЕТЫ', 'В КОММЕНТАРИЯХ']} />
       </Sequence>
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------------------
+// Версия 5 (10.11): лучшее из ролика другого ИИ + наше. Тизер из кусочков этикеток в первые 0,5 с,
+// хук на Кате в зале словами по одному (белые и красные курсивом, Oswald), счётчик «01 / 06» и отсчёт 3-2-1,
+// плавные переходы-пролёты, финал на развороте и подмигивании со стоп-кадром. Без цен, марок и лиц покупателей.
+
+const OSW = 'Oswald, "DejaVu Sans Condensed", sans-serif';
+const useOswald2 = () => {
+  const [handle] = React.useState(() => delayRender('oswald2'));
+  React.useEffect(() => {
+    const cyr = 'U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116';
+    const lat = 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF, U+FFFD';
+    const f = (file: string, range: string) =>
+      new FontFace('Oswald', `url(${staticFile(`fonts/${file}`)}) format('woff2')`, {weight: '700', style: 'normal', unicodeRange: range});
+    Promise.all([f('oswald-cyrillic-700-normal.woff2', cyr), f('oswald-latin-700-normal.woff2', lat)].map((x) => x.load()))
+      .then((l) => {
+        l.forEach((x) => document.fonts.add(x));
+        continueRender(handle);
+      })
+      .catch(() => continueRender(handle));
+  }, [handle]);
+};
+
+const TSHADOW = '0 3px 0 rgba(0,0,0,0.35), 0 6px 22px rgba(0,0,0,0.55)';
+// слово вылетает: сдвиг, наклон и проявление по плавной кривой
+const KWord: React.FC<{t: string; at: number; size: number; red?: boolean; from?: 'left' | 'right' | 'up'; dur: number}> = ({t, at, size, red, from = 'right', dur}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const p = at <= 0 ? 1 : spring({frame: f - at, fps, config: {damping: 15, stiffness: 190, mass: 0.6}});
+  const out = interpolate(f, [dur - 5, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const dx = from === 'right' ? 160 : from === 'left' ? -160 : 0;
+  const dy = from === 'up' ? -60 : 0;
+  return (
+    <div
+      style={{
+        fontFamily: OSW,
+        fontWeight: 700,
+        fontSize: size,
+        lineHeight: 1.05,
+        color: red ? RED : '#fff',
+        fontStyle: red ? 'italic' : 'normal',
+        textTransform: 'uppercase',
+        textAlign: 'center',
+        textShadow: red ? '0 2px 0 rgba(0,0,0,0.45), 0 6px 20px rgba(0,0,0,0.6)' : TSHADOW,
+        WebkitTextStroke: '0px',
+        paintOrder: 'stroke fill',
+        whiteSpace: 'nowrap',
+        opacity: Math.min(1, p * 1.4) * out,
+        transform: `translate(${(1 - p) * dx}px, ${(1 - p) * dy}px) skewX(${(1 - p) * -10}deg)`,
+        filter: `blur(${((1 - Math.min(1, p)) * 6).toFixed(2)}px)`,
+      } as React.CSSProperties}
+    >
+      {t}
+    </div>
+  );
+};
+
+// счётчик «01 / 06» слева и отсчёт 3-2-1 справа
+const Hud: React.FC<{n: number; dur: number}> = ({n, dur}) => {
+  const f = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const step = Math.floor(f / (dur / 3));
+  const local = f - step * (dur / 3);
+  const p = spring({frame: local, fps, config: {damping: 11, stiffness: 260, mass: 0.45}});
+  const pin = spring({frame: f, fps, config: {damping: 14, stiffness: 200, mass: 0.5}});
+  const out = interpolate(f, [dur - 4, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const digit = Math.max(1, 3 - step);
+  return (
+    <AbsoluteFill style={{opacity: out}}>
+      <div
+        style={{
+          position: 'absolute',
+          top: 230,
+          left: 70,
+          fontFamily: OSW,
+          fontWeight: 700,
+          fontStyle: 'italic',
+          fontSize: 92,
+          color: RED,
+          WebkitTextStroke: '2px #fff',
+          paintOrder: 'stroke fill',
+          textShadow: '0 6px 20px rgba(0,0,0,0.5)',
+          background: 'rgba(0,0,0,0.42)',
+          padding: '0 26px 4px 22px',
+          borderRadius: 18,
+          transform: `translateX(${(1 - pin) * -80}px)`,
+          opacity: pin,
+        } as React.CSSProperties}
+      >
+        {`0${n} / 06`}
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          top: 200,
+          right: 80,
+          width: 150,
+          height: 150,
+          borderRadius: 75,
+          background: 'rgba(0,0,0,0.38)',
+          border: '5px solid #fff',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: OSW,
+          fontWeight: 700,
+          fontSize: 100,
+          color: '#fff',
+          transform: `scale(${0.6 + 0.4 * p})`,
+          boxShadow: '0 8px 26px rgba(0,0,0,0.4)',
+        }}
+      >
+        {digit}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// тизер: 4 кусочка этикеток по 4 кадра
+const TEASE = 16;
+const Teaser: React.FC = () => {
+  const f = useCurrentFrame();
+  const i = Math.min(3, Math.floor(f / 4));
+  const srcs = ['tg4', 'tg3', 'tg6', 'tg2'];
+  const z = 1.25 - 0.05 * (f % 4);
+  return (
+    <AbsoluteFill style={{overflow: 'hidden'}}>
+      <OffthreadVideo src={staticFile(`r23/${srcs[i]}.mp4`)} startFrom={20} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${z})`}} />
+    </AbsoluteFill>
+  );
+};
+
+const H5 = 57; // хук на Кате в зале
+const G5 = 48; // загадка
+const M5_G = TEASE + H5;
+const M5_END = M5_G + 6 * G5;
+const M5_FIN = 140;
+export const UGADAJ_M5_FRAMES = M5_END + M5_FIN;
+const SEGS5: Seg[] = [
+  {src: 'walk2', from: TEASE, dur: H5, zoom: [1.0, 1.1]},
+  ...[1, 2, 3, 4, 5, 6].map((n, i) => ({src: `tg${n}`, from: M5_G + i * G5, dur: G5, zoom: [1.0, 1.1] as [number, number]})),
+];
+
+// мягкое затемнение под финальным текстом
+const FinBackdrop: React.FC = () => {
+  const f = useCurrentFrame();
+  return (
+    <AbsoluteFill
+      style={{
+        background: 'linear-gradient(180deg, rgba(0,0,0,0) 52%, rgba(0,0,0,0.55) 62%, rgba(0,0,0,0.55) 80%, rgba(0,0,0,0) 90%)',
+        opacity: interpolate(f, [0, 10], [0, 1], {extrapolateRight: 'clamp'}),
+      }}
+    />
+  );
+};
+
+const Finale5: React.FC<{dur: number}> = ({dur}) => (
+  <>
+    <Finale dur={dur} fr={43} lines={['', '', '']} />
+  </>
+);
+
+export const UgadajMotion5: React.FC = () => {
+  useMontserrat();
+  useOswald2();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <Sequence from={0} durationInFrames={TEASE}>
+        <Teaser />
+      </Sequence>
+      {SEGS5.map((s, i) => (
+        <Sequence key={`g${i}`} from={s.from} durationInFrames={s.dur + XT}>
+          <MClip s={s} first={false} last={false} />
+        </Sequence>
+      ))}
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.32) 100%)'}} />
+      {/* хук словами */}
+      <Sequence from={TEASE} durationInFrames={H5}>
+        <AbsoluteFill>
+          <div style={{position: 'absolute', top: 250, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <KWord t="Спорим," at={2} size={120} from="left" dur={H5} />
+            <KWord t="не угадаешь" at={8} size={120} from="right" dur={H5} />
+            <KWord t="все 6?" at={14} size={170} red from="up" dur={H5} />
+            <KWord t="по кусочку этикетки" at={22} size={66} from="right" dur={H5} />
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <Sequence key={`h${i}`} from={M5_G + i * G5} durationInFrames={G5}>
+          <Hud n={i + 1} dur={G5} />
+        </Sequence>
+      ))}
+      <Sequence from={M5_END} durationInFrames={M5_FIN}>
+        <Finale5 dur={M5_FIN} />
+      </Sequence>
+      {/* финальные слова поверх карточки */}
+      <Sequence from={M5_END + 50} durationInFrames={M5_FIN - 50}>
+        <AbsoluteFill>
+          <FinBackdrop />
+          <div style={{position: 'absolute', top: 1200, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+            <KWord t="Сколько из 6 угадала?" at={1} size={84} from="left" dur={M5_FIN} />
+            <KWord t="пиши цифру в комментариях" at={9} size={66} red from="right" dur={M5_FIN} />
+            <KWord t="подпишись: дальше сложнее" at={18} size={54} from="up" dur={M5_FIN} />
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+      {[TEASE].map((fr) => (
+        <Sequence key={`fl${fr}`} from={fr} durationInFrames={10}>
+          <Flash />
+        </Sequence>
+      ))}
     </AbsoluteFill>
   );
 };
