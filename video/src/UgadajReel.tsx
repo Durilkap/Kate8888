@@ -720,7 +720,7 @@ export const UgadajMotion5: React.FC = () => {
         <AbsoluteFill>
           <FinBackdrop />
           <div style={{position: 'absolute', top: 1200, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-            <KWord t="Сколько из 6 угадала?" at={1} size={84} from="left" dur={M5_FIN} />
+            <KWord t="Сколько из 6 угадал?" at={1} size={84} from="left" dur={M5_FIN} />
             <KWord t="пиши цифру в комментариях" at={9} size={66} red from="right" dur={M5_FIN} />
             <KWord t="подпишись: дальше сложнее" at={18} size={54} from="up" dur={M5_FIN} />
           </div>
