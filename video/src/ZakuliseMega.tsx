@@ -277,7 +277,8 @@ const FinaleCrown: React.FC<{dur: number}> = ({dur}) => {
                   ) : null}
                 </div>
               </div>
-              <div style={{position: 'absolute', left: -34, top: 150, transform: `rotate(-9deg) scale(${tag})`, transformOrigin: '0% 50%', opacity: tag}}>
+              {/* наклейка «Королева этикеток» убрана (Катя 11.11) */}
+              <div style={{display: 'none', position: 'absolute', left: -34, top: 150, transform: `rotate(-9deg) scale(${tag})`, transformOrigin: '0% 50%', opacity: tag}}>
                 <div
                   style={{
                     fontFamily: OSW,
