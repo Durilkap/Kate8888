@@ -55,12 +55,11 @@ def main():
     # стоп-кадр подмигивания для финала
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(dst / 'fin.mp4'), '-vf', "select='eq(n\\,37)'", '-frames:v', '1',
                     '-q:v', '2', str(dst / 'fin_freeze.jpg')], check=True)
-    # готовые рулоны: обрезка 9:16 по передней паллете (без монитора, листа на паллете, бумаг на стене)
+    # готовые рулоны: обрезка 9:16 только по рулонам передней паллеты
     im = Image.open(src / 'p_pallets.jpg').convert('RGB')
-    x0, w = 30, 940  # правее x 970 край листа-задания (проверка 11.11)
-    y1 = im.height
-    y0 = y1 - round(w * 16 / 9)
-    im.crop((x0, y0, x0 + w, y1)).resize((W, H), Image.LANCZOS).save(dst / 'done.jpg', quality=93)
+    # Катя 11.11: рулоны по центру, без паллеты; лист-задание (x > 1000) и картон вне кадра
+    x0, y0, w = 470, 1240, 480
+    im.crop((x0, y0, x0 + w, y0 + round(w * 16 / 9))).resize((W, H), Image.LANCZOS).save(dst / 'done.jpg', quality=93)
     print('done.jpg', im.size)
 
 
