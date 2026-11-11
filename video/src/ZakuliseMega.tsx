@@ -327,7 +327,7 @@ const STEPS: Step[] = [
   {src: 'mat', dur: 42, word: 'Материал', kind: 'reveal'},
   {src: 'ink', dur: 42, word: 'Краска', kind: 'whip', dir: 1},
   {src: 'print', dur: 48, word: 'Печать', kind: 'zoom'},
-  {src: 'cut', dur: 42, word: 'Вырубка', kind: 'whip', dir: -1},
+  {src: 'cut', dur: 42, word: 'Высечка', kind: 'whip', dir: -1},
   {src: 'wind', dur: 42, word: 'Намотка', kind: 'zoom'},
   {src: 'done.jpg', dur: 44, word: 'Готово', kind: 'whip', dir: 1, img: true, check: true},
 ];
