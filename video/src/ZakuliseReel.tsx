@@ -39,13 +39,14 @@ export const Dive: React.FC = () => {
   const z =
     interpolate(f, [0, HOOK], [1.0, 1.08], {extrapolateRight: 'clamp'}) *
     interpolate(f, [HOOK, HOOK + DIVE], [1, 8], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.in(Easing.cubic)});
-  const blur = interpolate(f, [HOOK + 12, HOOK + DIVE], [0, 18], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  // размытие с первого кадра «провала»: марки на банках не читаются (проверка 11.11)
+  const blur = interpolate(f, [HOOK, HOOK + 8, HOOK + DIVE], [0, 10, 22], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const style: React.CSSProperties = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
     transform: `scale(${z})`,
-    transformOrigin: '58% 23%',
+    transformOrigin: '60% 12%', // белая стенка над банками (проверка 11.11)
     filter: `blur(${blur.toFixed(2)}px) contrast(1.05) saturate(1.08)`,
   };
   return (

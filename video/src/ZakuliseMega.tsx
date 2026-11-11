@@ -192,8 +192,8 @@ const Sparkle: React.FC<{x: number; y: number; s: number; delay: number}> = ({x,
 };
 
 // ---------- финал: видео до подмигивания, стоп-кадр в фотокарточку, корона падает на голову ----------
-const FR = 57; // кадр стоп-кадра в fin.mp4 (fin_freeze.jpg = кадр 56)
-const HEAD: [number, number] = [705, 440]; // макушка Кати на стоп-кадре (пиксели кадра 1080x1920)
+const FR = 38; // кадр стоп-кадра в fin.mp4 (fin_freeze.jpg = кадр 37)
+const HEAD: [number, number] = [615, 415]; // макушка Кати на стоп-кадре (пиксели кадра 1080x1920)
 const FinaleCrown: React.FC<{dur: number}> = ({dur}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -208,12 +208,12 @@ const FinaleCrown: React.FC<{dur: number}> = ({dur}) => {
   const border = interpolate(p, [0, 1], [0, 22]);
   const flash = interpolate(f, [FR, FR + 2, FR + 12], [0, 0.85, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   // корона: падает сверху с отскоком
-  const cDrop = spring({frame: f - FR - 14, fps, config: {damping: 9, stiffness: 140, mass: 0.8}});
+  const cDrop = spring({frame: f - FR - 4, fps, config: {damping: 9, stiffness: 140, mass: 0.8}});
   const cy = interpolate(cDrop, [0, 1], [-900, 0]);
   const cRot = interpolate(cDrop, [0, 1], [-25, -12]);
-  const shine = interpolate(f, [FR + 34, FR + 50], [-40, 140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
-  const tag = spring({frame: f - FR - 30, fps, config: {damping: 12, stiffness: 200, mass: 0.5}});
-  const CW = 330;
+  const shine = interpolate(f, [FR + 22, FR + 38], [-40, 140], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const tag = spring({frame: f - FR - 18, fps, config: {damping: 12, stiffness: 200, mass: 0.5}});
+  const CW = 430;
   const freezeSrc = staticFile('r24/fin_freeze.jpg');
   const sp: [number, number, number, number][] = [
     [HEAD[0] - 220, HEAD[1] - 170, 80, 0],
@@ -269,31 +269,34 @@ const FinaleCrown: React.FC<{dur: number}> = ({dur}) => {
                     </div>
                   </div>
                   {cDrop > 0.9 ? (
-                    <Sequence from={FR + 24}>
+                    <Sequence from={FR + 14}>
                       {sp.map(([x, y, s, d], i) => (
                         <Sparkle key={i} x={x} y={y} s={s} delay={d} />
                       ))}
                     </Sequence>
                   ) : null}
-                  <div style={{position: 'absolute', left: HEAD[0] - 470, top: HEAD[1] - 340, transform: `rotate(-8deg) scale(${tag})`, opacity: tag}}>
-                    <span
-                      style={{
-                        fontFamily: OSW,
-                        fontWeight: 700,
-                        fontStyle: 'italic',
-                        fontSize: 64,
-                        color: '#fff',
-                        background: RED,
-                        padding: '2px 22px 6px',
-                        borderRadius: 14,
-                        textTransform: 'uppercase',
-                        boxShadow: '0 8px 22px rgba(0,0,0,0.4)',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      Королева этикеток
-                    </span>
-                  </div>
+                </div>
+              </div>
+              <div style={{position: 'absolute', left: -34, top: 150, transform: `rotate(-9deg) scale(${tag})`, transformOrigin: '0% 50%', opacity: tag}}>
+                <div
+                  style={{
+                    fontFamily: OSW,
+                    fontWeight: 700,
+                    fontStyle: 'italic',
+                    fontSize: 66,
+                    lineHeight: 1.0,
+                    color: '#fff',
+                    background: RED,
+                    padding: '10px 26px 14px',
+                    borderRadius: 14,
+                    textTransform: 'uppercase',
+                    boxShadow: '0 10px 26px rgba(0,0,0,0.45)',
+                    textAlign: 'left',
+                  }}
+                >
+                  Королева
+                  <br />
+                  этикеток
                 </div>
               </div>
             </div>
@@ -427,7 +430,7 @@ export const ZakuliseMega: React.FC = () => {
           <div style={{position: 'absolute', top: 1240, left: 0, right: 0, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <KWord t="Теперь ты знаешь," at={1} size={88} from="left" dur={FIN} />
             <KWord t="откуда этикетка" at={8} size={96} red from="right" dur={FIN} />
-            <KWord t="подпишись: покажу больше" at={16} size={54} from="up" dur={FIN} />
+            <KWord t="подпишись: про этикетки просто" at={16} size={54} from="up" dur={FIN} />
           </div>
         </AbsoluteFill>
       </Sequence>
