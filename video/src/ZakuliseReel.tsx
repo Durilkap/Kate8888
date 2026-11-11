@@ -31,9 +31,9 @@ const Teaser: React.FC = () => {
 };
 
 // хук на холодильнике и «провал» в банки на верхней полке
-const HOOK = 60;
-const DIVE = 24;
-const Dive: React.FC = () => {
+export const HOOK = 60;
+export const DIVE = 24;
+export const Dive: React.FC = () => {
   const f = useCurrentFrame();
   // хук: видео 0,85x (кадры 0-51 клипа), «провал»: стоп-кадр 51 (камера дальше уходит в сторону)
   const z =

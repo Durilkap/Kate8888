@@ -62,3 +62,4 @@
 
 ## Рилс 24 «Закулисье твоего холодильника» (черновик)
 Композиция `ZakuliseReel` (`src/ZakuliseReel.tsx`) из готовых кадров `public/r18` и `public/r19` (плюс стоп-кадры `r18/hook_f51.jpg`, `r19/wink_freeze54.jpg`). Общие части моушена (`MClip`, `KWord`, `Finale`, `Flash`) из `src/UgadajReel.tsx`.
+Финальный монтаж на кадрах Кати: `python3 tools/prepare_r24.py work/r24/src public/r24`, композиция `ZakuliseMega` (`src/ZakuliseMega.tsx`): смахивания с размытием по горизонтали (SVG-фильтр), блики, кружок, галочка, корона и искры нарисованы в коде.
