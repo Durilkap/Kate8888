@@ -63,3 +63,7 @@
 ## Рилс 24 «Закулисье твоего холодильника» (черновик)
 Композиция `ZakuliseReel` (`src/ZakuliseReel.tsx`) из готовых кадров `public/r18` и `public/r19` (плюс стоп-кадры `r18/hook_f51.jpg`, `r19/wink_freeze54.jpg`). Общие части моушена (`MClip`, `KWord`, `Finale`, `Flash`) из `src/UgadajReel.tsx`.
 Финальный монтаж на кадрах Кати: `python3 tools/prepare_r24.py work/r24/src public/r24`, композиция `ZakuliseMega` (`src/ZakuliseMega.tsx`): смахивания с размытием по горизонтали (SVG-фильтр), блики, кружок, галочка, корона и искры нарисованы в коде.
+
+## Рилс 26 «Спешка» (видео из машины, 240 к/с)
+1. `python3 tools/prepare_r26.py work/r26/src public/r26`: speed ramp в Python (кадры 240 к/с из ffmpeg, при ускорении усредняются: настоящее размытие движения; торможение по плавной кривой в лог-шкале скорости).
+2. Композиция `SpeshkaReel` (`src/SpeshkaReel.tsx`): тряска и холодный цвет в суете, уведомления, Cormorant курсивом по буквам, маска «дворника», светлая дымка в финале.
