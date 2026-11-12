@@ -13,7 +13,7 @@ import {VyhodnojKatya, R20K_FRAMES} from './BoxReel';
 import {SynReel, SynReelPlate, SynReelOne, SYN_FRAMES} from './SynReel';
 import {ZakuliseReel, ZAKULISE_FRAMES} from './ZakuliseReel';
 import {ZakuliseMega, ZAKULISE_MEGA_FRAMES} from './ZakuliseMega';
-import {SpeshkaReel, SPESHKA_FRAMES} from './SpeshkaReel';
+import {SpeshkaReel, SPESHKA_FRAMES, SpeshkaReel2, SPESHKA2_FRAMES} from './SpeshkaReel';
 import {ZavistReel, ZavistReelSoft, ZavistReelHard, ZavistKatya, ZAVIST_FRAMES} from './ZavistReel';
 import {UgadajReel, UGADAJ_FRAMES, UgadajMotion, UGADAJ_M_FRAMES, UgadajMotion2, UGADAJ_M2_FRAMES, UgadajMotion3, UGADAJ_M3_FRAMES, UgadajMotion5, UGADAJ_M5_FRAMES} from './UgadajReel';
 import {DevushkaReel, DevushkaReel2, R19_FRAMES, R19B_FRAMES, VyhodnojReel, R20_FRAMES, VyhodnojZebra, R20Z_FRAMES} from './SerijaReel';
@@ -146,6 +146,14 @@ export const Root: React.FC = () => (
       id="ZavistReel"
       component={ZavistReel}
       durationInFrames={ZAVIST_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+    <Composition
+      id="SpeshkaReel2"
+      component={SpeshkaReel2}
+      durationInFrames={SPESHKA2_FRAMES}
       fps={30}
       width={1080}
       height={1920}

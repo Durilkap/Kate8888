@@ -292,3 +292,210 @@ export const SpeshkaReel: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+// ---------------------------------------------------------------------------
+// Версия 2 (Катя 12.11, лучшее из её второго варианта): тексты глубже, бегущие «БЫСТРЕЕ» и «УСПЕТЬ»,
+// строка состояния «08:17 · РЕЖИМ: СПЕШКА» с бегущими часами (в финале «РЕЖИМ: ЖИЗНЬ»), «СТОП.» с разрезом
+// кадра на полосы в момент торможения. Длинные тире из её варианта заменены (правило Кати).
+
+const S2B = 306;
+export const SPESHKA2_FRAMES = X2 + S2B;
+const END2 = 420;
+const STOP = 92;
+
+// бегущая строка из повторов слова
+const Ticker: React.FC<{word: string; y: number; dir: 1 | -1; rot: number; size: number; a: number; b: number}> = ({word, y, dir, rot, size, a, b}) => {
+  const f = useCurrentFrame();
+  const o = interpolate(f, [a, a + 4, b - 6, b], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const x = dir * (f - a) * 22 - (dir > 0 ? 900 : 200);
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: y,
+        left: 0,
+        whiteSpace: 'nowrap',
+        transform: `translateX(${x}px) rotate(${rot}deg)`,
+        opacity: o,
+        fontFamily: OSW,
+        fontWeight: 700,
+        fontSize: size,
+        color: '#fff',
+        textShadow: '0 4px 16px rgba(0,0,0,0.55)',
+        letterSpacing: '0.02em',
+      }}
+    >
+      {Array(8).fill(word).join('   ')}
+    </div>
+  );
+};
+
+// строка состояния: часы бегут в суете, замирают при замедлении
+const StatusBar: React.FC = () => {
+  const f = useCurrentFrame();
+  const calm = calmAt(f);
+  const mins = 17 + Math.floor(Math.min(f, RAMP_A) / 3) + Math.floor(Math.max(0, Math.min(f, RAMP_B) - RAMP_A) / 12);
+  const hh = 8 + Math.floor(mins / 60);
+  const mm = mins % 60;
+  const life = f >= END2 + 20;
+  const blink = Math.floor(f / 8) % 2 === 0;
+  const o = interpolate(f, [0, 3], [0, 1], {extrapolateRight: 'clamp'});
+  return (
+    <AbsoluteFill style={{opacity: o}}>
+      <div style={{position: 'absolute', top: 120, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 18,
+            fontFamily: OSW,
+            fontWeight: 700,
+            fontSize: 40,
+            letterSpacing: '0.08em',
+            color: life ? '#1e1e1e' : '#fff',
+            background: life ? 'rgba(255,255,255,0.55)' : 'rgba(0,0,0,0.38)',
+            padding: '6px 24px 8px',
+            borderRadius: 40,
+          }}
+        >
+          <span style={{width: 18, height: 18, borderRadius: 9, background: life ? '#3a9d5d' : RED, opacity: calm > 0.5 || blink ? 1 : 0.25}} />
+          <span>{`${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')} · РЕЖИМ: ${life ? 'ЖИЗНЬ' : 'СПЕШКА'}`}</span>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// «СТОП.»: кадр режется на полосы, полосы смещаются и возвращаются
+const SLICES = 5;
+const SliceStop: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const f = useCurrentFrame();
+  const local = f - STOP;
+  if (local < 0 || local > 22) return <>{children}</>;
+  return (
+    <AbsoluteFill>
+      {Array.from({length: SLICES}).map((_, i) => {
+        const p = interpolate(local, [i * 1.5, i * 1.5 + 5, 14 + i, 22], [0, 1, 1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
+        const dy = (i % 2 === 0 ? -1 : 1) * 45 * p;
+        const l = (i * 100) / SLICES;
+        const r = 100 - ((i + 1) * 100) / SLICES;
+        return (
+          <AbsoluteFill key={i} style={{clipPath: `inset(0 ${r}% 0 ${l}%)`, transform: `translateY(${dy}px)`}}>
+            {children}
+          </AbsoluteFill>
+        );
+      })}
+      <AbsoluteFill style={{background: 'linear-gradient(90deg, rgba(0,0,0,0.0) 0%, rgba(0,0,0,0.0) 100%)'}} />
+    </AbsoluteFill>
+  );
+};
+
+const Footage2: React.FC = () => {
+  const f = useCurrentFrame();
+  const calm = calmAt(f);
+  const amp = (1 - calm) * 7;
+  const jx = amp * Math.sin(f * 2.3) * Math.cos(f * 0.7);
+  const jy = amp * Math.sin(f * 1.7 + 1.3);
+  const rot = (1 - calm) * 0.35 * Math.sin(f * 1.1);
+  const zoom = interpolate(f, [0, RAMP_B, SPESHKA2_FRAMES], [1.1, 1.05, 1.0]);
+  const filter = `contrast(${1.12 - 0.1 * calm}) saturate(${0.72 + 0.33 * calm}) brightness(${0.94 + 0.08 * calm}) sepia(${0.12 * calm}) hue-rotate(${-10 * (1 - calm)}deg)`;
+  const x = interpolate(f, [X2, X2 + 18], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
+  const style: React.CSSProperties = {position: 'absolute', width: '100%', height: '100%', objectFit: 'cover', filter};
+  return (
+    <AbsoluteFill style={{overflow: 'hidden', transform: `translate(${jx}px, ${jy}px) rotate(${rot}deg) scale(${zoom})`}}>
+      <Sequence from={0} durationInFrames={R1}>
+        <OffthreadVideo src={staticFile('r26/ramp1.mp4')} muted style={style} />
+      </Sequence>
+      <Sequence from={X2} durationInFrames={S2B}>
+        <AbsoluteFill style={{opacity: x}}>
+          <OffthreadVideo src={staticFile('r26/slow2.mp4')} muted style={style} />
+        </AbsoluteFill>
+      </Sequence>
+    </AbsoluteFill>
+  );
+};
+
+const Haze2: React.FC = () => {
+  const f = useCurrentFrame();
+  const o = interpolate(f, [END2 - 10, END2 + 30], [0, 0.62], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.sin)});
+  return <AbsoluteFill style={{background: '#f4f1ec', opacity: o}} />;
+};
+
+export const SpeshkaReel2: React.FC = () => {
+  useOswald2();
+  useInter();
+  useCormorant();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <SliceStop>
+        <Footage2 />
+      </SliceStop>
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.38) 100%)'}} />
+      <Haze2 />
+      <StatusBar />
+
+      {/* суета: бегущие слова и хук */}
+      <Ticker word="БЫСТРЕЕ" y={300} dir={-1} rot={-6} size={92} a={0} b={52} />
+      <Ticker word="УСПЕТЬ" y={1240} dir={1} rot={-6} size={92} a={0} b={52} />
+      <Sequence from={0} durationInFrames={54}>
+        <AbsoluteFill>
+          <div style={{position: 'absolute', top: 580, left: 0, right: 0}}>
+            <HookPlate t="Ты не устала" size={130} at={0} dur={54} />
+            <HookPlate t="жить на" size={110} at={0} dur={54} />
+            <HookPlate t="скорости ×2?" size={130} at={0} dur={54} />
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+      <Sequence from={0} durationInFrames={200}>
+        <Notes />
+      </Sequence>
+
+      {/* СТОП. */}
+      <Sequence from={STOP} durationInFrames={30}>
+        <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+          <HookPlate t="Стоп." size={200} at={1} dur={30} />
+        </AbsoluteFill>
+      </Sequence>
+      <Sequence from={STOP} durationInFrames={10}>
+        <AbsoluteFill style={{backgroundColor: '#fff', opacity: 0.35}} />
+      </Sequence>
+
+      {/* спокойная часть 1 */}
+      <DarkBand a={130} b={280} />
+      <Sequence from={0} durationInFrames={290}>
+        <AbsoluteFill>
+          <div style={{position: 'absolute', top: 1290, left: 0, right: 0}}>
+            <SoftLine t="Спешка не всегда про дела." at={135} size={76} out={250} />
+            <SoftLine t="Иногда это способ" at={185} size={76} out={254} />
+            <SoftLine t="не чувствовать." at={205} size={84} out={258} />
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+
+      {/* спокойная часть 2: дворник стирает фразу */}
+      <DarkBand a={278} b={420} />
+      <Sequence from={0} durationInFrames={420}>
+        <AbsoluteFill>
+          <div style={{position: 'absolute', top: 1340, left: 0, right: 0}}>
+            <WiperWipe a={352} b={396}>
+              <SoftLine t="Пока ты гонишься за жизнью," at={286} size={74} />
+              <SoftLine t="она идёт мимо." at={316} size={84} />
+            </WiperWipe>
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+
+      {/* финал */}
+      <Sequence from={END2}>
+        <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center'}}>
+          <div style={{marginTop: -80}}>
+            <SoftLine t="Притормози." at={14} size={150} color="#1e1e1e" />
+            <SoftLine t="Ты уже живёшь." at={44} size={92} color="#1e1e1e" />
+            <div style={{height: 40}} />
+            <SoftLine t="Отправь тому, кто всё время спешит" at={80} size={60} color="#3a3a3a" />
+          </div>
+        </AbsoluteFill>
+      </Sequence>
+    </AbsoluteFill>
+  );
+};
