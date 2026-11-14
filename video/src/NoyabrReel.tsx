@@ -17,7 +17,7 @@ const S0 = T0 + 6;
 const FREEZE = 66;
 export const NOYABR_FRAMES = S0 + REST + FREEZE;
 
-const Plate: React.FC<{t: string; size: number; at: number; dur: number; light?: boolean}> = ({t, size, at, dur, light}) => {
+export const Plate: React.FC<{t: string; size: number; at: number; dur: number; light?: boolean}> = ({t, size, at, dur, light}) => {
   const f = useCurrentFrame();
   const p = at <= 0 ? 1 : interpolate(f, [at, at + 8], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.6))});
   const out = interpolate(f, [dur - 6, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
