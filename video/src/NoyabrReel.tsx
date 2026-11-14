@@ -55,6 +55,15 @@ const Rain: React.FC = () => {
     <AbsoluteFill>
       <Sequence from={0} durationInFrames={CUR}>
         <OffthreadVideo src={staticFile('r30/curtain.mp4')} muted style={{width: '100%', height: '100%', objectFit: 'cover', filter: `${cold} blur(2.5px)`, transform: `scale(${interpolate(f, [0, CUR], [1.0, 1.06])})`}} />
+        {/* окно и двор в верхней части кадра размыты сильнее (проверка 14.11) */}
+        <AbsoluteFill
+          style={{
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            WebkitMaskImage: 'linear-gradient(180deg, black 0%, black 52%, transparent 66%)',
+            maskImage: 'linear-gradient(180deg, black 0%, black 52%, transparent 66%)',
+          } as React.CSSProperties}
+        />
       </Sequence>
       <Sequence from={D0} durationInFrames={DROPS + 10}>
         <AbsoluteFill style={{opacity: dIn, overflow: 'hidden'}}>

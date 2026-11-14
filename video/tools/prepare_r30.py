@@ -29,9 +29,9 @@ def main():
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a}', '-to', f'{b}', '-i', str(src / 'rain.mov'), '-an', '-vf', vf,
                         '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1', str(dst / f'{name}.mp4')], check=True)
         print(name)
-    # стоп-кадр для финала: кадр 342 rest.mp4 (последние кадры её монтажа размыты)
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(dst / 'rest.mp4'), '-vf', "select='eq(n\\,342)'", '-frames:v', '1',
-                    '-q:v', '2', str(dst / 'rest_last.jpg')], check=True)
+    # стоп-кадр для финала: 11,8 с исходника (кадр 342 rest.mp4), без резкости (проверка 14.11: зерно на коже)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '11.8', '-i', str(src / 'rest.mp4'), '-frames:v', '1',
+                    '-vf', f'scale={W}:{H}:flags=lanczos', '-q:v', '2', str(dst / 'rest_last.jpg')], check=True)
 
 
 if __name__ == '__main__':
