@@ -5,46 +5,62 @@ import {RED} from './SerijaReel';
 import {Plate} from './NoyabrReel';
 
 // Рилс 31 «Зашла просто посмотреть» (14.11): ТЦ и примерочная, видео Кати.
-// Хук на развороте в проходе, проход к камере, три образа через шторку примерочной (ускорение и замедление,
-// клипы готовит tools/prepare_r31.py), вспышки ещё трёх образов, финал: три образа рядом и вопрос.
+// Хук: улыбка в камеру и разворот в проходе, походка мимо стойки, рука берёт вещь и по ткани, три образа через
+// шторку примерочной (ускорение и замедление, клипы готовит tools/prepare_r31.py), образ 4 (белое платье),
+// вспышки ещё двух образов, три подмигивания с наездом на лицо, финал: четыре образа рядом и вопрос.
 // Вывески магазинов в проходе размыты при подготовке клипов. Без звука.
 
 const OSW = 'Oswald, "DejaVu Sans Condensed", sans-serif';
 const GRADE = 'contrast(1.05) saturate(1.08)';
 
-const HOOK = 30;
-const WALK = 75;
+const HOOK = 57;
+const WALK = 42;
+const INS = 22;
 const O1 = 93;
+const O1W = 38;
 const O1X = 26;
 const O2 = 93;
 const O2X = 27;
 const O3 = 138;
+const O4 = 39;
 const FL = 12;
+const WINKS: {src: string; dur: number; origin: string; z: number}[] = [
+  {src: 'w1', dur: 33, origin: '52% 30%', z: 1.9},
+  {src: 'w2', dur: 26, origin: '42% 20%', z: 1.9},
+  {src: 'w3', dur: 27, origin: '55% 25%', z: 1.8},
+];
 const FIN = 108;
 
 const S_WALK = HOOK;
-const S_O1 = S_WALK + WALK;
-const S_O1X = S_O1 + O1;
+const S_I1 = S_WALK + WALK;
+const S_I2 = S_I1 + INS;
+const S_O1 = S_I2 + INS;
+const S_O1W = S_O1 + O1;
+const S_O1X = S_O1W + O1W;
 const S_O2 = S_O1X + O1X;
 const S_O2X = S_O2 + O2;
 const S_O3 = S_O2X + O2X;
-const S_FL = S_O3 + O3;
-const S_FIN = S_FL + 3 * FL;
+const S_O4 = S_O3 + O3;
+const S_FL = S_O4 + O4;
+const S_W = S_FL + 2 * FL;
+const W_STARTS = WINKS.map((w, i) => S_W + WINKS.slice(0, i).reduce((a, x) => a + x.dur, 0));
+const S_FIN = S_W + WINKS.reduce((a, x) => a + x.dur, 0);
 export const PRIMEROCHNAYA_FRAMES = S_FIN + FIN;
 
 type Fx = 'none' | 'whip' | 'punch' | 'zoom';
 
 // клип на весь кадр с переходами на входе и выходе
-const Clip: React.FC<{src: string; dur: number; fin?: Fx; fout?: Fx; zoom?: [number, number]; origin?: string}> = ({
+const Clip: React.FC<{src: string; dur: number; fin?: Fx; fout?: Fx; zoom?: [number, number]; origin?: string; ease?: boolean}> = ({
   src,
   dur,
   fin = 'none',
   fout = 'none',
   zoom = [1, 1],
   origin = '50% 45%',
+  ease = false,
 }) => {
   const f = useCurrentFrame();
-  let s = interpolate(f, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  let s = interpolate(f, [0, dur], zoom, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: ease ? Easing.inOut(Easing.cubic) : undefined});
   let x = 0;
   let blur = 0;
   if (fin === 'whip') {
@@ -128,6 +144,7 @@ const Num: React.FC<{n: number; at: number; dur: number}> = ({n, at, dur}) => {
 };
 
 // финал: три образа рядом
+const SW = 270; // ширина полосы: четыре образа
 const Strip: React.FC<{src: string; i: number; cx: number}> = ({src, i, cx}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
@@ -135,11 +152,11 @@ const Strip: React.FC<{src: string; i: number; cx: number}> = ({src, i, cx}) => 
   const dir = i % 2 === 0 ? -1 : 1;
   const np = spring({frame: f - 14 - i * 5, fps, config: {damping: 9, stiffness: 240, mass: 0.5}});
   return (
-    <div style={{position: 'absolute', left: i * 360, top: 0, width: 360, height: 1920, overflow: 'hidden', transform: `translateY(${((1 - p) * dir * 1920).toFixed(1)}px)`}}>
+    <div style={{position: 'absolute', left: i * SW, top: 0, width: SW, height: 1920, overflow: 'hidden', transform: `translateY(${((1 - p) * dir * 1920).toFixed(1)}px)`}}>
       <OffthreadVideo
         src={staticFile(`r31/${src}.mp4`)}
         muted
-        style={{position: 'absolute', width: 1080, height: 1920, top: 0, left: -(cx * 1080 - 180), filter: GRADE}}
+        style={{position: 'absolute', width: 1080, height: 1920, top: 0, left: -(cx * 1080 - SW / 2), filter: GRADE}}
       />
       <div style={{position: 'absolute', top: 150, left: 0, right: 0, display: 'flex', justifyContent: 'center'}}>
         <div
@@ -147,7 +164,7 @@ const Strip: React.FC<{src: string; i: number; cx: number}> = ({src, i, cx}) => 
             fontFamily: OSW,
             fontWeight: 700,
             fontStyle: 'italic',
-            fontSize: 190,
+            fontSize: 160,
             lineHeight: 1,
             color: RED,
             WebkitTextStroke: '6px #fff',
@@ -171,8 +188,9 @@ const Final: React.FC = () => {
       <Strip src="h1" i={0} cx={0.5} />
       <Strip src="h2" i={1} cx={0.48} />
       <Strip src="h3" i={2} cx={0.5} />
-      {[1, 2].map((k) => (
-        <div key={k} style={{position: 'absolute', left: k * 360 - 4, top: 0, width: 8, height: 1920 * line, backgroundColor: '#fff'}} />
+      <Strip src="h4" i={3} cx={0.57} />
+      {[1, 2, 3].map((k) => (
+        <div key={k} style={{position: 'absolute', left: k * SW - 4, top: 0, width: 8, height: 1920 * line, backgroundColor: '#fff'}} />
       ))}
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(0,0,0,0.35) 100%)'}} />
       <div style={{position: 'absolute', top: 1330, left: 0, right: 0}}>
@@ -188,16 +206,25 @@ export const PrimerochnayaReel: React.FC = () => {
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       <Sequence from={0} durationInFrames={HOOK}>
-        <Clip src="hook" dur={HOOK} fout="whip" zoom={[1.13, 1.18]} origin="50% 40%" />
+        <Clip src="hook" dur={HOOK} fout="whip" zoom={[1.0, 1.06]} origin="50% 40%" />
       </Sequence>
       <Sequence from={S_WALK} durationInFrames={WALK}>
         <Clip src="walk" dur={WALK} fin="whip" fout="zoom" zoom={[1.0, 1.06]} />
       </Sequence>
+      <Sequence from={S_I1} durationInFrames={INS}>
+        <Clip src="i1" dur={INS} fin="whip" zoom={[1.0, 1.08]} />
+      </Sequence>
+      <Sequence from={S_I2} durationInFrames={INS}>
+        <Clip src="i2" dur={INS} fin="whip" fout="zoom" zoom={[1.0, 1.08]} />
+      </Sequence>
       <Sequence from={S_O1} durationInFrames={O1}>
         <Clip src="o1" dur={O1} fin="punch" />
       </Sequence>
+      <Sequence from={S_O1W} durationInFrames={O1W}>
+        <Clip src="o1w" dur={O1W} fin="punch" zoom={[1.0, 1.35]} origin="49% 20%" ease />
+      </Sequence>
       <Sequence from={S_O1X} durationInFrames={O1X}>
-        <Clip src="o1x" dur={O1X} />
+        <Clip src="o1x" dur={O1X} fin="punch" />
       </Sequence>
       <Sequence from={S_O2} durationInFrames={O2}>
         <Clip src="o2" dur={O2} fin="punch" />
@@ -208,9 +235,17 @@ export const PrimerochnayaReel: React.FC = () => {
       <Sequence from={S_O3} durationInFrames={O3}>
         <Clip src="o3" dur={O3} fin="punch" fout="zoom" />
       </Sequence>
-      {['f1', 'f2', 'f3'].map((s, i) => (
+      <Sequence from={S_O4} durationInFrames={O4}>
+        <Clip src="o4" dur={O4} fin="punch" zoom={[1.0, 1.08]} />
+      </Sequence>
+      {['f1', 'f3'].map((s, i) => (
         <Sequence key={s} from={S_FL + i * FL} durationInFrames={FL}>
           <Clip src={s} dur={FL} fin="punch" zoom={[1.0, 1.06]} />
+        </Sequence>
+      ))}
+      {WINKS.map((w, i) => (
+        <Sequence key={w.src} from={W_STARTS[i]} durationInFrames={w.dur}>
+          <Clip src={w.src} dur={w.dur} fin="punch" zoom={[1.0, w.z]} origin={w.origin} ease />
         </Sequence>
       ))}
       <Sequence from={S_FIN} durationInFrames={FIN}>
@@ -218,10 +253,10 @@ export const PrimerochnayaReel: React.FC = () => {
       </Sequence>
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.28) 100%)', pointerEvents: 'none'}} />
 
-      {/* хук: плашки ниже лица (лицо в кадре с первых кадров) */}
+      {/* хук: плашки над лицом (Катя близко к камере) */}
       <Sequence from={0} durationInFrames={HOOK + 4}>
         <AbsoluteFill>
-          <div style={{position: 'absolute', top: 1180, left: 0, right: 0}}>
+          <div style={{position: 'absolute', top: 190, left: 0, right: 0}}>
             <Plate t="Зашла" size={120} at={0} dur={HOOK + 4} light />
             <Plate t="«просто посмотреть» 🙈" size={78} at={0} dur={HOOK + 4} light />
           </div>
@@ -236,8 +271,8 @@ export const PrimerochnayaReel: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
       {/* номера образов */}
-      <Sequence from={S_O1} durationInFrames={O1 + O1X}>
-        <Num n={1} at={12} dur={O1 + O1X} />
+      <Sequence from={S_O1} durationInFrames={O1 + O1W + O1X}>
+        <Num n={1} at={12} dur={O1 + O1W + O1X} />
       </Sequence>
       <Sequence from={S_O2} durationInFrames={O2 + O2X}>
         <Num n={2} at={12} dur={O2 + O2X} />
@@ -245,15 +280,18 @@ export const PrimerochnayaReel: React.FC = () => {
       <Sequence from={S_O3} durationInFrames={O3}>
         <Num n={3} at={12} dur={O3} />
       </Sequence>
-      <Sequence from={S_FL} durationInFrames={3 * FL + 2}>
+      <Sequence from={S_O4} durationInFrames={O4}>
+        <Num n={4} at={6} dur={O4} />
+      </Sequence>
+      <Sequence from={S_FL} durationInFrames={2 * FL + 2}>
         <AbsoluteFill>
           <div style={{position: 'absolute', top: 1380, left: 0, right: 0}}>
-            <Plate t="и ещё чуть-чуть 🙈" size={96} at={0} dur={3 * FL + 2} />
+            <Plate t="и ещё чуть-чуть 🙈" size={96} at={0} dur={2 * FL + 2} />
           </div>
         </AbsoluteFill>
       </Sequence>
       {/* вспышки на склейках */}
-      {[S_O1, S_O2, S_O3, S_FL, S_FL + FL, S_FL + 2 * FL, S_FIN].map((s) => (
+      {[S_O1, S_O1W, S_O2, S_O3, S_O4, S_FL, S_FL + FL, ...W_STARTS, S_FIN].map((s) => (
         <Sequence key={`fl${s}`} from={s} durationInFrames={10}>
           <Flash />
         </Sequence>
