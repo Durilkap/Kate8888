@@ -4,7 +4,7 @@ import {KWord, useOswald2} from './UgadajReel';
 import {RED} from './SerijaReel';
 
 // Рилс 30 «Ноябрь. Открываю шторы...» (14.11): видео Кати из окна (дождь, 240 к/с) и её готовое видео с отдыха.
-// Рука открывает шторы, за окном дождь (дома напротив размыты: по виду из окна не узнать, где живёт Катя),
+// Рука открывает шторы, за окном дождь (без размытия, решение Кати 14.11),
 // «закрываю глаза»: наезд в капли, вспышка тёплого света, лето. Финал: стоп-кадр с лицом и вопрос.
 
 const CUR = 78; // curtain.mp4
@@ -50,24 +50,17 @@ const Rain: React.FC = () => {
   const dIn = interpolate(f, [D0, D0 + 6], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   // «закрываю глаза»: наезд в капли и размытие
   const dive = interpolate(f, [T0 - 24, T0 + 6], [1, 2.4], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.in(Easing.cubic)});
-  const dblur = 7 + interpolate(f, [T0 - 20, T0 + 6], [0, 26], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  const dblur = interpolate(f, [T0 - 20, T0 + 6], [0, 26], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  // шторы открылись: наезд в окно, предметы на подоконнике справа и подоконник в кадр не попадают (Катя 14.11)
+  const cz = interpolate(f, [0, 28, 42, CUR], [1.0, 1.05, 1.48, 1.52], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.quad)});
   return (
     <AbsoluteFill>
       <Sequence from={0} durationInFrames={CUR}>
-        <OffthreadVideo src={staticFile('r30/curtain.mp4')} muted style={{width: '100%', height: '100%', objectFit: 'cover', filter: `${cold} blur(2.5px)`, transform: `scale(${interpolate(f, [0, CUR], [1.0, 1.06])})`}} />
-        {/* окно и двор в верхней части кадра размыты сильнее (проверка 14.11) */}
-        <AbsoluteFill
-          style={{
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            WebkitMaskImage: 'linear-gradient(180deg, black 0%, black 52%, transparent 66%)',
-            maskImage: 'linear-gradient(180deg, black 0%, black 52%, transparent 66%)',
-          } as React.CSSProperties}
-        />
+        <OffthreadVideo src={staticFile('r30/curtain.mp4')} muted style={{width: '100%', height: '100%', objectFit: 'cover', filter: cold, transform: `scale(${cz})`, transformOrigin: '25% 20%'}} />
       </Sequence>
       <Sequence from={D0} durationInFrames={DROPS + 10}>
         <AbsoluteFill style={{opacity: dIn, overflow: 'hidden'}}>
-          <OffthreadVideo src={staticFile('r30/drops.mp4')} muted style={{width: '100%', height: '100%', objectFit: 'cover', filter: `${cold} blur(${(dblur + 5).toFixed(1)}px)`, transform: `scale(${1.05 * dive})`, transformOrigin: '50% 45%'}} />
+          <OffthreadVideo src={staticFile('r30/drops.mp4')} muted style={{width: '100%', height: '100%', objectFit: 'cover', filter: `${cold} blur(${dblur.toFixed(1)}px)`, transform: `scale(${1.15 * dive})`, transformOrigin: '50% 40%'}} />
         </AbsoluteFill>
       </Sequence>
     </AbsoluteFill>

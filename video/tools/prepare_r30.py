@@ -21,7 +21,7 @@ def main():
                     '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1', str(dst / 'rest.mp4')], check=True)
     print('rest.mp4')
     # дождь из окна (Катя 14.11, 240 к/с): рука открывает шторы; капли на стекле, фон не в фокусе
-    for name, a, b, speed in [('curtain', 1.3, 3.9, 1.0), ('drops', 6.55, 8.05, 0.5)]:
+    for name, a, b, speed in [('curtain', 1.3, 3.9, 1.0), ('drops', 8.4, 9.9, 0.5)]:  # капли: кусок без рамы окна (Катя 14.11)
         vf = f'scale={W}:{H}:force_original_aspect_ratio=increase:flags=lanczos,crop={W}:{H}'
         if speed != 1.0:
             vf += f',setpts=PTS/{speed}'
