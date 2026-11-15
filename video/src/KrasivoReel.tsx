@@ -3,10 +3,11 @@ import {AbsoluteFill, Easing, interpolate, OffthreadVideo, Sequence, staticFile,
 import {useInter} from './SynReel';
 import {useOswald2} from './UgadajReel';
 
-// Рилс 32 «Красиво уходит», версия 2 (15.11, Катя: «хочется ещё эффектнее», «сделай как крутой рилсмейкер»).
+// Рилс 32 «Красиво уходит», версия 3 (15.11): эффекты версии 2 («хочется ещё эффектнее», «как крутой рилсмейкер»),
+// без кадров с пола в примерочной (Катя: «Мне не нравится с кадрами из примерочной»), весь ролик в ТЦ после хука.
 // Формат «фраза поверх красивых кадров» (разбор @natally_glow), но в ритме: склейки по долям 0,5 с, ускорение
 // и замедление на взмахах волос, рывки камеры, вспышки, тёплые засветы, плёночное зерно, текст по словам.
-// Финал: чёрное платье, взмах волос, уходит и задёргивает шторку, «КРАСИВО УХОДИТ.» Клипы: tools/prepare_r32.py.
+// Финал: уходит по галерее со спины: замедление, ускорение вдаль, снова замедление, «КРАСИВО УХОДИТ.» Клипы: tools/prepare_r32.py.
 // Без размытия (решение Кати 15.11). Без звука: музыку Катя добавляет в Instagram.
 
 const OSW = 'Oswald, "DejaVu Sans Condensed", sans-serif';
@@ -19,14 +20,13 @@ type Seg = {src: string; dur: number; z: [number, number]; origin?: string; fin?
 const SEGS: Seg[] = [
   {src: 's0', dur: 60, z: [1.08, 1.0], origin: '45% 40%', fout: 'whipL'},
   {src: 's1', dur: 45, z: [1.0, 1.06], fin: 'whipL', fout: 'zoomIn'},
-  {src: 'r6', dur: 75, z: [1.04, 1.12], origin: '50% 30%', fin: 'punch', fout: 'whipR'},
-  {src: 's2r', dur: 60, z: [1.0, 1.08], origin: '50% 40%', fin: 'whipR', fout: 'zoomIn'},
-  {src: 's4', dur: 45, z: [1.12, 1.0], fin: 'zoomOut'},
-  {src: 'r4', dur: 150, z: [1.0, 1.1], origin: '50% 55%', fin: 'punch'},
+  {src: 's2r', dur: 60, z: [1.0, 1.08], origin: '50% 40%', fin: 'punch', fout: 'whipR'},
+  {src: 's3', dur: 45, z: [1.0, 1.06], fin: 'whipR', fout: 'zoomIn'},
+  {src: 'r9', dur: 150, z: [1.02, 1.2], origin: '80% 55%', fin: 'zoomOut'}, // наезд вправо: прохожий у левого края уходит за кадр
 ];
 const STARTS = SEGS.map((_, i) => SEGS.slice(0, i).reduce((a, x) => a + x.dur, 0));
 export const KRASIVO_FRAMES = SEGS.reduce((a, x) => a + x.dur, 0);
-const FIN0 = STARTS[5];
+const FIN0 = STARTS[4];
 
 const Shot: React.FC<Seg> = ({src, dur, z, origin = '50% 45%', fin = 'none', fout = 'none'}) => {
   const f = useCurrentFrame();
@@ -179,7 +179,7 @@ export const KrasivoReel: React.FC = () => {
           <Flash />
         </Sequence>
       ))}
-      <Sequence from={FIN0 + 118} durationInFrames={14}>
+      <Sequence from={FIN0 + 104} durationInFrames={14}>
         <Flash warm />
       </Sequence>
       <Grain />
@@ -210,18 +210,18 @@ export const KrasivoReel: React.FC = () => {
           ],
         ]}
       />
-      <Lines from={STARTS[3] + 24} dur={STARTS[5] - STARTS[3] - 24} rows={[[{t: 'Она', at: 2}, {t: 'просто', at: 8}]]} />
+      <Lines from={STARTS[3] + 8} dur={FIN0 - STARTS[3] - 8} rows={[[{t: 'Она', at: 2}, {t: 'просто', at: 8}]]} />
       <Lines
         from={FIN0}
-        dur={SEGS[5].dur}
+        dur={SEGS[4].dur}
         rows={[
           [
             {t: 'Она', at: 0},
             {t: 'просто', at: 0},
           ],
           [
-            {t: 'красиво', at: 22, big: true, glow: true},
-            {t: 'уходит.', at: 120, big: true, glow: true},
+            {t: 'красиво', at: 18, big: true, glow: true},
+            {t: 'уходит.', at: 106, big: true, glow: true},
           ],
         ]}
       />
