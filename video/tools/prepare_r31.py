@@ -148,7 +148,28 @@ def track_signs(path, src_fps, start, n, signs):
     n = len(G)
     out = [[] for _ in range(n)]
     for sign in signs:
-        keys = sorted((max(0, min(n - 1, round((t - start) * src_fps))), np.array(b, float)) for t, b in sign)
+        raw = sorted((((t - start) * src_fps), np.array(b, float)) for t, b in sign)
+        raw = [(float(i), b) for i, b in raw]
+
+        def at(i):
+            """рамка в кадре i по прямой между опорными кадрами"""
+            if i <= raw[0][0]:
+                return raw[0][1]
+            for (i0, b0), (i1, b1) in zip(raw, raw[1:]):
+                if i0 <= i <= i1:
+                    u = (i - i0) / max(1e-6, i1 - i0)
+                    return b0 * (1 - u) + b1 * u
+            return raw[-1][1]
+
+        inner = [(round(i), b) for i, b in raw if 0 <= i <= n - 1]
+        if raw[0][0] < 0 and (not inner or inner[0][0] > 0):
+            inner.insert(0, (0, at(0.0)))
+        if raw[-1][0] > n - 1 and (not inner or inner[-1][0] < n - 1):
+            inner.append((n - 1, at(float(n - 1))))
+        keys = []
+        for i, b in inner:
+            if not keys or i > keys[-1][0]:
+                keys.append((i, b))
 
         def size_at(i):
             if i <= keys[0][0]:
