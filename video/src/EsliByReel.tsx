@@ -66,47 +66,45 @@ export const EsliByReel: React.FC<{src?: string}> = ({src = 'r36/main.mp4'}) => 
 };
 
 // Рилс 36, челлендж Лилии, день 1 (17.11): видео Кати на кухне + настоящие комментарии из-под рилса 34
-// (ники и аватарки закрыты, tools/prepare_r36.py). Комментарии сыплются стопкой, пока Катя не кладёт телефон
-// экраном вниз, тогда исчезают. Текст в стиле референса (IgText). 7 с, без звука: музыку Катя ставит в Instagram.
+// (ники и аватарки закрыты, tools/prepare_r36.py). Комментарии крупно, по одному: появился, улетел, следующий;
+// последние 1,6 с без комментариев. Текст в стиле референса (IgText). 7 с, без звука: музыку Катя ставит в Instagram.
 
 // кадрирование по просьбе Кати «ракурс максимально красивый»: ближе, от головы до талии, лёгкий наезд
 const R36 = [
   {src: 'a', dur: 54, z: [1.2, 1.26], o: '50% 30%'},
   {src: 'b', dur: 60, z: [1.18, 1.24], o: '50% 32%'},
   {src: 'c', dur: 60, z: [1.24, 1.3], o: '52% 30%'},
-  {src: 'd', dur: 36, z: [1.16, 1.2], o: '55% 26%'},
+  {src: 'd', dur: 30, z: [1.16, 1.2], o: '55% 26%'}, // без шага к камере (Катя 17.11)
 ];
 const R36_START = R36.map((_, i) => R36.slice(0, i).reduce((a, x) => a + x.dur, 0));
 export const DEN1_FRAMES = R36.reduce((a, x) => a + x.dur, 0);
 const GRADE36 = 'contrast(1.03) saturate(1.05) brightness(1.02)';
-const POP = [4, 20, 36, 52, 68, 84];
-const GONE = 96; // Катя кладёт телефон экраном вниз
-const CARD_H = [140, 135, 135, 215, 112, 132].map((h) => (h * 880) / 1150);
-const CARD_Y: number[] = [];
-// новая карточка закрывает у предыдущей только строку с ником (её низ в пикселях карточки)
-const NAME_BOTTOM = [68, 66, 66, 52, 46, 68].map((h) => (h * 880) / 1150 - 4);
-CARD_H.forEach((h, i) => CARD_Y.push(i === 0 ? 1850 - h : CARD_Y[i - 1] + NAME_BOTTOM[i - 1] - h));
-const CARD_X = [-10, 8, -6, 10, -8, 6];
-const CARD_R = [-1, 0.8, -0.6, 1, -0.8, 0.6];
+// Катя 17.11: комментарии крупнее и по одному: появился, исчез, следующий. Каждый в своём месте кадра.
+const SLOT = 26; // 0,87 с на комментарий: 6 кадров появление, 14 держится, 6 улетает
+const POP = [6, 32, 58, 84, 110, 136];
+const CARD_W = 1040;
+const CARD_Y = [1330, 1470, 1350, 1420, 1500, 1380];
+const CARD_X = [-6, 8, -10, 4, -4, 10];
+const CARD_R = [-2.5, 2, -1.5, 2.5, -2, 1.5];
 
 const Card: React.FC<{i: number}> = ({i}) => {
   const f = useCurrentFrame();
   const at = POP[i];
-  if (f < at) return null;
-  const p = interpolate(f, [at, at + 6], [0, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.8))});
-  const g = interpolate(f, [GONE + i, GONE + i + 10], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.in(Easing.cubic)});
+  if (f < at || f >= at + SLOT) return null;
+  const p = interpolate(f, [at, at + 6], [0, 1], {extrapolateRight: 'clamp', easing: Easing.out(Easing.back(2))});
+  const g = interpolate(f, [at + SLOT - 6, at + SLOT], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.in(Easing.cubic)});
+  const dir = i % 2 ? 1 : -1;
   return (
     <Img
       src={staticFile(`r36/c${i + 1}.png`)}
       style={{
         position: 'absolute',
-        left: 540 - 440 + CARD_X[i],
+        left: 540 - CARD_W / 2 + CARD_X[i],
         top: CARD_Y[i],
-        width: 880,
-        transform: `translateY(${(g * 900).toFixed(1)}px) scale(${(0.6 + 0.4 * p) * (1 - 0.15 * g)}) rotate(${CARD_R[i] + g * (i % 2 ? 12 : -12)}deg)`,
-        transformOrigin: '50% 100%',
-        opacity: Math.min(1, p * 1.5) * (1 - g),
-        filter: `blur(${(g * 8).toFixed(1)}px) drop-shadow(0 10px 24px rgba(0,0,0,0.35))`,
+        width: CARD_W,
+        transform: `translateX(${(g * dir * 700).toFixed(1)}px) scale(${(0.72 + 0.28 * p) * (1 - 0.1 * g)}) rotate(${CARD_R[i] + g * dir * 10}deg)`,
+        opacity: Math.min(1, p * 1.6) * (1 - g),
+        filter: `blur(${(g * 10).toFixed(1)}px) drop-shadow(0 12px 28px rgba(0,0,0,0.4))`,
       }}
     />
   );
