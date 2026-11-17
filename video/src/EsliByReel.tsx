@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {AbsoluteFill, continueRender, delayRender, Easing, Img, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {RED} from './SerijaReel';
+import {useOswald2} from './UgadajReel';
+import {useMontserrat} from './WordCaptions';
 
 // Стиль текста по референсу челленджа Лилии (ролик «Если бы мне нужно было...», Катя 17.11): маленький белый
 // шрифт без плашки по центру кадра чуть ниже середины, мягкая тень, стрелка ⬇️. Шрифт Instagram «Классический»
@@ -60,7 +63,7 @@ export const EsliByReel: React.FC<{src?: string}> = ({src = 'r36/main.mp4'}) => 
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       <OffthreadVideo src={staticFile(src)} muted style={{width: '100%', height: '100%', objectFit: 'cover'}} />
-      <IgText lines={['Если бы мне нужно', 'было не пускать в себя негатив -', 'я бы сделала это ⬇️']} />
+      <HookBold style={hook} />
     </AbsoluteFill>
   );
 };
@@ -124,8 +127,58 @@ const Shot36: React.FC<{src: string; dur: number; z: [number, number]; o: string
   );
 };
 
-export const Den1Reel: React.FC = () => {
+// Хук пожирнее и заметнее (наставник Кати 18.11): три варианта на выбор, по умолчанию «plate».
+// plate: чёрный Montserrat ExtraBold на белых плашках по строкам; stroke: белый Montserrat с обводкой и красным словом;
+// oswald: Oswald заглавными, белый с тенью и красным словом.
+type HookStyle = 'plate' | 'stroke' | 'oswald';
+const HOOK_LINES: {t: string; a?: boolean}[][] = [
+  [{t: 'Если бы мне нужно было'}],
+  [{t: 'не пускать в себя'}, {t: 'негатив,', a: true}],
+  [{t: 'я бы сделала это ⬇️'}],
+];
+
+const HookBold: React.FC<{style: HookStyle}> = ({style}) => {
+  const osw = style === 'oswald';
+  const size = osw ? 76 : 64;
+  return (
+    <div style={{position: 'absolute', top: osw ? 960 : 990, left: 40, right: 40, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: style === 'plate' ? 10 : 2}}>
+      {HOOK_LINES.map((l, i) => (
+        <div
+          key={i}
+          style={{
+            fontFamily: osw ? 'Oswald, "DejaVu Sans Condensed", sans-serif' : 'Montserrat, "DejaVu Sans", sans-serif',
+            fontWeight: osw ? 700 : 800,
+            fontSize: size,
+            lineHeight: style === 'plate' ? 1.12 : 1.1,
+            letterSpacing: osw ? '0.01em' : '-0.015em',
+            textTransform: osw ? 'uppercase' : 'none',
+            textAlign: 'center',
+            whiteSpace: 'nowrap',
+            color: style === 'plate' ? '#111' : '#fff',
+            background: style === 'plate' ? '#fff' : 'none',
+            padding: style === 'plate' ? '0.08em 0.36em 0.12em' : 0,
+            borderRadius: style === 'plate' ? '0.28em' : 0,
+            boxShadow: style === 'plate' ? '0 8px 24px rgba(0,0,0,0.28)' : 'none',
+            WebkitTextStroke: style === 'stroke' ? '7px rgba(0,0,0,0.85)' : '0px',
+            paintOrder: 'stroke fill',
+            textShadow: style === 'plate' ? 'none' : '0 4px 10px rgba(0,0,0,0.55), 0 10px 34px rgba(0,0,0,0.5)',
+          } as React.CSSProperties}
+        >
+          {l.map((w, j) => (
+            <span key={j} style={{color: w.a ? RED : undefined, marginLeft: j ? '0.25em' : 0}}>
+              {w.t}
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export const Den1Reel: React.FC<{hook?: HookStyle}> = ({hook = 'plate'}) => {
   useInter400();
+  useMontserrat();
+  useOswald2();
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
       {R36.map((s, i) => (
@@ -136,7 +189,7 @@ export const Den1Reel: React.FC = () => {
       {POP.map((_, i) => (
         <Card key={i} i={i} />
       ))}
-      <IgText lines={['Если бы мне нужно', 'было не пускать в себя негатив -', 'я бы сделала это ⬇️']} />
+      <HookBold style={hook} />
     </AbsoluteFill>
   );
 };
