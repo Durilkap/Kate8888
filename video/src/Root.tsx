@@ -18,6 +18,7 @@ import {PrimerochnayaReel, PRIMEROCHNAYA_FRAMES} from './PrimerochnayaReel';
 import {KrasivoReel, KRASIVO_FRAMES} from './KrasivoReel';
 import {VybirayteReel, VYBIRAYTE_FRAMES} from './VybirayteReel';
 import {Den1Reel, DEN1_FRAMES, EsliByRefTest, EsliByReel} from './EsliByReel';
+import {ProshuReel, PROSHU_FRAMES} from './ProshuReel';
 import {SpeshkaReel, SPESHKA_FRAMES, SpeshkaReel2, SPESHKA2_FRAMES} from './SpeshkaReel';
 import {ZavistReel, ZavistReelSoft, ZavistReelHard, ZavistKatya, ZAVIST_FRAMES} from './ZavistReel';
 import {UgadajReel, UGADAJ_FRAMES, UgadajMotion, UGADAJ_M_FRAMES, UgadajMotion2, UGADAJ_M2_FRAMES, UgadajMotion3, UGADAJ_M3_FRAMES, UgadajMotion5, UGADAJ_M5_FRAMES} from './UgadajReel';
@@ -183,6 +184,14 @@ export const Root: React.FC = () => (
       id="VybirayteReel"
       component={VybirayteReel}
       durationInFrames={VYBIRAYTE_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+      <Composition
+      id="ProshuReel"
+      component={ProshuReel}
+      durationInFrames={PROSHU_FRAMES}
       fps={30}
       width={1080}
       height={1920}
