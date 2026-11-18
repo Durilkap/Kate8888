@@ -35,7 +35,7 @@ export const ProshuReel: React.FC = () => {
       />
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 58%, rgba(0,0,0,0.28) 100%)'}} />
       <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.28) 75%, rgba(0,0,0,0.05) 100%)'}} />
-      <WordCaptions cards={PROSHU_CARDS} total={PROSHU_FRAMES} ready={ready} accent={RED} plate top={1180} />
+      <WordCaptions cards={PROSHU_CARDS} total={PROSHU_FRAMES} ready={ready} accent={RED} plate top={1230} size={66} />
     </AbsoluteFill>
   );
 };

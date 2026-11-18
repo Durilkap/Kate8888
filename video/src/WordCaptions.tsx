@@ -24,7 +24,7 @@ const fit = (text: string, base: number, extra = 0) => {
   return w > MAXW ? Math.floor((base * MAXW) / w) : base;
 };
 
-const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; accent: string; plate: boolean}> = ({c, dur, ready, top, accent, plate}) => {
+const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; accent: string; plate: boolean; size?: number}> = ({c, dur, ready, top, accent, plate, size: fixed}) => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const out = interpolate(f, [dur - 4, dur], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
@@ -39,7 +39,8 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; acce
           right: 110,
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          // при едином размере текст всегда начинается с одной высоты (куратор Кати 19.11)
+          justifyContent: fixed ? 'flex-start' : 'center',
           alignItems: 'center',
           fontFamily: SANS,
           fontWeight: 800,
@@ -50,7 +51,7 @@ const Caption: React.FC<{c: Card; dur: number; ready: boolean; top: number; acce
         {c.lines.map((l, i) => {
           const base = l.big ? BIG : BASE;
           const plates = plate ? l.words.filter((w) => w.a).length * 0.42 : 0; // запас ширины на плашки
-          const size = ready ? fit(l.words.map((w) => w.t).join(' '), base, plates) : base;
+          const size = fixed ?? (ready ? fit(l.words.map((w) => w.t).join(' '), base, plates) : base);
           return (
             <div key={i} style={{fontSize: size, lineHeight: plate ? 1.22 : 1.1, whiteSpace: 'nowrap'}}>
               {l.words.map((w, j) => {
@@ -116,20 +117,21 @@ export const useMontserrat = () => {
 };
 
 // Все экраны титров: каждый держится до начала следующего, последний до конца ролика
-export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number; accent?: string; plate?: boolean}> = ({
+export const WordCaptions: React.FC<{cards: Card[]; total: number; ready: boolean; top?: number; accent?: string; plate?: boolean; size?: number}> = ({
   cards,
   total,
   ready,
   top = 1030,
   accent = YELLOW,
   plate = false,
+  size,
 }) => (
   <>
     {cards.map((c, i) => {
       const to = i + 1 < cards.length ? cards[i + 1].from : total;
       return (
         <Sequence key={`c${i}`} from={c.from} durationInFrames={to - c.from}>
-          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} accent={accent} plate={plate} />
+          <Caption c={c} dur={i + 1 < cards.length ? to - c.from : to - c.from + 12} ready={ready} top={top} accent={accent} plate={plate} size={size} />
         </Sequence>
       );
     })}
