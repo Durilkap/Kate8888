@@ -15,7 +15,7 @@ const SEGS = [
 ];
 const STARTS = SEGS.map((_, i) => SEGS.slice(0, i).reduce((a, x) => a + x.dur, 0));
 export const VOPROS_FRAMES = SEGS.reduce((a, x) => a + x.dur, 0);
-const LINES = ['Как изменилась ваша жизнь,', 'когда вы позволили себе', 'стать охуевшей? 😏'];
+const LINES = ['Женщины, которые', 'стали охуевшими,', 'расскажите, какая вы? 😏']; // формулировка Кати 19.11
 
 const Shot: React.FC<{src: string; dur: number; z: number[]; o: string}> = ({src, dur, z, o}) => {
   const f = useCurrentFrame();
