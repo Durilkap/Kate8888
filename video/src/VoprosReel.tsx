@@ -2,46 +2,57 @@ import React from 'react';
 import {AbsoluteFill, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {useMontserrat} from './WordCaptions';
 
-// Рилс 38, челлендж Лилии, день 3 «ВОПРОС» (19.11): вопрос на экране всё видео, Катя в ТЦ (кадры «Красиво уходит»,
-// public/r32): идёт к камере с улыбкой, разворот со взмахом волос в замедлении, уходит. 7 с, без звука:
+// Рилс 38, челлендж Лилии, день 3 «ВОПРОС» (19.11): вопрос на экране всё видео. 7 с, без звука:
 // трендовую музыку Катя ставит в Instagram. Текст: чёрный Montserrat ExtraBold на белых плашках (как день 1, его хвалил куратор).
+// VoprosReel: танец Кати в клубе, красный топ (public/r38, tools/prepare_r38.py): крупно с улыбкой, руки вверх,
+// взмах волос в замедлении, взгляд через плечо. VoprosTcReel: прежняя версия в ТЦ (кадры «Красиво уходит», public/r32).
 
 const GRADE = 'contrast(1.06) saturate(1.0) sepia(0.05) brightness(1.02)';
-const SEGS = [
-  {src: 's1', from: 0, dur: 60, z: [1.0, 1.05], o: '50% 40%'},
-  {src: 's2r', from: 0, dur: 60, z: [1.02, 1.08], o: '50% 40%'},
-  {src: 's3', from: 0, dur: 45, z: [1.0, 1.05], o: '50% 45%'},
-  {src: 's4', from: 0, dur: 45, z: [1.08, 1.0], o: '50% 45%'},
+type Seg = {src: string; dur: number; z: number[]; o: string};
+const SEGS_TC: Seg[] = [
+  {src: 'r32/s1', dur: 60, z: [1.0, 1.05], o: '50% 40%'},
+  {src: 'r32/s2r', dur: 60, z: [1.02, 1.08], o: '50% 40%'},
+  {src: 'r32/s3', dur: 45, z: [1.0, 1.05], o: '50% 45%'},
+  {src: 'r32/s4', dur: 45, z: [1.08, 1.0], o: '50% 45%'},
 ];
-const STARTS = SEGS.map((_, i) => SEGS.slice(0, i).reduce((a, x) => a + x.dur, 0));
-export const VOPROS_FRAMES = SEGS.reduce((a, x) => a + x.dur, 0);
+const SEGS_DANCE: Seg[] = [
+  {src: 'r38/k1', dur: 53, z: [1.0, 1.04], o: '50% 30%'},
+  {src: 'r38/k2', dur: 60, z: [1.02, 1.06], o: '50% 35%'},
+  {src: 'r38/k3', dur: 44, z: [1.0, 1.04], o: '50% 35%'},
+  {src: 'r38/k4', dur: 53, z: [1.0, 1.04], o: '35% 35%'},
+];
+export const VOPROS_FRAMES = SEGS_DANCE.reduce((a, x) => a + x.dur, 0);
+export const VOPROS_TC_FRAMES = SEGS_TC.reduce((a, x) => a + x.dur, 0);
 const LINES = ['Женщины, которые', 'стали охуевшими,', 'расскажите, какая вы? 😏']; // формулировка Кати 19.11
 
-const Shot: React.FC<{src: string; dur: number; z: number[]; o: string}> = ({src, dur, z, o}) => {
+const Shot: React.FC<{src: string; dur: number; z: number[]; o: string; punch: boolean}> = ({src, dur, z, o, punch}) => {
   const f = useCurrentFrame();
-  const s = interpolate(f, [0, dur], z, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
+  // толчок на склейке под бит (только танец): +4% и назад за 5 кадров
+  const p = punch ? interpolate(f, [0, 5], [0.04, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) : 0;
+  const s = interpolate(f, [0, dur], z, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) + p;
   return (
     <AbsoluteFill style={{overflow: 'hidden'}}>
-      <OffthreadVideo src={staticFile(`r32/${src}.mp4`)} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${s.toFixed(4)})`, transformOrigin: o, filter: GRADE}} />
+      <OffthreadVideo src={staticFile(`${src}.mp4`)} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${s.toFixed(4)})`, transformOrigin: o, filter: GRADE}} />
     </AbsoluteFill>
   );
 };
 
-export const VoprosReel: React.FC = () => {
+const Vopros: React.FC<{segs: Seg[]; top: number; punch: boolean}> = ({segs, top, punch}) => {
   useMontserrat();
+  const starts = segs.map((_, i) => segs.slice(0, i).reduce((a, x) => a + x.dur, 0));
   return (
     <AbsoluteFill style={{backgroundColor: '#000'}}>
-      {SEGS.map((x, i) => (
-        <Sequence key={x.src} from={STARTS[i]} durationInFrames={x.dur}>
-          <Shot src={x.src} dur={x.dur} z={x.z} o={x.o} />
+      {segs.map((x, i) => (
+        <Sequence key={x.src} from={starts[i]} durationInFrames={x.dur}>
+          <Shot src={x.src} dur={x.dur} z={x.z} o={x.o} punch={punch && i > 0} />
         </Sequence>
       ))}
-      <div style={{position: 'absolute', top: 1000, left: 30, right: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10}}>
+      <div style={{position: 'absolute', top, left: 30, right: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10}}>
         {LINES.map((l) => (
           <div
             key={l}
             style={{
-              fontFamily: 'Montserrat, "DejaVu Sans", sans-serif',
+              fontFamily: 'Montserrat, "Noto Color Emoji", "DejaVu Sans", sans-serif',
               fontWeight: 800,
               fontSize: 58,
               lineHeight: 1.12,
@@ -61,3 +72,7 @@ export const VoprosReel: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+// танец: лица в кадрах на высоте 500-1150 px, поэтому вопрос ниже лица, над зоной подписи Instagram
+export const VoprosReel: React.FC = () => <Vopros segs={SEGS_DANCE} top={1270} punch />;
+export const VoprosTcReel: React.FC = () => <Vopros segs={SEGS_TC} top={1000} punch={false} />;
