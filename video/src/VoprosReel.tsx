@@ -4,8 +4,8 @@ import {useMontserrat} from './WordCaptions';
 
 // Рилс 38, челлендж Лилии, день 3 «ВОПРОС» (19.11): вопрос на экране всё видео. 7 с, без звука:
 // трендовую музыку Катя ставит в Instagram. Текст: чёрный Montserrat ExtraBold на белых плашках (как день 1, его хвалил куратор).
-// VoprosReel: танец Кати в клубе, красный топ (public/r38, tools/prepare_r38.py): крупно с улыбкой, руки вверх,
-// взмах волос в замедлении, взгляд через плечо. VoprosTcReel: прежняя версия в ТЦ (кадры «Красиво уходит», public/r32).
+// VoprosReel: танец Кати в клубе, красный топ (public/r38, tools/prepare_r38.py): оглядывается с улыбкой, танец
+// в полный рост, взмах волос в замедлении, взгляд через плечо (крупные кадры анфас Кате не понравились). VoprosTcReel: прежняя версия в ТЦ (кадры «Красиво уходит», public/r32).
 
 const GRADE = 'contrast(1.06) saturate(1.0) sepia(0.05) brightness(1.02)';
 type Seg = {src: string; dur: number; z: number[]; o: string};
@@ -16,10 +16,11 @@ const SEGS_TC: Seg[] = [
   {src: 'r32/s4', dur: 45, z: [1.08, 1.0], o: '50% 45%'},
 ];
 const SEGS_DANCE: Seg[] = [
-  {src: 'r38/k1', dur: 53, z: [1.0, 1.04], o: '50% 30%'},
-  {src: 'r38/k2', dur: 60, z: [1.02, 1.06], o: '50% 35%'},
-  {src: 'r38/k3', dur: 44, z: [1.0, 1.04], o: '50% 35%'},
-  {src: 'r38/k4', dur: 53, z: [1.0, 1.04], o: '35% 35%'},
+  {src: 'r38/k1', dur: 39, z: [1.0, 1.04], o: '50% 30%'},
+  {src: 'r38/k2', dur: 45, z: [1.14, 1.17], o: '70% 40%'},
+  {src: 'r38/k2b', dur: 43, z: [1.14, 1.18], o: '70% 40%'},
+  {src: 'r38/k3', dur: 40, z: [1.0, 1.04], o: '50% 35%'},
+  {src: 'r38/k4', dur: 43, z: [1.0, 1.04], o: '35% 35%'},
 ];
 export const VOPROS_FRAMES = SEGS_DANCE.reduce((a, x) => a + x.dur, 0);
 export const VOPROS_TC_FRAMES = SEGS_TC.reduce((a, x) => a + x.dur, 0);
@@ -54,7 +55,7 @@ const Vopros: React.FC<{segs: Seg[]; top: number; punch: boolean}> = ({segs, top
             style={{
               fontFamily: 'Montserrat, "Noto Color Emoji", "DejaVu Sans", sans-serif',
               fontWeight: 800,
-              fontSize: 58,
+              fontSize: 54,
               lineHeight: 1.12,
               letterSpacing: '-0.015em',
               color: '#111',
@@ -73,6 +74,7 @@ const Vopros: React.FC<{segs: Seg[]; top: number; punch: boolean}> = ({segs, top
   );
 };
 
-// танец: лица в кадрах на высоте 500-1150 px, поэтому вопрос ниже лица, над зоной подписи Instagram
+// танец: лица в кадрах на высоте 500-1150 px, поэтому вопрос ниже лица, над зоной подписи Instagram;
+// шрифт 54 (в ТЦ тоже), чтобы смайлик не заходил под кнопки Instagram справа
 export const VoprosReel: React.FC = () => <Vopros segs={SEGS_DANCE} top={1270} punch />;
 export const VoprosTcReel: React.FC = () => <Vopros segs={SEGS_TC} top={1000} punch={false} />;
