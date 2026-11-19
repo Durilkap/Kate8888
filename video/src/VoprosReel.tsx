@@ -22,7 +22,15 @@ const SEGS_DANCE: Seg[] = [
   {src: 'r38/k6', dur: 72, z: [1.1, 1.14], o: '50% 10%'},
   {src: 'r38/k4', dur: 43, z: [1.0, 1.04], o: '35% 35%'},
 ];
-export const VOPROS_FRAMES = SEGS_DANCE.reduce((a, x) => a + x.dur, 0);
+// версия 7 (Катя 19.11): белый топик и юбка, кадры, где грудь смотрится красиво (профиль, полный рост), танцпол
+const SEGS_TOPIK: Seg[] = [
+  {src: 'r38/t1', dur: 41, z: [1.0, 1.04], o: '50% 30%'},
+  {src: 'r38/t2', dur: 49, z: [1.0, 1.05], o: '50% 30%'},
+  {src: 'r38/t3', dur: 79, z: [1.02, 1.06], o: '45% 30%'},
+  {src: 'r38/t4', dur: 41, z: [1.0, 1.04], o: '50% 30%'},
+];
+export const VOPROS_FRAMES = SEGS_TOPIK.reduce((a, x) => a + x.dur, 0);
+export const VOPROS_RED_FRAMES = SEGS_DANCE.reduce((a, x) => a + x.dur, 0);
 export const VOPROS_TC_FRAMES = SEGS_TC.reduce((a, x) => a + x.dur, 0);
 const LINES = ['Женщины, которые', 'стали охуевшими,', 'расскажите, какая вы? 😏']; // формулировка Кати 19.11
 
@@ -76,5 +84,6 @@ const Vopros: React.FC<{segs: Seg[]; top: number; punch: boolean}> = ({segs, top
 
 // танец: лица в кадрах на высоте 500-1150 px, поэтому вопрос ниже лица, над зоной подписи Instagram;
 // шрифт 54 (в ТЦ тоже), чтобы смайлик не заходил под кнопки Instagram справа
-export const VoprosReel: React.FC = () => <Vopros segs={SEGS_DANCE} top={1270} punch />;
+export const VoprosReel: React.FC = () => <Vopros segs={SEGS_TOPIK} top={1270} punch />;
+export const VoprosRedReel: React.FC = () => <Vopros segs={SEGS_DANCE} top={1270} punch />; // версия 6, красный топ
 export const VoprosTcReel: React.FC = () => <Vopros segs={SEGS_TC} top={1000} punch={false} />;

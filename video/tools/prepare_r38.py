@@ -20,15 +20,24 @@ CLIPS = [
     ('IMG_3038.MOV', 19.8, 20.95, 'k4', 0.8, (1566, 2784, 0, 500)),  # y=500: лицо в начале выше вопроса
 ]
 
+# Катя 19.11: «Есть кадры, где грудь смотрится красиво. И хочу ещё одно видео, где я в топике танцую».
+# Версия 7: только белый топик и юбка (IMG_2207 балкон, IMG_2208 светящийся танцпол).
+CLIPS_TOPIK = [
+    ('IMG_2207.MOV', 24.6, 25.55, 't1', 0.7, None),   # танцует, поворачивается к камере с улыбкой
+    ('IMG_2208.MOV', 4.3, 5.93, 't2', 1.0, (1215, 2160, 372, 700)),  # танцпол, обе руки вверх, улыбка; кроп к Кате без танцующих рядом
+    ('IMG_2207.MOV', 4.6, 6.7, 't3', 0.8, None),      # в профиль у перил, в полный рост
+    ('IMG_2207.MOV', 25.55, 26.65, 't4', 0.8, None),   # разворот, спина, хвост с платком
+]
+
 
 def main():
-    for f, a, b, n, sp, crop in CLIPS:
+    for f, a, b, n, sp, crop in CLIPS + CLIPS_TOPIK:
         cr = 'crop=%d:%d:%d:%d,' % crop if crop else ''
         vf = f'setpts=PTS/{sp},{cr}scale=1080:1920:flags=lanczos,fps=30,format=yuv420p'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(a), '-to', str(b), '-i', f'{SRC}/{f}', '-an',
                         '-vf', vf, '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1',
                         f'public/r38/{n}.mp4'], check=True)
-    print('кусков', len(CLIPS))
+    print('кусков', len(CLIPS) + len(CLIPS_TOPIK))
 
 
 if __name__ == '__main__':
