@@ -10,6 +10,8 @@ import json, subprocess
 
 U = [u for u in json.load(open('work/r40/units.json')) if u['words']]
 PRE, POST = 0.08, 0.12
+# размытие коллажа на стене (проверка 21.11): частичные полосы выглядят пятнами, ждём ответа Кати, кто на фото
+BLUR = False
 
 
 def main():
@@ -22,7 +24,14 @@ def main():
         tl.append({'k': u['k'], 'src': [round(a, 3), round(b, 3)], 'out': [round(t, 3), round(t + b - a, 3)]})
         t += b - a
     n = len(U)
-    fc.append(''.join(f'[v{i}][a{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][a0];[a0]loudnorm=I=-14:TP=-1.5:LRA=11[a]')
+    fc.append(''.join(f'[v{i}][a{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[vc][ac];[ac]loudnorm=I=-14:TP=-1.5:LRA=11[a];')
+    if not BLUR:
+        fc.append('[vc]null[v]')
+    # проверка 21.11: на стене холст-коллаж с фото людей (кто на фото, не подтверждено). Голова Кати закрывает
+    # большую часть, оставшееся размываем: полоса над головой и полоса справа от головы (координаты кадра 1080x1920)
+    else:
+      fc.append('[vc]split=3[vb][c1][c2];[c1]crop=330:140:575:95,boxblur=lr=20:lp=3:cr=10:cp=3[b1];[c2]crop=80:320:828:230,boxblur=lr=20:lp=3:cr=10:cp=3[b2];'
+              '[vb][b1]overlay=575:95[t1];[t1][b2]overlay=828:230[v]')
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', 'work/r40/take/take.mov', '-filter_complex', ''.join(fc),
                     '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-pix_fmt', 'yuv420p',
                     '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-map_metadata', '-1', 'public/r40/talk.mp4'], check=True)
