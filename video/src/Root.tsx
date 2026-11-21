@@ -20,6 +20,7 @@ import {VybirayteReel, VYBIRAYTE_FRAMES} from './VybirayteReel';
 import {Den1Reel, DEN1_FRAMES, EsliByRefTest, EsliByReel} from './EsliByReel';
 import {ProshuReel, PROSHU_FRAMES} from './ProshuReel';
 import {PlatyeReel, PLATYE_FRAMES} from './PlatyeReel';
+import {FrazyReel, FRAZY_FRAMES} from './FrazyReel';
 import {VoprosReel, VOPROS_FRAMES, VoprosTcReel, VOPROS_TC_FRAMES, VoprosRedReel, VOPROS_RED_FRAMES} from './VoprosReel';
 import {SpeshkaReel, SPESHKA_FRAMES, SpeshkaReel2, SPESHKA2_FRAMES} from './SpeshkaReel';
 import {ZavistReel, ZavistReelSoft, ZavistReelHard, ZavistKatya, ZAVIST_FRAMES} from './ZavistReel';
@@ -202,6 +203,14 @@ export const Root: React.FC = () => (
       id="VoprosReel"
       component={VoprosReel}
       durationInFrames={VOPROS_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+      <Composition
+      id="FrazyReel"
+      component={FrazyReel}
+      durationInFrames={FRAZY_FRAMES}
       fps={30}
       width={1080}
       height={1920}
