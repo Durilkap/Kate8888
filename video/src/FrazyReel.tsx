@@ -8,7 +8,7 @@ import {FRAZY_CARDS, FRAZY_CUTS, FRAZY_FRAMES, FRAZY_HEADS} from './FrazyCards';
 // Один дубль Кати дома (говорит и собирается), паузы убраны (tools/prepare_r40.py). На склейках смена крупности
 // и короткий толчок. Сверху заголовок типажа «1/ ...» (как в примерах), снизу титры по словам (tools/cards_r40.py).
 
-const GRADE = 'contrast(1.05) saturate(1.05) sepia(0.04) brightness(1.03)';
+const GRADE = 'contrast(1.02) saturate(1.02)'; // основной свет и цвет в tools/prepare_r40.py (LIGHT)
 export {FRAZY_FRAMES};
 
 export const FrazyReel: React.FC = () => {
