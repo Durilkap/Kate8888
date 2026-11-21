@@ -59,13 +59,13 @@ const Plate: React.FC<{lines: string[]; f: number; from: number; size?: number}>
   );
 };
 
-const Half: React.FC<{src: string; left: boolean; label: string}> = ({src, left, label}) => {
+const Half: React.FC<{src: string; left: boolean; label: string; from?: number; still?: boolean; x?: number; corner?: boolean}> = ({src, left, label, from = 0, still = false, x = -271, corner = false}) => {
   const f = useCurrentFrame();
-  const a = interpolate(f, [0, 8], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
+  const a = still ? 1 : interpolate(f, [0, 8], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
   return (
     <div style={{position: 'absolute', top: 0, bottom: 0, left: left ? 0 : 543, width: 537, overflow: 'hidden', transform: `translateX(${(1 - a) * (left ? -120 : 120)}px)`}}>
-      <OffthreadVideo src={staticFile(`r41/${src}.mp4`)} muted style={{position: 'absolute', left: -271, width: 1080, height: 1920, objectFit: 'cover', filter: GRADE}} />
-      <div style={{position: 'absolute', top: 240, width: '100%', textAlign: 'center', fontFamily: FONT, fontWeight: 800, fontSize: 150, color: '#fff', textShadow: '0 6px 24px rgba(0,0,0,0.55)', opacity: a}}>{label}</div>
+      <OffthreadVideo src={staticFile(`r41/${src}.mp4`)} startFrom={from} muted style={{position: 'absolute', left: x, width: 1080, height: 1920, objectFit: 'cover', filter: GRADE}} />
+      <div style={corner ? {position: 'absolute', top: 40, left: 36, fontFamily: FONT, fontWeight: 800, fontSize: 120, color: '#fff', textShadow: '0 6px 24px rgba(0,0,0,0.55)'} : {position: 'absolute', top: 240, width: '100%', textAlign: 'center', fontFamily: FONT, fontWeight: 800, fontSize: 150, color: '#fff', textShadow: '0 6px 24px rgba(0,0,0,0.55)', opacity: a}}>{label}</div>
     </div>
   );
 };
@@ -88,6 +88,18 @@ export const ViborReel: React.FC = () => {
         </AbsoluteFill>
       </Sequence>
       {t ? <Plate key={t.from} lines={t.lines} f={f} from={t.from} size={t.lines[0].length > 22 ? 54 : 60} /> : null}
+    </AbsoluteFill>
+  );
+};
+
+// обложка (Катя 21.11): слева Катя в белом пиджаке (не со спины), справа кепка и очки, внизу вопрос
+export const ViborCover: React.FC = () => {
+  useMontserrat();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#fff'}}>
+      <Half src="l1" left label="1" from={40} still x={-200} corner />
+      <Half src="sr" left={false} label="2" from={30} still corner />
+      <Plate lines={['Леди или спортсменка?']} f={10} from={0} size={60} />
     </AbsoluteFill>
   );
 };
