@@ -10,7 +10,7 @@ const GRADE = 'contrast(1.05) saturate(1.06) brightness(1.03)';
 type Seg = {src: string; dur: number; z?: [number, number]; o?: string; flash?: boolean};
 const SEGS: Seg[] = [
   {src: 'l1', dur: 66, z: [1.0, 1.05], o: '50% 30%'},
-  {src: 's1', dur: 45, z: [1.02, 1.07], o: '50% 30%'},
+  {src: 's1', dur: 76, z: [1.02, 1.07], o: '50% 30%'},
   {src: 'l2', dur: 54, z: [1.0, 1.05], o: '50% 40%'},
   {src: 'l3', dur: 54, z: [1.02, 1.06], o: '50% 40%', flash: true},
   {src: 's2', dur: 48, z: [1.0, 1.05], o: '50% 40%', flash: true},
@@ -22,12 +22,15 @@ const SPLIT_FROM = SEGS.reduce((a, x) => a + x.dur, 0);
 const SPLIT_DUR = 72;
 export const VIBOR_FRAMES = SPLIT_FROM + SPLIT_DUR;
 
+// Катя 22.11: добавить «я не убираюсь и не готовлю»; время текстов от начала кусков (STARTS)
+const S1_MID = STARTS[1] + 36;
 const TEXTS: {from: number; to: number; lines: string[]}[] = [
-  {from: 0, to: 66, lines: ['Знаете, что самое сложное', 'в моих выходных?']},
-  {from: 66, to: 111, lines: ['Не уборка.', 'Не готовка.']},
-  {from: 111, to: 165, lines: ['Выбрать, кто я сегодня 😅']},
-  {from: 165, to: 219, lines: ['Леди?']},
-  {from: 219, to: 267, lines: ['Или спортсменка?']},
+  {from: 0, to: STARTS[1], lines: ['Знаете, что самое сложное', 'в моих выходных?']},
+  {from: STARTS[1], to: S1_MID, lines: ['Не уборка.', 'Не готовка.']},
+  {from: S1_MID, to: STARTS[2], lines: ['Я не убираюсь', 'и не готовлю 😏']},
+  {from: STARTS[2], to: STARTS[3], lines: ['Выбрать, кто я сегодня 😅']},
+  {from: STARTS[3], to: STARTS[4], lines: ['Леди?']},
+  {from: STARTS[4], to: STARTS[5], lines: ['Или спортсменка?']},
   {from: SPLIT_FROM, to: VIBOR_FRAMES, lines: ['Решите за меня:', '1 или 2? 👇']},
 ];
 const FONT = 'Montserrat, "Noto Color Emoji", "DejaVu Sans", sans-serif';
