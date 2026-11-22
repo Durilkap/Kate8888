@@ -83,8 +83,8 @@ export const ViborReel: React.FC = () => {
       ))}
       <Sequence from={SPLIT_FROM} durationInFrames={SPLIT_DUR}>
         <AbsoluteFill style={{backgroundColor: '#fff'}}>
-          <Half src="sl" left label="1" />
-          <Half src="sr" left={false} label="2" />
+          <Half src="sl" left label="1" x={-200} corner />
+          <Half src="sr" left={false} label="2" corner />
         </AbsoluteFill>
       </Sequence>
       {t ? <Plate key={t.from} lines={t.lines} f={f} from={t.from} size={t.lines[0].length > 22 ? 54 : 60} /> : null}
