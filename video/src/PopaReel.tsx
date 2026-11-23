@@ -3,7 +3,7 @@ import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, Sequence, static
 import {useMontserrat} from './WordCaptions';
 
 // Рилс 42 (челлендж Лилии, день 6 «Просто потому что...», 23.11): идея Кати «красивая попа», кадры из зала
-// (public/sport, подготовлены для рилса 13: посторонние на фоне уже размыты), без кадров на платформе с гирей. 7 с, без голоса, музыку Катя ставит
+// без размытия фона (Катя 23.11: «Не размывай ничего»; tools/prepare_r42.py), без кадров на платформе с гирей. 7 с, без голоса, музыку Катя ставит
 // в Instagram. Хук текстом с первой секунды, наглядно: упражнения на ягодицы.
 
 const GRADE = 'contrast(1.05) saturate(1.05) brightness(1.03)';
@@ -32,7 +32,7 @@ const Shot: React.FC<{s: Seg; first: boolean}> = ({s, first}) => {
       {s.photo ? (
         <Img src={staticFile(`sport/${s.src}.jpg`)} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
       ) : (
-        <OffthreadVideo src={staticFile(`sport/${s.src}.mp4`)} startFrom={s.from} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
+        <OffthreadVideo src={staticFile(`sport/raw_${s.src}.mp4`)} startFrom={s.from} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
       )}
     </AbsoluteFill>
   );
