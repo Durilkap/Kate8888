@@ -10,7 +10,7 @@ const GRADE = 'contrast(1.05) saturate(1.05) brightness(1.03)';
 type Seg = {src: string; from: number; dur: number; z?: [number, number]; o?: string; photo?: boolean};
 // Катя 23.11: кадры на платформе с гирей (c2, c3) убрать
 const SEGS: Seg[] = [
-  {src: 'sq2', from: 0, dur: 45, z: [1.0, 1.06], o: '50% 70%', photo: true}, // фото сзади в жёлтой футболке, присед
+  {src: 'sq2b', from: 0, dur: 45, z: [1.0, 1.05], o: '50% 55%', photo: true}, // фото сзади в жёлтой футболке, присед (значок на коврике размыт), наезд на всю фигуру
   {src: 'c7', from: 15, dur: 36, z: [1.04, 1.08], o: '40% 60%'}, // махи на четвереньках
   {src: 'c9', from: 0, dur: 30, z: [1.0, 1.04], o: '50% 60%'},   // мах крупно
   {src: 'c4', from: 0, dur: 42, z: [1.0, 1.05], o: '50% 60%'},   // махи на четвереньках у зеркала
