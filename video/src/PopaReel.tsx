@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, Sequence, staticFile, useCurrentFrame} from 'remotion';
 import {useMontserrat} from './WordCaptions';
 
 // Рилс 42 (челлендж Лилии, день 6 «Просто потому что...», 23.11): идея Кати «красивая попа», кадры из зала
@@ -7,13 +7,14 @@ import {useMontserrat} from './WordCaptions';
 // в Instagram. Хук текстом с первой секунды, наглядно: упражнения на ягодицы.
 
 const GRADE = 'contrast(1.05) saturate(1.05) brightness(1.03)';
-type Seg = {src: string; from: number; dur: number; z?: [number, number]; o?: string};
+type Seg = {src: string; from: number; dur: number; z?: [number, number]; o?: string; photo?: boolean};
 const SEGS: Seg[] = [
-  {src: 'c2', from: 0, dur: 45, z: [1.0, 1.05], o: '50% 60%'},   // тренажёр, сзади, шорты
+  {src: 'sq2', from: 0, dur: 45, z: [1.0, 1.06], o: '50% 70%', photo: true}, // фото сзади в жёлтой футболке, присед (Катя 23.11)
+  {src: 'c2', from: 0, dur: 30, z: [1.0, 1.04], o: '50% 60%'},   // тренажёр, сзади, шорты
   {src: 'c6', from: 0, dur: 33, z: [1.02, 1.06], o: '50% 55%'},  // махи ногой с мячом
-  {src: 'c7', from: 15, dur: 40, z: [1.04, 1.08], o: '40% 60%'}, // махи на четвереньках
-  {src: 'c9', from: 0, dur: 40, z: [1.0, 1.04], o: '50% 60%'},   // мах крупно
-  {src: 'c3', from: 0, dur: 52, z: [1.0, 1.05], o: '50% 60%'},   // тренажёр, сзади, финал
+  {src: 'c7', from: 15, dur: 36, z: [1.04, 1.08], o: '40% 60%'}, // махи на четвереньках
+  {src: 'c9', from: 0, dur: 30, z: [1.0, 1.04], o: '50% 60%'},   // мах крупно
+  {src: 'c3', from: 0, dur: 36, z: [1.0, 1.05], o: '50% 60%'},   // тренажёр, сзади, финал
 ];
 const STARTS = SEGS.map((_, i) => SEGS.slice(0, i).reduce((a, x) => a + x.dur, 0));
 export const POPA_FRAMES = SEGS.reduce((a, x) => a + x.dur, 0);
@@ -27,7 +28,11 @@ const Shot: React.FC<{s: Seg; first: boolean}> = ({s, first}) => {
   const sc = interpolate(f, [0, s.dur], z, {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}) + punch;
   return (
     <AbsoluteFill style={{overflow: 'hidden'}}>
-      <OffthreadVideo src={staticFile(`sport/${s.src}.mp4`)} startFrom={s.from} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
+      {s.photo ? (
+        <Img src={staticFile(`sport/${s.src}.jpg`)} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
+      ) : (
+        <OffthreadVideo src={staticFile(`sport/${s.src}.mp4`)} startFrom={s.from} muted style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${sc.toFixed(4)})`, transformOrigin: s.o ?? '50% 50%', filter: GRADE}} />
+      )}
     </AbsoluteFill>
   );
 };
