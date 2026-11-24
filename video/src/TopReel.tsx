@@ -21,15 +21,20 @@ export const TopReel: React.FC = () => {
   const push = interpolate(f, [TOP_CUTS[i], TOP_CUTS[i + 1]], [0, 0.02], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   const punch = i === 0 ? 0 : interpolate(f, [TOP_CUTS[i], TOP_CUTS[i] + 5], [0.04, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.cubic)});
   const item = TOP_ITEMS.find((x) => f >= x.from && f < x.to);
+  const headA = interpolate(f, [TOP_CUTS[1] - 8, TOP_CUTS[1]], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'});
   return (
     <AbsoluteFill style={{backgroundColor: '#000', overflow: 'hidden'}}>
       <OffthreadVideo src={staticFile('r43/talk.mp4')} style={{width: '100%', height: '100%', objectFit: 'cover', transform: `scale(${(base + push + punch).toFixed(4)})`, transformOrigin: '50% 28%', filter: GRADE}} />
-      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.05) 100%)'}} />
-      <div style={{position: 'absolute', top: 120, left: 70, right: 70, textAlign: 'center', fontFamily: SANS, color: '#fff', textShadow: SHADOW}}>
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 18%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.25) 75%, rgba(0,0,0,0.05) 100%)'}} />
+      {/* куратор 24.11: заголовок только в начале (до конца вступления), потом убрать, чтобы не висел над головой */}
+      <div style={{position: 'absolute', top: 120, left: 70, right: 70, textAlign: 'center', fontFamily: SANS, color: '#fff', textShadow: SHADOW, opacity: headA}}>
         <div style={{fontWeight: 800, fontSize: 46, lineHeight: 1.18}}>{TOP_HEAD}</div>
         <div style={{fontWeight: 600, fontSize: 34, marginTop: 8, fontFamily: 'Montserrat, "Noto Color Emoji", sans-serif'}}>{TOP_TRIG}</div>
-        <div style={{fontWeight: 800, fontSize: 40, marginTop: 10, opacity: item ? 1 : 0}}>{item ? item.t : ''}</div>
       </div>
+      {/* счётчик пунктов маленьким в правом верхнем углу, в стороне от головы */}
+      {item ? (
+        <div style={{position: 'absolute', top: 150, right: 60, fontFamily: SANS, fontWeight: 800, fontSize: 44, color: '#fff', textShadow: SHADOW}}>{item.t}</div>
+      ) : null}
       <WordCaptions cards={TOP_CARDS} total={TOP_FRAMES} ready={ready} accent={RED} plate top={1250} size={60} />
     </AbsoluteFill>
   );
