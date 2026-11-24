@@ -52,7 +52,7 @@ export const TopCover: React.FC = () => {
 };
 
 // обложка из фото Кати 24.11 (офис, белая рубашка, брошь): документы на столе срезаны кадрированием
-// (public/r43/cover_photo.jpg; цвет лица теплее и розовее: colortemperature 5300, colorbalance, eq, по просьбе Кати), заголовок внизу, чтобы не закрывать лицо; в сетке профиля (3:4) текст остаётся виден
+// (public/r43/cover_photo.jpg; цвет лица светлее и теплее по двум просьбам Кати: colortemperature 4900, colorbalance, eq gamma 1.14), заголовок внизу, чтобы не закрывать лицо; в сетке профиля (3:4) текст остаётся виден
 export const TopCoverPhoto: React.FC = () => {
   useMontserrat();
   return (
