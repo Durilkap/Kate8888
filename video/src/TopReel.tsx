@@ -50,3 +50,19 @@ export const TopCover: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+// обложка из фото Кати 24.11 (офис, белая рубашка, брошь): документы на столе срезаны кадрированием
+// (public/r43/cover_photo.jpg; цвет лица теплее и розовее: colortemperature 5300, colorbalance, eq, по просьбе Кати), заголовок внизу, чтобы не закрывать лицо; в сетке профиля (3:4) текст остаётся виден
+export const TopCoverPhoto: React.FC = () => {
+  useMontserrat();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <Img src={staticFile('r43/cover_photo.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.02)'}} />
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 78%, rgba(0,0,0,0.25) 100%)'}} />
+      <div style={{position: 'absolute', top: 1270, left: 60, right: 60, textAlign: 'center', fontFamily: SANS, color: '#fff', textShadow: SHADOW}}>
+        <div style={{fontWeight: 800, fontSize: 58, lineHeight: 1.16}}>{TOP_HEAD}</div>
+        <div style={{fontWeight: 600, fontSize: 40, marginTop: 12, fontFamily: 'Montserrat, "Noto Color Emoji", sans-serif'}}>{TOP_TRIG}</div>
+      </div>
+    </AbsoluteFill>
+  );
+};
