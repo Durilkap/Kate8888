@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, OffthreadVideo, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Easing, Img, interpolate, OffthreadVideo, staticFile, useCurrentFrame} from 'remotion';
 import {RED} from './SerijaReel';
 import {SANS, useMontserrat, WordCaptions} from './WordCaptions';
 import {TOP_CARDS, TOP_CUTS, TOP_FRAMES, TOP_HEAD, TOP_ITEMS, TOP_TRIG} from './TopCards';
@@ -31,6 +31,22 @@ export const TopReel: React.FC = () => {
         <div style={{fontWeight: 800, fontSize: 40, marginTop: 10, opacity: item ? 1 : 0}}>{item ? item.t : ''}</div>
       </div>
       <WordCaptions cards={TOP_CARDS} total={TOP_FRAMES} ready={ready} accent={RED} plate top={1250} size={60} />
+    </AbsoluteFill>
+  );
+};
+
+// обложка (Катя 24.11: «я же просила лучшие кадры, посмотри на лицо»): кадр дубля 1 на 0,4 с, лицо спокойное,
+// губы сомкнуты, взгляд в камеру (выбран по крупной сетке лиц из обоих дублей)
+export const TopCover: React.FC = () => {
+  useMontserrat();
+  return (
+    <AbsoluteFill style={{backgroundColor: '#000'}}>
+      <Img src={staticFile('r43/cover.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover', filter: GRADE, transform: 'scale(1.22)', transformOrigin: '45% 22%'}} />
+      <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 26%)'}} />
+      <div style={{position: 'absolute', top: 110, left: 60, right: 60, textAlign: 'center', fontFamily: SANS, color: '#fff', textShadow: SHADOW}}>
+        <div style={{fontWeight: 800, fontSize: 54, lineHeight: 1.16}}>{TOP_HEAD}</div>
+        <div style={{fontWeight: 600, fontSize: 38, marginTop: 10, fontFamily: 'Montserrat, "Noto Color Emoji", sans-serif'}}>{TOP_TRIG}</div>
+      </div>
     </AbsoluteFill>
   );
 };
