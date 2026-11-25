@@ -2,7 +2,7 @@
 import {Card} from './WordCaptions';
 
 export const KOMM_FRAMES = 1238;
-export const KOMM_HEAD = "Женщина, которая знает себе цену: меркантильная?";
+export const KOMM_HEAD = "Женщина, которая знает свою ценность: меркантильная?";
 export const KOMM_HEAD_TO = 247;
 export const KOMM_SCHED: {n: number; from: number; to: number}[] = [{"n": 1, "from": 247, "to": 367}, {"n": 2, "from": 367, "to": 496}, {"n": 3, "from": 496, "to": 650}, {"n": 4, "from": 650, "to": 811}, {"n": 5, "from": 811, "to": 1018}];
 export const KOMM_CUTS: number[] = [0, 103, 247, 367, 496, 568, 650, 747, 811, 956, 1018, 1178, 1238];
