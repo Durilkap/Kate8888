@@ -8,7 +8,8 @@ TL = json.load(open('public/r44/timeline.json'))
 U = {t: json.load(open(f'work/r44/{t}_units.json')) for t in ('t1', 't2', 't3')}
 W = {t: [w for u in U[t] for w in u['words']] for t in U}
 TEXT = [
-    [['Вопрос:'], ['женщина, которая', 'знает свою ценность,'], ['это~2 *меркантильная?']],
+    [['Вопрос:']],
+    [['женщина, которая', 'знает свою ценность,'], ['это *меркантильная?']],
     [['Под моим рилсом', 'больше *сотни', '*комментариев.'], ['Читаю самые яркие,'], ['а своё мнение', 'скажу в конце.']],
     [['«Не знал, что', 'молекулы пахнут»'], ['*Пахнут.', 'Особенно на', 'правильной *женщине 😌~0']],
     [['«Это все названия', 'порошков', 'перечислили?»'], ['Я же говорю:', 'лишь *малую *часть 😉~0']],
@@ -24,11 +25,36 @@ TEXT = [
 HEAD = 'Женщина, которая знает свою ценность: меркантильная?'  # как говорит Катя (проверка 25.11)
 
 
+def piece_words(tk, a, b):
+    """Слова куска со временем: распознаём ровно отрезок [a, b] дубля (так время совпадает со склейкой)."""
+    import subprocess, numpy as np, sherpa_onnx
+    global REC
+    if 'REC' not in globals():
+        M = 'work/models/giga3'
+        REC = sherpa_onnx.OfflineRecognizer.from_nemo_ctc(model=f'{M}/model.int8.onnx', tokens=f'{M}/tokens.txt', num_threads=4)
+    p = subprocess.run(['ffmpeg', '-v', 'error', '-ss', str(a), '-t', str(b - a), '-i', f'work/r44/take/{tk}.mov', '-vn', '-ac', '1',
+                        '-ar', '16000', '-f', 's16le', '-'], capture_output=True)
+    x = np.frombuffer(p.stdout, np.int16).astype(np.float32) / 32768
+    s = REC.create_stream(); s.accept_waveform(16000, x); REC.decode_stream(s); r = s.result
+    words, cur = [], None
+    for tok, tt in zip(r.tokens, r.timestamps):
+        tt += a
+        if tok.strip() == '' or tok == '▁':
+            if cur: words.append(cur); cur = None
+            continue
+        if tok.startswith('▁') and cur: words.append(cur); cur = None
+        t2 = tok.replace('▁', '')
+        if cur is None: cur = {'w': t2, 's': round(tt, 2)}
+        else: cur['w'] += t2
+    if cur: words.append(cur)
+    return words
+
+
 def main():
     cards = []
     for i, cs in enumerate(TEXT):
         x = TL[i]; tk = x['take']; a, b = x['src']; o0 = x['out'][0]
-        ws = [w for w in W[tk] if a - 0.05 <= w['s'] <= b]
+        ws = piece_words(tk, a, b)
         k = 0; last = None
         for c in cs:
             lines = []
@@ -59,7 +85,7 @@ def main():
             sched[-1]['to'] = f1
         else:
             sched.append({'n': x['card'], 'from': f0, 'to': f1})
-    head_to = round(TL[1]['out'][1] * FPS)
+    head_to = round(TL[2]['out'][1] * FPS)
     cuts = [round(x['out'][0] * FPS) for x in TL] + [total]
     # куратор 25.11: текст сверху опустить к голове, минимальный зазор. Для каждого куска ищем верх головы (YuNet):
     # верх рамки лица минус доля её высоты на лоб и волосы (подобрано по кадрам: дубли 1-2 0,3, крупный дубль 3 0,5),
