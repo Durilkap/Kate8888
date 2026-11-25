@@ -24,6 +24,7 @@ import {FrazyReel, FRAZY_FRAMES} from './FrazyReel';
 import {ViborReel, VIBOR_FRAMES, ViborCover} from './ViborReel';
 import {PopaReel, POPA_FRAMES} from './PopaReel';
 import {TopReel, TOP_FRAMES, TopCover, TopCoverPhoto} from './TopReel';
+import {KommReel, KOMM_FRAMES, KommCover} from './KommReel';
 import {VoprosReel, VOPROS_FRAMES, VoprosTcReel, VOPROS_TC_FRAMES, VoprosRedReel, VOPROS_RED_FRAMES} from './VoprosReel';
 import {SpeshkaReel, SPESHKA_FRAMES, SpeshkaReel2, SPESHKA2_FRAMES} from './SpeshkaReel';
 import {ZavistReel, ZavistReelSoft, ZavistReelHard, ZavistKatya, ZAVIST_FRAMES} from './ZavistReel';
@@ -206,6 +207,22 @@ export const Root: React.FC = () => (
       id="VoprosReel"
       component={VoprosReel}
       durationInFrames={VOPROS_FRAMES}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+      <Composition
+      id="KommCover"
+      component={KommCover}
+      durationInFrames={1}
+      fps={30}
+      width={1080}
+      height={1920}
+    />
+      <Composition
+      id="KommReel"
+      component={KommReel}
+      durationInFrames={KOMM_FRAMES}
       fps={30}
       width={1080}
       height={1920}

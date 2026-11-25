@@ -28,7 +28,47 @@ def cover(im, box):
     im.paste(reg, (x0, y0))
 
 
+# голос и видео: лучшие куски по фразам из дублей t1, t2, t3 (t4 = копия t3);
+# выбраны по крупной сетке лиц (Катя 25.11: «Выбери лучшие кадры, чтобы везде было красиво, чтобы влюбиться»)
+PIECES = [  # (дубль, начало, конец, карточка или None)
+    ('t1', 0.98, 4.42, None),    # Вопрос: женщина, которая знает свою ценность, это меркантильная?
+    ('t1', 4.60, 9.38, None),    # Под моим рилсом больше сотни комментариев...
+    ('t1', 9.72, 13.72, 1),      # «Не знал, что молекулы пахнут». Пахнут. Особенно на правильной женщине.
+    ('t1', 14.48, 18.78, 2),     # «Это все названия порошков перечислили?» Я же говорю: лишь малую часть.
+    ('t3', 19.06, 21.48, 3),     # «Нет уж, мне бывшей хватило с её уровнем жизни»
+    ('t2', 22.82, 25.56, 3),     # Уровень жизни тут ни при чём. Дело в уважении. (дубль 2: спокойный взгляд в камеру)
+    ('t1', 25.24, 28.46, 4),     # «Да нам пофиг, от кого чем пахнет...»
+    ('t2', 29.70, 31.84, 4),     # Согласна. Одно другому не мешает. (дубль 2: без гримас и жестов)
+    ('t1', 31.90, 36.72, 5),     # «Всё верно. Влюбляемся, но выключаем эту х*рню...»
+    ('t1', 36.90, 38.98, 5),     # Вот это подход, аплодирую.
+    ('t1', 39.18, 44.50, None),  # Моё мнение: ... не продаёт себя дёшево.
+    ('t3', 44.60, 46.62, None),  # А вы как думаете? Пишите в комментариях.
+]
+# тёплый мягкий цвет (куратор 23.11 просила меньше синевы)
+WARM = 'colortemperature=temperature=5600:mix=0.5,eq=gamma=1.04:saturation=1.04'
+
+
+def talk():
+    import json, subprocess
+    fc, tl, t = [], [], 0.0
+    for i, (tk, a, b, card) in enumerate(PIECES):
+        idx = {'t1': 0, 't2': 1, 't3': 2}[tk]
+        fc.append(f"[{idx}:v]trim={a}:{b},setpts=PTS-STARTPTS,scale=1080:1920,fps=30,{WARM}[v{i}];"
+                  f"[{idx}:a]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.02,afade=t=out:st={b - a - 0.03:.3f}:d=0.03[a{i}];")
+        tl.append({'take': tk, 'src': [a, b], 'out': [round(t, 3), round(t + b - a, 3)], 'card': card})
+        t += b - a
+    n = len(PIECES)
+    fc.append(''.join(f'[v{i}][a{i}]' for i in range(n)) + f'concat=n={n}:v=1:a=1[v][a0];[a0]loudnorm=I=-14:TP=-1.5:LRA=11[a]')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', 'work/r44/take/t1.mov', '-i', 'work/r44/take/t2.mov', '-i', 'work/r44/take/t3.mov',
+                    '-filter_complex', ''.join(fc), '-map', '[v]', '-map', '[a]', '-c:v', 'libx264', '-crf', '15',
+                    '-preset', 'medium', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000',
+                    '-map_metadata', '-1', 'public/r44/talk.mp4'], check=True)
+    json.dump(tl, open('public/r44/timeline.json', 'w'), ensure_ascii=False, indent=1)
+    print(n, 'кусков,', round(t, 2), 'с')
+
+
 def main():
+    talk()
     font = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 40)
     for i, (f, crop, covers, repl) in enumerate(CARDS, 1):
         im = Image.open(f'{SH}/{f}').convert('RGB').crop(crop)
