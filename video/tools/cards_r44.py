@@ -61,11 +61,30 @@ def main():
             sched.append({'n': x['card'], 'from': f0, 'to': f1})
     head_to = round(TL[1]['out'][1] * FPS)
     cuts = [round(x['out'][0] * FPS) for x in TL] + [total]
+    # куратор 25.11: текст сверху опустить к голове, минимальный зазор. Для каждого куска ищем верх головы (YuNet):
+    # верх рамки лица минус доля её высоты на лоб и волосы (подобрано по кадрам: дубли 1-2 0,3, крупный дубль 3 0,5),
+    # берём самое высокое положение за кусок
+    import cv2
+    cap = cv2.VideoCapture('public/r44/talk.mp4'); det = None; tops = []
+    for x in TL:
+        a, b = x['out']; best = 1920
+        for k in range(8):
+            t = a + (b - a) * (k + 0.5) / 8
+            cap.set(cv2.CAP_PROP_POS_MSEC, t * 1000); ok, fr = cap.read()
+            if not ok: continue
+            h, w = fr.shape[:2]; sm = cv2.resize(fr, (w // 3, h // 3))
+            if det is None: det = cv2.FaceDetectorYN_create('work/models/yunet.onnx', '', (w // 3, h // 3), 0.5, 0.3, 50)
+            _, fc = det.detect(sm)
+            if fc is not None and len(fc):
+                fx, fy, fw, fh = [v * 3 for v in max(fc, key=lambda q: q[2] * q[3])[:4]]
+                best = min(best, fy - (0.5 if x['take'] == 't3' else 0.3) * fh)
+        tops.append(int(best))
     ts = ("// Титры и карточки рилса 44 (tools/cards_r44.py).\nimport {Card} from './WordCaptions';\n\n"
           f"export const KOMM_FRAMES = {total};\nexport const KOMM_HEAD = {json.dumps(HEAD, ensure_ascii=False)};\n"
           f"export const KOMM_HEAD_TO = {head_to};\n"
           f"export const KOMM_SCHED: {{n: number; from: number; to: number}}[] = {json.dumps(sched)};\n"
           f"export const KOMM_CUTS: number[] = {json.dumps(cuts)};\n"
+          f"export const KOMM_HEADTOP: number[] = {json.dumps(tops)};\n"
           "export const KOMM_CARDS: Card[] = " + json.dumps(cards, ensure_ascii=False) + ";\n")
     open('src/KommCards.ts', 'w', encoding='utf-8').write(ts)
     print(len(cards), 'экранов,', total, 'кадров,', len(sched), 'карточек')
