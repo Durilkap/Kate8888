@@ -38,9 +38,10 @@ export const PereobReel: React.FC = () => {
   // склейки внутри пункта (вырезанные паузы): крупность через раз, чтобы стык читался как смена плана, а не как скачок
   const alt = PER_JUMPS.filter((j) => j > PER_CUTS[i] && j <= f).length % 2 === 1 ? ALT : 0;
   const sc = 1 + push + punch + alt;
-  // текст вплотную над головой (как просила куратор 25.11): по самому крупному плану пункта, чтобы текст не прыгал на склейках
+  // текст над головой (куратор 25.11: близко к голове; 26.11: не на лбу, чуть выше): по самому крупному плану пункта,
+  // чтобы текст не прыгал на склейках, и с зазором над волосами
   const headY = 768 + (PER_HEADTOP[i] - 768) * (1.02 + ALT);
-  const textBottom = headY + 10;
+  const textBottom = headY - 26;
   const tIn = interpolate(f, [PER_CUTS[i], PER_CUTS[i] + 6], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.out(Easing.back(1.5))});
   const appear = i === 0 ? 1 : tIn;
   return (
