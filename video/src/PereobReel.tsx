@@ -16,8 +16,8 @@ const GLOW = '0 2px 10px rgba(0,0,0,0.7), 0 0 3px rgba(0,0,0,0.85), 0 0 28px rgb
 const FONT = 'Montserrat, "Noto Color Emoji", sans-serif';
 export const PER_HOOK = 'В чём я переобулась, когда у меня сформировались лобные доли';
 export const PER_TAG = 'Версия охуевшей 😏';
-const POINTS = ['Не жду, что догадается', 'Не оправдываюсь', 'Не готовлю и не убираюсь', 'Знать себе цену не стыдно'];
-const FINAL = 'С каким пунктом вы согласны, а с каким готовы спорить? 👇';
+const POINTS = ['Не жду, что догадается', 'Не оправдываюсь', 'Не готовлю и не убираюсь', 'Знать свою ценность не стыдно'];
+const FINAL = 'С каким пунктом вы согласны, с каким готовы спорить? 👇';
 const ALT = 0.06;
 
 const Tag: React.FC<{size?: number}> = ({size = 34}) => (
@@ -55,7 +55,7 @@ export const PereobReel: React.FC = () => {
             <div style={{fontSize: 54, lineHeight: 1.15, textWrap: 'balance'} as React.CSSProperties}>{PER_HOOK}</div>
           </>
         ) : i <= POINTS.length ? (
-          <div style={{fontSize: 54, lineHeight: 1.15}}><span style={{color: RED}}>{i}.</span> {POINTS[i - 1]}</div>
+          <div style={{fontSize: 54, lineHeight: 1.15, textWrap: 'balance'} as React.CSSProperties}><span style={{color: RED}}>{i}.</span> {POINTS[i - 1]}</div>
         ) : (
           <div style={{fontSize: 48, lineHeight: 1.16, textWrap: 'balance'} as React.CSSProperties}>{FINAL}</div>
         )}
