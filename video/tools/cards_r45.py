@@ -9,24 +9,15 @@ TALK = 'public/r45/talk.mp4'
 TL = json.load(open('public/r45/timeline.json'))
 
 
-def out_t(src):
-    """Время дубля k1 -> время ролика."""
-    for x in TL:
-        a, b = x['src']
-        if a - 1e-6 <= src <= b + 1e-6:
-            return x['out'][0] + src - a
-    raise ValueError(src)
-
-
-# начала разделов (в тишине перед первым словом, по огибающей громкости дубля): хук, 1-4, вопрос
-STARTS = [0.0, out_t(5.95), out_t(13.80), TL[1]['out'][0], out_t(31.25), out_t(41.05)]
+# начала разделов (хук, 1-4, вопрос): первый кусок каждого раздела (tools/prepare_r45.py, версия 3: смена дубля на каждом пункте)
+STARTS = [next(x['out'][0] for x in TL if x['section'] == i) for i in range(6)]
 TEXT = [
-    [['В чём я', '*переобулась,'], ['когда у меня', 'сформировались', 'лобные доли.'], ['На это ушло', '*два *брака.']],
+    [['В чём я', '*переобулась,'], ['когда у меня', 'сформировались', 'лобные доли.'], ['*Спойлер:', 'на это ушло', '*два *брака.']],
     [['*Первое.', 'Раньше я ждала,'], ['что мужчина', 'сам *догадается.'], ['Два брака ждала.', '*Не *догадались.'],
      ['Теперь я', 'прошу *прямо.'], ['И да,', 'мне *дарят 😏~0']],
     [['*Второе.', 'Раньше я объясняла'], ['каждое своё', '*«нет».'], ['Теперь', 'не *оправдываюсь.'],
      ['Ни за желания,', 'ни за цену,', 'ни за *«нет».'], ['«Мне так', 'не подходит»,'], ['и этого', '*достаточно.']],
-    [['*Третье.', 'Раньше я думала,'], ['что хорошая жена', '*обязана'], ['готовить', 'и~0 убирать.'],
+    [['*Третье.', 'Раньше я думала,'], ['что хорошая жена', '*обязана'], ['готовить', 'и убирать.'],
      ['Теперь я', '*не *убираюсь', '*и *не *готовлю.'], ['И да,', 'я *замужем 😏~0']],
     [['И *четвёртое.'], ['Раньше слово', '«меркантильная»'], ['меня *задевало.'], ['Теперь я', 'спокойно говорю:'],
      ['женщина, которая', 'знает свою ценность,'], ['*не *меркантильная.'], ['Она просто', 'не продаёт себя', '*дёшево.']],
@@ -84,11 +75,12 @@ def main():
                     out.append({'t': tok.lstrip('*'), 'at': max(0, round(t * FPS)), 'a': tok.startswith('*')})
                 lines.append({'big': False, 'words': out})
             cards.append({'from': max(0, lines[0]['words'][0]['at'] - 2), 'full': False, 'lines': lines})
-            if i == 0 and c[0].startswith('На это'):
+            if i == 0 and c[0].startswith('*Спойлер'):
                 spoiler = lines[0]['words'][0]['at']
         assert k == len(ws), (i, k, len(ws), [w['w'] for w in ws])
     cards[0]['from'] = 0
     cuts = [round(s * FPS) for s in STARTS] + [total]
+    jumps = [round(x['out'][0] * FPS) for x in TL]  # склейки (смена крупности)
     # верх головы по разделам (YuNet): верх рамки лица минус 0,15 её высоты (подобрано по кадрам 26.11), самое высокое за раздел
     import cv2
     cap = cv2.VideoCapture(TALK); det = None; tops = []
@@ -106,6 +98,7 @@ def main():
         tops.append(int(best))
     ts = ("// Титры и разделы рилса 45 (tools/cards_r45.py).\nimport {Card} from './WordCaptions';\n\n"
           f"export const PER_FRAMES = {total};\nexport const PER_CUTS: number[] = {json.dumps(cuts)};\n"
+          f"export const PER_JUMPS: number[] = {json.dumps(jumps)};\n"
           f"export const PER_HEADTOP: number[] = {json.dumps(tops)};\nexport const PER_SPOILER = {spoiler};\n"
           "export const PER_CARDS: Card[] = " + json.dumps(cards, ensure_ascii=False) + ";\n")
     open('src/PereobCards.ts', 'w', encoding='utf-8').write(ts)
