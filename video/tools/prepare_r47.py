@@ -22,10 +22,12 @@ PHOTOS = [
 # видео: (файл, имя, начало, длительность)
 CLIPS = [
     ('v4.mp4', 'roses', 0.2, 1.2),    # большой букет красных роз крупно
-    ('v2.mp4', 'ring', 15.5, 1.3),    # рука с кольцом
+    ('v2.mp4', 'ring', 15.5, 1.3),    # рука с кольцом (справа тарелка с «Happy Birthday»: обрезаем, хук «без повода»)
     ('v5.mp4', 'heart', 14.0, 1.3),   # сердце из лепестков на кровати и мишка
 ]
 GRADE = 'eq=contrast=1.04:saturation=1.05'
+# дополнительное кадрирование до вписывания в 1080x1920 (проверка 28.11): кольцо без тарелки с «Happy Birthday» справа
+PRECROP = {'ring': 'crop=iw*0.73:ih*0.73:0:ih*0.18,'}
 
 
 def main():
@@ -36,8 +38,9 @@ def main():
                         f'{c}scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,{GRADE}', '-q:v', '2',
                         f'public/r47/{n}.jpg'], check=True)
     for f, n, ss, d in CLIPS:
+        pre = PRECROP.get(n, '')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(ss), '-t', str(d), '-i', f'{W}/take/{f}', '-an', '-vf',
-                        f'scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,{GRADE},format=yuv420p',
+                        f'{pre}scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30,{GRADE},format=yuv420p',
                         '-c:v', 'libx264', '-crf', '15', '-preset', 'medium', '-map_metadata', '-1', f'public/r47/{n}.mp4'], check=True)
     print('фото', len(PHOTOS), 'видео', len(CLIPS))
 
